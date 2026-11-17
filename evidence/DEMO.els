@@ -1,0 +1,20 @@
+const PROJECT={no:'DEMO',title:'公開示例地盤 · 非實際工程',base:'作品集示例'};
+const GRID={x:{A:0,B:12,C:24,D:36,E:48},y:{'1':0,'2':12,'3':24,'4':36}};
+const LEVELS={existingGL:8.0,modelBase:-6.0};
+const UNLABELED_MODE='rule';
+const SITE_OUTLINE=[[0,0],[48,0],[48,30],[40,36],[0,36]];
+const RAMP=null;
+const REGIONS=[
+ {id:'WEST',name:'西側平台',level:4.5,src:'red',labels:[[10,17]],poly:[[3,4],[21,4],[21,31],[3,31]]},
+ {id:'EAST',name:'東側開挖',level:1.5,src:'red',labels:[[33,17]],poly:[[24,4],[44,4],[44,27],[38,31],[24,31]]},
+ {id:'CAP',name:'樁帽坑',level:-1,src:'red',nestedIn:'EAST',labels:[[32,16]],poly:[[29,13],[35,13],[35,19],[29,19]]}
+];
+const SHEET_PILES={top:8,profile:{pitch:.4,depth:.125},lines:[
+ {id:'SP1',note:'示例板樁',toe:-5,pts:[[2,3],[22,3],[22,32],[2,32]],closed:true},
+ {id:'SP2',note:'示例板樁',toe:-5,pts:[[23,3],[45,3],[45,28],[39,32],[23,32]],closed:true}
+]};
+const PILE_CAPS={height:1,polys:[[[29.5,13.5],[34.5,13.5],[34.5,18.5],[29.5,18.5]]]};
+const DRAINAGE={poly:[[0,33],[36,33],[36,35],[0,35]],label:'排水預留'};
+const COLORS={background:['#f4f2ee','#dde4ea'],ground:'#a39883',grass:['#7c8f4f','#5f7a3c'],slopeTop:'#c8a977',slopeBottom:'#bf8a56',floorTop:'#95805f',floorBottom:'#5e4a38',ramp:'#9d927f',depthRamp:[[-1.6,'#8f5d3d'],[.4,'#c29a61'],[1.6,'#d2b481'],[2.8,'#d8c69b'],[4.2,'#e0d5b6']],soilCut:['#6e5642','#9a7b57'],steel:'#55595d',concrete:'#b9b6ae',drainage:'#4caf50',grid:'#55606a'};
+const TERRAIN={cell:.3,coarse:1,x0:-3,x1:51,y0:-3,y1:39};
+const SLOPE={defaultDeg:45};

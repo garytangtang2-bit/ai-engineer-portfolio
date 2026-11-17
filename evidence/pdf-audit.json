@@ -1,0 +1,12 @@
+{
+  "dataset": "Synthetic numeric tables; 20 pages × 50 rows × 20 columns",
+  "branch": "original process_pdf; text layer; explicit table regions; optional image OCR checks disabled",
+  "cells": 20000,
+  "tables": 20,
+  "extraction_matches": 20000,
+  "export_numeric_cells": 20000,
+  "export_matches_in_order": 20000,
+  "elapsed_seconds": 34.06,
+  "generated_on": "2026-11-18",
+  "scope": "Synthetic fixture validates this text-layer path only. Not a production OCR accuracy measurement."
+}

@@ -1,0 +1,5 @@
+assets/*.png
+assets/engineering-cover.webp
+__pycache__/
+*.log
+.DS_Store

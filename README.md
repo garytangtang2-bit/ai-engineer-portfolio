@@ -1,2 +1,24 @@
-# ai-engineer-portfolio
-Gary Tang · AI Engineer 中文求職作品集與可操作工程成果
+# Gary Tang · AI Engineering Portfolio
+
+中文 AI Engineer 求職作品集。以實際問題、工程流程、交付與可操作證據介紹作品。
+
+## 本地檢視
+
+在此目錄執行 `python -m http.server 7817 --bind 127.0.0.1`，再開啟 `http://127.0.0.1:7817/`。網站無建置步驟，亦毋須 API key。
+
+## 展示方式
+
+- **會議紀錄**：依原流程製作的逐步導覽，展示分級事實、來源、人手答疑及交付狀態；不在瀏覽器執行 ASR／模型。
+- **PDF → Excel**：原 Python 程式處理的 20 頁、20,000 格合成數值表，提供實際 PDF、Excel 與逐格核對紀錄。此測試只涵蓋文字層及指定選區，並非掃描 OCR 準確率測量。
+- **ToGoalAi**：正式站截圖及外部產品入口。產品維持原有部署。
+- **3D ELS**：複用原有編輯器，使用另製的 DEMO 地盤。Three.js 及依賴本地提供，按需載入；支援分區、剖面、圖層及編輯。
+- **鑽孔**：原 `rock_head` 函數預先生成的合成案例，可查逐窗計算及 Excel 報告。
+- **上傳／影片 Skills**：按已開發流程說明架構，不操作公開展示者的帳戶。
+
+公司成效與採用量來自本人工作紀錄及陳述，屬個案結果；合成展示不含原公司項目資料。個人聯絡方式只在 PDF 履歷。
+
+## 介面
+
+原生 HTML／CSS／JavaScript，響應式排版、鍵盤可用的流程頁籤及表格、可關閉圖片對話框、按需載入 3D、可暫停模型旋轉，並尊重 `prefers-reduced-motion`。
+
+第三方授權位於 `fonts/*-OFL.txt` 及 `tools/vendor/three/LICENSE`。
