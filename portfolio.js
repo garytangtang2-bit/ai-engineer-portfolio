@@ -2,52 +2,24 @@
 document.documentElement.classList.add('js');
 const $ = id => document.getElementById(id);
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
-const isReduced=()=>reduceMotion.matches||document.documentElement.dataset.motion==='off';
-const revealObserver = new IntersectionObserver(entries => entries.forEach(entry => {
-  if (entry.isIntersecting) { entry.target.classList.add('seen'); revealObserver.unobserve(entry.target); }
-}), {threshold:.06});
-document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-const nav = $('navigation');
-const navSections = [...nav.querySelectorAll('a[href^="#"]')].map(link => ({ link, section: $(link.hash.slice(1)) }));
-let activeNavLink;
-let scheduled = false;
-function updateScroll() {
-  const max = document.documentElement.scrollHeight - innerHeight;
-  const current = navSections.filter(({ section }) => section.getBoundingClientRect().top <= 100).at(-1)?.link;
-  if (current !== activeNavLink) {
-    activeNavLink?.removeAttribute('aria-current');
-    current?.setAttribute('aria-current', 'location');
-    activeNavLink = current;
-  }
-  document.documentElement.style.setProperty('--scroll', max > 0 ? Math.min(1,scrollY/max) : 0);
-  scheduled = false;
-}
-addEventListener('scroll', () => {if (!scheduled) {scheduled = true;requestAnimationFrame(updateScroll);}}, {passive:true});
-addEventListener('resize',updateScroll);updateScroll();
-const menu = document.querySelector('.menu-button');
-function closeMenu(){nav.classList.remove('open');menu.setAttribute('aria-expanded','false');menu.textContent='目錄 ＋';}
-menu.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')!=='true';menu.setAttribute('aria-expanded',String(open));menu.textContent=open?'關閉 ×':'目錄 ＋';nav.classList.toggle('open',open);});
-nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));
-
+const isReduced = () => reduceMotion.matches;
 const galleryLinks = [...document.querySelectorAll('.project-gallery a')];
 const galleryCases = galleryLinks.map(link => $(link.hash.slice(1)));
-const caseNames = galleryLinks.map(link => link.querySelector('.tile-copy strong').textContent);
-const caseNeighbors = [$('case-prev'), $('case-next')];
+const moreProjects = $('more-projects');
+moreProjects.open = false;
 
 function selectCase(activeCase) {
-  const index = galleryCases.indexOf(activeCase);
-  galleryCases.forEach((item, itemIndex) => {
-    item.hidden = itemIndex !== index;
-    const link = galleryLinks[itemIndex];
-    if (itemIndex === index) link.setAttribute('aria-current', 'location');
-    else link.removeAttribute('aria-current');
+  galleryCases.forEach((item, index) => {
+    const current = item === activeCase;
+    item.hidden = !current;
+    const link = galleryLinks[index];
+    if (current) {
+      link.setAttribute('aria-current', 'location');
+      if (moreProjects.contains(link)) moreProjects.open = true;
+    } else {
+      link.removeAttribute('aria-current');
+    }
   });
-  const previous = (index - 1 + galleryCases.length) % galleryCases.length;
-  const next = (index + 1) % galleryCases.length;
-  caseNeighbors[0].href = galleryLinks[previous].hash;
-  caseNeighbors[0].textContent = '← ' + caseNames[previous];
-  caseNeighbors[1].href = galleryLinks[next].hash;
-  caseNeighbors[1].textContent = caseNames[next] + ' →';
 }
 
 function openCaseAnchor(hash) {
@@ -55,80 +27,24 @@ function openCaseAnchor(hash) {
   const activeCase = target?.closest('#case-view > .case');
   if (!activeCase) return;
   selectCase(activeCase);
-  const detail = target.closest('details');
-  if (detail) detail.open = true;
-  if (target.id === 'meeting-demo' && meetingStep !== 3) renderMeeting(3);
+  let detail = target.parentElement.closest('details');
+  while (detail) {
+    detail.open = true;
+    detail = detail.parentElement.closest('details');
+  }
+  if (target.matches('details')) target.open = true;
   return target;
 }
-
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&nav.classList.contains('open')){closeMenu();menu.focus();}});
-document.addEventListener('click',e=>{if(!e.target.closest('.navbar'))closeMenu();});
-
-const introChoices = [...document.querySelectorAll('[data-intro]')];
-const introScenes = [...document.querySelectorAll('[data-intro-scene]')];
-const introActions = [...document.querySelectorAll('[data-intro-action]')];
-introChoices.forEach(choice => choice.addEventListener('click', () => {
-  const selected = choice.dataset.intro;
-  introChoices.forEach(button => button.setAttribute('aria-pressed', String(button === choice)));
-  introScenes.forEach(scene => { scene.hidden = scene.dataset.introScene !== selected; });
-  introActions.forEach(action => { action.hidden = action.dataset.introAction !== selected; });
-}));
-
-const engineeringDecisions = {
-  meeting: {
-    stages: [['程式', '處理錄音與議程'], ['模型', '整理有來源的事實'], ['人手', '確認不清楚的內容'], ['程式', '檢查後匯出文件']],
-    note: '把核對留給人，把可重複的交付檢查寫成 Python。',
-  },
-  pdf: {
-    stages: [['程式', '找出文字與欄列'], ['辨識', '讀取難辨字形'], ['人手', '核對疑點和來源'], ['程式', '寫成可計算 Excel']],
-    note: '有文字及座標的頁面可直接解析。影像和難辨字才加上辨識。',
-  },
-  togoal: {
-    stages: [['程式', '限於本人所選教材'], ['模型', '過長才壓縮'], ['模型', '按教材回答'], ['程式', '串流顯示答案']],
-    note: '長教材才用較輕量模型壓縮。單來源對話可重用 Gemini 上下文快取。',
-  },
-};
-const decisionChoices = [...document.querySelectorAll('[data-decision]')];
-decisionChoices.forEach(choice => choice.addEventListener('click', () => {
-  if (choice.getAttribute('aria-pressed') === 'true') return;
-  const decision = engineeringDecisions[choice.dataset.decision];
-  decisionChoices.forEach(button => button.setAttribute('aria-pressed', String(button === choice)));
-  $('decision-path').replaceChildren(...decision.stages.map(([role, action]) => {
-    const stage = document.createElement('li');
-    const label = document.createElement('span');
-    const text = document.createElement('strong');
-    label.textContent = role;
-    text.textContent = action;
-    stage.append(label, text);
-    return stage;
-  }));
-  $('decision-note').textContent = decision.note;
-}));
 
 let meetingStep=0,reviewed=false;
 const confirmedMinutes = 'The next submission is scheduled for Thursday, 22 October 2026.';
 const factRows=`<table class="facts"><thead><tr><th>等級</th><th>事實與來源</th><th>去向</th></tr></thead><tbody><tr><td><span class="confidence">A</span></td><td>西側圖則待顧問回覆<span class="quote">18:32「已經交咗，等緊顧問覆。」</span></td><td>進草稿</td></tr><tr><td><span class="confidence pending">B</span></td><td>下次提交日期未確認<span class="quote">19:06「下星期…四？再確認。」</span></td><td>回問</td></tr><tr><td><span class="confidence exclude">C</span></td><td>舊議程的完成日期<span class="quote">本次會議沒有支持原句</span></td><td>排除表</td></tr></tbody></table>`;
 function meetingContent(step){
   if(step===0)return `<h4>先準備完整輸入</h4><p>影片提供本次討論，舊議程提供框架。兩者用途不同，不能把舊狀態直接當新事實。</p><div class="file-stack"><div class="file-card"><span class="file-type">MP4</span><div><strong>約 90 分鐘會議影片</strong><small>本機錄音、畫面與時間定位</small></div></div><div class="file-card"><span class="file-type">PDF</span><div><strong>上次議程與固定框架</strong><small>專案卡、人物卡、既有格式</small></div></div></div>`;
-  if(step===1)return `<h4>六引擎轉錄，程式先整理</h4><p>FFmpeg 先整理音訊；faster-whisper 與 Transformers 依序轉錄。議程、畫面及已確認校正組成熱詞，按各模型的上下文限制載入。</p><div class="asr-engines">${['qwen17','hf_jacky_turbo','w_large_v3','hf_buzz','glm_nano','w_large_v2'].map(x=>`<span>${x}</span>`).join('')}</div><p class="asr-note">多個引擎有共同技術來源，仍需來源核對及人手處理疑點。</p>`;
+  if (step === 1) return `<h4>先轉錄，再核對</h4><p>Python 用 FFmpeg 整理錄音，再以 faster-whisper 等引擎本機轉錄。專案詞彙和已確認的校正可在下次沿用。</p>`;
   if(step===2)return `<h4>先確認事實，再寫英文紀錄</h4><p>每項附時間及原句。高信心事實進草稿；不確定項目回問，無依據項目留在排除紀錄。</p>${factRows}`;
-  if (step === 3) return `
-    <h4>下次提交是哪一天？</h4>
-    <p>AI 標記了聽不清的日期，把有時間碼的片段交給同事確認。</p>
-    <div class="review-question" data-confirmed="${reviewed}">
-      <span class="quote"><time datetime="2026-10-12">2026.10.12</time> 會議 · 19:06 原句示例</span>
-      <blockquote>「下星期……四？再確認。」</blockquote>
-      <div class="meeting-human"><span>同事回覆示例</span><p>「我核實咗，係 <time datetime="2026-10-22">10 月 22 日星期四</time>。」</p></div>
-      ${reviewed ? '<p class="meeting-confirmed">✓ 已記錄覆核答案</p>'
-        : '<button class="button small primary" id="confirm-review">記錄同事回覆</button>'}
-    </div>
-    ${reviewed ? `<div class="meeting-output" id="meeting-output-trace">
-      <span>英文紀錄已更新</span>
-      <p lang="en">${confirmedMinutes}</p>
-      <small>來源 19:06 · 同事已確認 · 此答疑通過交稿檢查</small>
-      <a href="#meeting-architecture">查看原流程檢查與回饋 ↓</a>
-    </div>` : '<p class="meeting-review-notice">缺少確定的回覆時，交付維持草稿。</p>'}`;
-  return `<h4>${reviewed?'覆核完成，才交付。':'疑點未答，先保留草稿。'}</h4><p>${reviewed?'原流程會更新來源核對及交稿檢查，再產生以下交付。這裏可下載虛構文字示例。':'你可返回「答疑」記錄覆核答案，看看交付狀態怎樣改變。'}</p><ul class="delivery-list ${reviewed?'':'locked'}"><li>英文會議紀錄 · TXT / Word</li><li>下一次議程 · Excel</li><li>來源、排除表與檢查紀錄</li><li>learn_cycle → 刪除／補充／聽錯候選 → 詞庫與規則</li></ul><div style="margin-top:1.2rem">${reviewed?'<button class="button small primary" id="minutes-download">下載虛構紀錄 TXT ↓</button>':'<button class="button small" id="back-review">前往答疑 →</button>'}</div>`;
+  if (step === 3) return `<h4>確認有疑點的日期</h4><p>同事聽回 19:06 的原句並核對日程。已確認的答案連同來源寫回事實表。</p><a href="#meeting-demo">返回上方答疑示範 ↑</a>`;
+  return `<h4>${reviewed ? '覆核完成，可交付' : '日期待確認，保留草稿'}</h4><ul class="delivery-list"><li>英文會議紀錄 · Word</li><li>下次議程 · Excel</li><li>來源與交稿檢查紀錄</li></ul>`;
 }
 function renderMeeting(step,focus=false){
   meetingStep=step;
@@ -139,56 +55,70 @@ function renderMeeting(step,focus=false){
   const panel = $('meeting-panel');
   panel.setAttribute('aria-labelledby', `meeting-tab-${step}`);
   panel.innerHTML = meetingContent(step);
-  if (!isReduced()) {
-    panel.getAnimations().forEach(animation => animation.cancel());
-    panel.animate([{ opacity: .5, transform: 'translateY(5px)' }, { opacity: 1, transform: 'translateY(0)' }], {
-      duration: 250, easing: 'ease-out',
-    });
-  }
-  const demo = $('meeting-demo');
   const delivery = $('meeting-state');
-  demo.style.setProperty('--workflow-progress', (step + 1) / 5);
   delivery.textContent = reviewed ? '已覆核 · 可交付' : '待覆核 · 草稿';
   delivery.dataset.confirmed = String(reviewed);
   $('meeting-position').textContent = `0${step + 1} / 05`;
   const next = $('meeting-next');
   next.textContent = step === 4 ? '從頭查看 ↺' : step === 3 ? (reviewed ? '查看交付 →' : '查看待覆核草稿 →') : '下一步 →';
-  next.classList.toggle('primary', step === 3 && reviewed);
-  $('confirm-review')?.addEventListener('click', () => {
-    reviewed = true;
-    renderMeeting(3);
-    next.focus({ preventScroll: true });
-  });
-  $('back-review')?.addEventListener('click',()=>renderMeeting(3,true));
-  $('minutes-download')?.addEventListener('click', () => download('示例會議紀錄.txt', `公開互動導覽 · 虛構文字\n2026.10.12 會議\n\nWest-side drawings were submitted and are awaiting the consultant’s response.\n${confirmedMinutes} (Human confirmation recorded.)\n\n來源示例 18:32 / 19:06\n文字為流程導覽示例。`));
   if(focus)$(`meeting-tab-${step}`).focus();
 }
 document.querySelectorAll('[data-step]').forEach((tab,i)=>{tab.addEventListener('click',()=>renderMeeting(i));tab.addEventListener('keydown',e=>{let next;if(e.key==='ArrowRight')next=(i+1)%5;if(e.key==='ArrowLeft')next=(i+4)%5;if(e.key==='Home')next=0;if(e.key==='End')next=4;if(next!==undefined){e.preventDefault();renderMeeting(next,true);}});});
-$('meeting-next').addEventListener('click', () => {
-  if (meetingStep === 4) reviewed = false;
-  renderMeeting((meetingStep + 1) % 5);
+$('meeting-next').addEventListener('click', () => renderMeeting((meetingStep + 1) % 5));
+
+const confirmReview = $('confirm-review');
+confirmReview.addEventListener('click', () => {
+  reviewed = !reviewed;
+  const minutes = $('quick-minutes');
+  minutes.textContent = reviewed ? confirmedMinutes : '草稿 · 日期待確認';
+  if (reviewed) minutes.lang = 'en';
+  else minutes.removeAttribute('lang');
+  $('minutes-source').hidden = !reviewed;
+  $('minutes-download').hidden = !reviewed;
+  $('minutes-download').classList.toggle('primary', reviewed);
+  $('meeting-output-trace').dataset.confirmed = String(reviewed);
+  confirmReview.classList.toggle('primary', !reviewed);
+  confirmReview.textContent = reviewed ? '重試答疑' : '採用同事回覆';
+  renderMeeting(meetingStep);
+  if (reviewed) $('meeting-output-trace').scrollIntoView({ block: 'nearest' });
+});
+$('minutes-download').addEventListener('click', () => {
+  download('示例會議紀錄.txt', `虛構文字示例\n2026.10.12 會議\n\nWest-side drawings were submitted and are awaiting the consultant’s response.\n${confirmedMinutes}\n\n來源示例 18:32 / 19:06 · 同事已確認`);
 });
 
 selectCase($('meeting'));
-renderMeeting(location.hash === '#meeting-demo' ? 3 : 0);
+renderMeeting(0);
 const initialCaseTarget = openCaseAnchor(location.hash);
-if (initialCaseTarget) requestAnimationFrame(() => initialCaseTarget.scrollIntoView({ behavior: 'instant' }));
+if (initialCaseTarget) requestAnimationFrame(() => initialCaseTarget.scrollIntoView());
 addEventListener('hashchange', () => {
   const target = openCaseAnchor(location.hash);
-  if (target) target.scrollIntoView({ behavior: isReduced() ? 'instant' : 'smooth' });
+  if (target) target.scrollIntoView();
+  else if (!location.hash) selectCase($('meeting'));
 });
 document.addEventListener('click', event => {
   if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
   const link = event.target.closest('a[href^="#"]');
   if (!link) return;
   const target = openCaseAnchor(link.hash);
-  if (event.detail === 0 && target) {
+  if (!target) return;
+  event.preventDefault();
+  if (location.hash !== link.hash) history.pushState(null, '', link.hash);
+  const picker = link.closest('.project-gallery');
+  if (!picker || innerWidth < 760) target.scrollIntoView();
+  if (event.detail === 0) {
     target.setAttribute('tabindex', '-1');
     target.focus({ preventScroll: true });
   }
 });
-function download(name,content){const u=URL.createObjectURL(new Blob(['\uFEFF',content],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),3000);}
 
+function download(name, content) {
+  const url = URL.createObjectURL(new Blob(['\uFEFF', content], {type: 'text/plain;charset=utf-8'}));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = name;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 3000);
+}
 
 // Synthetic examples of the source tools' human-feedback flow. No model or persistent write.
 const feedbackExamples = [
@@ -203,7 +133,6 @@ function renderFeedback(mode, focus=false){
   const panel=$('feedback-panel');panel.setAttribute('aria-labelledby',`feedback-tab-${mode}`);panel.dataset.confirmed=String(confirmed);
   panel.innerHTML=`<ol class="feedback-stages"><li><span class="feedback-number">01 / REVIEW</span><h5>${example.kind}</h5><p class="feedback-value">${example.before}</p><p>回到來源，由用戶確認正確讀法。</p></li><li><span class="feedback-number">02 / REMEMBER</span><h5>${example.memory}</h5><p class="feedback-value">${confirmed?example.record:'等待確認'}</p><p>${confirmed?'本頁示例：確認結果已加入流程狀態。':'未確認的猜測，先留在候選清單。'}</p></li><li><span class="feedback-number">03 / REUSE</span><h5>${example.later}</h5><p class="feedback-value">${confirmed?example.correct:'沿用前先確認'}</p><p>${confirmed?example.explanation:'按下方按鈕，看看確認後的記憶與再使用方式。'}</p></li></ol><div class="feedback-action"><button id="feedback-confirm" class="button ${confirmed?'':'primary'}">${confirmed?'重設這個示例 ↺':`模擬用戶確認「${example.correct}」 →`}</button><p id="feedback-status" role="status">${confirmed?'示例已確認・下次沿用的路徑已顯示':'示例尚未確認・按鈕只操作本頁示意'}</p></div><p class="feedback-source">${example.source}</p>`;
   $('feedback-confirm').addEventListener('click',()=>{feedbackConfirmed[mode]=!confirmed;renderFeedback(mode);$('feedback-confirm').focus({preventScroll:true});});
-  if(!isReduced())panel.animate([{opacity:.45,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}],{duration:240,easing:'ease-out'});
   if(focus)$(`feedback-tab-${mode}`).focus();
 }
 document.querySelectorAll('[data-feedback]').forEach((tab,i)=>{
@@ -212,9 +141,36 @@ document.querySelectorAll('[data-feedback]').forEach((tab,i)=>{
 });
 renderFeedback(0);
 
+// Show the same first nine cells as the crop of the synthetic source PDF.
+function showQuickCells(rows) {
+  const grid = $('quick-cells');
+  const marker = $('source-marker');
+  const cells = [];
+  rows.slice(0, 3).forEach((row, rowIndex) => {
+    row.slice(0, 3).forEach((value, columnIndex) => {
+      const cell = document.createElement('button');
+      const address = `${String.fromCharCode(65 + columnIndex)}${rowIndex + 1}`;
+      const number = value.toFixed(2);
+      cell.type = 'button';
+      cell.textContent = number;
+      cell.setAttribute('aria-label', `${address}，${number}`);
+      cell.addEventListener('click', () => {
+        cells.forEach(button => button.setAttribute('aria-pressed', String(button === cell)));
+        marker.style.setProperty('--row', rowIndex);
+        marker.style.setProperty('--column', columnIndex);
+        $('cell-match').textContent = `${address} · 原 PDF 與 Excel 都是 ${number}`;
+      });
+      cells.push(cell);
+    });
+  });
+  grid.replaceChildren(...cells);
+  cells[0].click();
+}
+
 async function loadTable(){
   const response=await fetch('evidence/table-preview.json');if(!response.ok)throw Error('資料無法載入');
   const {pages}=await response.json();const sel=$('pdf-page');
+  showQuickCells(pages[0].rows);
   pages.forEach((_,i)=>sel.add(new Option(String(i+1),String(i+1))));
   function render(){
     const p=pages[Number(sel.value)-1];
@@ -228,7 +184,10 @@ async function loadTable(){
   $('actual-table').addEventListener('click',e=>{const b=e.target.closest('button[data-r]');if(!b)return;document.querySelectorAll('#actual-table button[tabindex="0"]').forEach(x=>x.tabIndex=-1);document.querySelectorAll('.selected-cell').forEach(x=>x.classList.remove('selected-cell'));b.tabIndex=0;b.classList.add('selected-cell');const location=`${String.fromCharCode(65+Number(b.dataset.c))}${Number(b.dataset.r)+1}`;$('cell-location').textContent=`第 ${Number(sel.value)} 頁・${location}`;$('cell-value').textContent=b.textContent;$('cell-info').textContent=`第 ${Number(sel.value)} 頁 · ${location} = ${b.textContent} · Excel 數值型儲存格`;});
   $('actual-table').addEventListener('keydown',e=>{const b=e.target.closest('button[data-r]');if(!b)return;let r=Number(b.dataset.r),c=Number(b.dataset.c);if(e.key==='ArrowRight')c++;else if(e.key==='ArrowLeft')c--;else if(e.key==='ArrowDown')r++;else if(e.key==='ArrowUp')r--;else return;e.preventDefault();const next=$('actual-table').querySelector(`button[data-r="${Math.max(0,Math.min(49,r))}"][data-c="${Math.max(0,Math.min(19,c))}"]`);next.click();next.focus({preventScroll:true});next.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});});
 }
-loadTable().catch(()=>{$('cell-info').textContent='預覽暫時無法載入；你仍可直接下載下方完整 Excel 與 PDF。';});
+loadTable().catch(() => {
+  $('cell-match').textContent = '預覽暫未載入，可下載 Excel 及原 PDF。';
+  $('cell-info').textContent = '預覽暫未載入。';
+});
 async function loadReviewRule(){
   const response=await fetch('evidence/review-rule-audit.json');if(!response.ok)throw Error('Rule result unavailable');
   const audit=await response.json(),example=audit.cases.find(c=>c.id==='ambiguous-header');
@@ -255,7 +214,6 @@ function showPdfSkill(i){
   $('skill-document').dataset.stage=String(i);$('doc-callout').textContent=pdfSkillSteps[i][2];
   const panel=$('pdf-skill-panel');panel.setAttribute('aria-labelledby',`skill-tab-${i}`);panel.replaceChildren();
   const h=document.createElement('h4'),p=document.createElement('p');h.textContent=pdfSkillSteps[i][0];p.textContent=pdfSkillSteps[i][1];panel.append(h,p);
-  if(!isReduced())panel.animate([{opacity:.4,transform:'translateY(5px)'},{opacity:1,transform:'none'}],{duration:220});
 }
 document.querySelectorAll('[data-pdf-skill]').forEach((b,i)=>{
   b.addEventListener('click',()=>showPdfSkill(i));
@@ -270,10 +228,8 @@ document.querySelectorAll('[id^="site-view-"]').forEach(b=>b.addEventListener('c
   $('site-view-plan').classList.toggle('selected',plan);$('site-view-3d').classList.toggle('selected',!plan);
 }));
 async function loadUploadPreflight() {
-  const trigger = $('upload-inspect');
-  const result = $('upload-states');
   const files = $('batch-files');
-  const modes = result.querySelectorAll('[data-batch]');
+  const modes = $('upload-states').querySelectorAll('[data-batch]');
   const labels = {
     ready: '可處理', blocked: '缺少封面', prepared: '跳過 · 已準備',
     changed: '重新排程 · 素材已替換', empty: '跳過 · 空檔',
@@ -300,32 +256,18 @@ async function loadUploadPreflight() {
       }));
       const queued = rows.filter(row => ['ready', 'changed'].includes(row.state)).length;
       $('batch-result').textContent = `${queued} 個排入佇列 · ${rows.length - queued} 個需修正或略過`;
-      if (!isReduced()) files.animate([{ opacity: .6 }, { opacity: 1 }], { duration: 180 });
     }
 
-    modes.forEach(button => button.addEventListener('click', () => showBatch(button.dataset.batch)));
-    trigger.addEventListener('click', () => {
-      result.hidden = !result.hidden;
-      trigger.setAttribute('aria-expanded', String(!result.hidden));
-      trigger.textContent = result.hidden ? '查看預檢結果 ↓' : '收起預檢結果 ↑';
+    modes.forEach(button => {
+      button.addEventListener('click', () => showBatch(button.dataset.batch));
+      button.disabled = false;
     });
     showBatch('initial');
-    trigger.disabled = false;
-    trigger.textContent = '查看預檢結果 ↓';
   } catch {
-    trigger.textContent = '未能載入預檢結果';
+    $('batch-result').textContent = '未能載入預檢結果。';
   }
 }
 loadUploadPreflight();
-const videoSteps=[
-  ['先定內容，再定分鏡','劇本 Skill 將主題拆成段落與鏡頭；核心指令保持精簡，所需規格與元件參考按步驟讀取。劇本標籤再控制字幕、畫面及 Remotion 動畫。'],
-  ['Python × FFmpeg × Remotion','faster-whisper 對齊劇本；NumPy 以人聲響度辨識停頓，Python 呼叫 FFmpeg 剪接。OpenCV / rembg 處理人像，再由 React / Remotion 組合字幕與動畫。'],
-  ['量度聲音，也檢查畫面','FFmpeg 完成人聲 EQ、降噪與壓縮，master.py 統一響度並限制真峰值；ffprobe 檢查輸出規格，audit.py 重新轉錄核對內容，再檢查構圖、字幕及轉場。'],
-  ['先過檢查，再輸出及發佈','run_all.py 先檢查再渲染，記錄狀態方便針對失敗步驟重跑。流程輸出直式 1080 × 1920、60 fps 影片；求職介紹片由本人另拍素材。']
-];
-function showVideo(i){document.querySelectorAll('[data-video]').forEach((b,n)=>b.setAttribute('aria-pressed',String(n===i)));$('video-description').replaceChildren();const strong=document.createElement('strong');strong.textContent=videoSteps[i][0];const p=document.createElement('p');p.textContent=videoSteps[i][1];$('video-description').append(strong,p);if(!isReduced())$('video-description').animate([{opacity:.4,transform:'translateX(5px)'},{opacity:1,transform:'none'}],{duration:220});}
-document.querySelectorAll('[data-video]').forEach((b,i)=>b.addEventListener('click',()=>showVideo(i)));showVideo(0);
-
 const productScreens = {
   home: ['togoalai-live.webp', '正式站首頁', '公開首頁介紹筆記、練習及複習工具。切換上面三項可看公開模擬考試展示。', 1440, 700],
   setup: ['togoalai-demo-setup.webp', '設定考試', '設定考試主題、涵蓋範圍及題量，再交給 AI 生成題目。', 896, 504],
@@ -349,7 +291,6 @@ productChoices.forEach(button => button.addEventListener('click', () => {
   screenshot.width = width;
   screenshot.height = height;
   $('product-screen-note').textContent = description;
-  if (!isReduced()) screenshot.animate([{ opacity: .6 }, { opacity: 1 }], { duration: 180 });
 }));
 
 const productRoutes = {
@@ -367,7 +308,6 @@ productRouteChoices.forEach(button => button.addEventListener('click', () => {
   productRoutes[button.dataset.productRoute].forEach((step, index) => {
     productRouteText[index].textContent = step;
   });
-  if (!isReduced()) productRouteSteps.animate([{ opacity: .5 }, { opacity: 1 }], { duration: 180 });
 }));
 
 // Synthetic timeline with the editor's line, chunk and spoken-word time fields.
@@ -471,7 +411,7 @@ elsOpen.addEventListener('click',()=>{
   $('els-rotate').disabled=true;
   $('els-load-state').textContent='載入完整地盤模型…';
   elsFrame.src='tools/els.html';
-  $('els-inline').scrollIntoView({behavior:isReduced()?'instant':'smooth',block:'start'});
+  $('els-inline').scrollIntoView({behavior:'instant',block:'start'});
 });
 elsFrame.addEventListener('load',()=>waitForElsReady());
 $('els-inline-close').addEventListener('click',()=>{clearTimeout(elsReadyTimer);$('els-rotate').disabled=true;$('els-rotate').setAttribute('aria-pressed','false');$('els-rotate').textContent='播放模型旋轉 ▶';$('els-inline').hidden=true;elsFrame.src='about:blank';elsOpen.setAttribute('aria-expanded','false');elsOpen.focus({preventScroll:true});});
@@ -578,13 +518,3 @@ siteTour.addEventListener('cancel', event => {
   event.preventDefault();
   closeSiteTour();
 });
-
-const motionButton=$('motion-toggle');
-function motionState(){
- motionButton.disabled=reduceMotion.matches;
- const paused=document.documentElement.dataset.motion==='off';
- motionButton.setAttribute('aria-pressed',String(paused||reduceMotion.matches));
- motionButton.textContent=reduceMotion.matches?'已依系統減少動效':paused?'恢復裝飾動效':'暫停裝飾動效';
-}
-motionButton.addEventListener('click',()=>{document.documentElement.dataset.motion=document.documentElement.dataset.motion==='off'?'on':'off';motionState();});
-reduceMotion.addEventListener('change',motionState);motionState();
