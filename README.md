@@ -21,4 +21,10 @@
 
 原生 HTML／CSS／JavaScript，響應式排版、鍵盤可用的流程頁籤及表格、可關閉圖片對話框、按需載入 3D、可暫停模型旋轉，並尊重 `prefers-reduced-motion`。
 
+## 技術與回饋機制
+
+案例可見區列出工具與職責，展開後說明具體資料流：Python 調用 FFmpeg、faster-whisper／Transformers 本機轉錄、PyMuPDF／OpenCV 表格及字形、RapidOCR／ONNX Runtime、Office 輸出，以及 Remotion 影片製作。
+
+雙模式回饋示例展示「用戶確認 → 記憶更新 → 下次沿用」：語音術語進入經確認的熱詞／校正流程，PDF 字形更新同組讀值並保存字典。示例只操作合成的頁面狀態，不寫入真實知識庫或呼叫模型。實際機制以有來源的知識庫、詞庫及規則累積經驗；候選資料先確認再套用。
+
 第三方授權位於 `fonts/*-OFL.txt` 及 `tools/vendor/three/LICENSE`。

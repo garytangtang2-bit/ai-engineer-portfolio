@@ -29,10 +29,10 @@ let meetingStep=0,reviewed=false;
 const factRows=`<table class="facts"><thead><tr><th>等級</th><th>事實與來源</th><th>去向</th></tr></thead><tbody><tr><td><span class="confidence">A</span></td><td>西側圖則待顧問回覆<span class="quote">18:32「已經交咗，等緊顧問覆。」</span></td><td>進草稿</td></tr><tr><td><span class="confidence pending">B</span></td><td>下次提交日期未確認<span class="quote">19:06「下星期…四？再確認。」</span></td><td>回問</td></tr><tr><td><span class="confidence exclude">C</span></td><td>舊議程的完成日期<span class="quote">本次會議沒有支持原句</span></td><td>排除表</td></tr></tbody></table>`;
 function meetingContent(step){
   if(step===0)return `<h4>先準備完整輸入</h4><p>影片提供本次討論，舊議程提供框架。兩者用途不同，不能把舊狀態直接當新事實。</p><div class="file-stack"><div class="file-card"><span class="file-type">MP4</span><div><strong>約 90 分鐘會議影片</strong><small>本機錄音、畫面與時間定位</small></div></div><div class="file-card"><span class="file-type">PDF</span><div><strong>上次議程與固定框架</strong><small>專案卡、人物卡、既有格式</small></div></div></div>`;
-  if(step===1)return `<h4>六引擎轉錄，程式先整理</h4><p>按本機資源循序執行，再整理時間、詞典與畫面線索。模型接收結構化資料，而不是任意重寫整份議程。</p><div class="asr-engines">${['qwen17','hf_jacky_turbo','w_large_v3','hf_buzz','glm_nano','w_large_v2'].map(x=>`<span>${x}</span>`).join('')}</div><p class="asr-note">多個引擎有共同技術來源，仍需來源核對及人手處理疑點。</p>`;
+  if(step===1)return `<h4>六引擎轉錄，程式先整理</h4><p>FFmpeg 先整理音訊；faster-whisper 與 Transformers 依序轉錄。議程、畫面及已確認校正組成熱詞，按各模型的上下文限制載入。</p><div class="asr-engines">${['qwen17','hf_jacky_turbo','w_large_v3','hf_buzz','glm_nano','w_large_v2'].map(x=>`<span>${x}</span>`).join('')}</div><p class="asr-note">多個引擎有共同技術來源，仍需來源核對及人手處理疑點。</p>`;
   if(step===2)return `<h4>先確認事實，再寫英文紀錄</h4><p>每項附時間及原句。高信心事實進草稿；不確定項目回問，無依據項目留在排除紀錄。</p>${factRows}`;
-  if(step===3)return `<h4>人只回答真正的疑點</h4><p>正式工具為問題附相關音段，並在提問前鎖定 AI 答案，保留獨立核對依據。</p><div class="review-question"><p><strong>示例疑點：下次提交日期？</strong></p><span class="quote">19:06 · 相關音段約 26 秒（此導覽不提供公司錄音）</span><p>覆核者已確認：星期四。</p><button class="button small ${reviewed?'':'primary'}" id="confirm-review" ${reviewed?'disabled':''}>${reviewed?'已記錄覆核答案 ✓':'記錄這項覆核答案 →'}</button></div><p class="review-status">${reviewed?'答案已記錄，可前往交付。':'尚未覆核：交付維持草稿。'}</p>`;
-  return `<h4>${reviewed?'覆核完成，才交付。':'疑點未答，先保留草稿。'}</h4><p>${reviewed?'原流程會更新來源核對及交稿檢查，再產生以下交付。這裏可下載虛構文字示例。':'你可返回「答疑」記錄覆核答案，看看交付狀態怎樣改變。'}</p><ul class="delivery-list ${reviewed?'':'locked'}"><li>英文會議紀錄 · TXT / Word</li><li>下一次議程 · Excel</li><li>來源、排除表與檢查紀錄</li><li>最終修改差異 → 詞典／流程修訂</li></ul><div style="margin-top:1.2rem">${reviewed?'<button class="button small primary" id="minutes-download">下載虛構紀錄 TXT ↓</button>':'<button class="button small" id="back-review">前往答疑 →</button>'}</div>`;
+  if(step===3)return `<h4>人只回答真正的疑點</h4><p>正式工具以 FFmpeg 切出相關音段，提問前先鎖定 AI 答案。用戶答覆另存入有來源、日期及適用範圍的知識庫。</p><div class="review-question"><p><strong>示例疑點：下次提交日期？</strong></p><span class="quote">19:06 · 相關音段約 26 秒（此導覽不提供公司錄音）</span><p>覆核者已確認：星期四。</p><button class="button small ${reviewed?'':'primary'}" id="confirm-review" ${reviewed?'disabled':''}>${reviewed?'已記錄覆核答案 ✓':'記錄這項覆核答案 →'}</button></div><p class="review-status">${reviewed?'答案已記錄，可前往交付。':'尚未覆核：交付維持草稿。'}</p>`;
+  return `<h4>${reviewed?'覆核完成，才交付。':'疑點未答，先保留草稿。'}</h4><p>${reviewed?'原流程會更新來源核對及交稿檢查，再產生以下交付。這裏可下載虛構文字示例。':'你可返回「答疑」記錄覆核答案，看看交付狀態怎樣改變。'}</p><ul class="delivery-list ${reviewed?'':'locked'}"><li>英文會議紀錄 · TXT / Word</li><li>下一次議程 · Excel</li><li>來源、排除表與檢查紀錄</li><li>learn_cycle → 刪除／補充／聽錯候選 → 詞庫與規則</li></ul><div style="margin-top:1.2rem">${reviewed?'<button class="button small primary" id="minutes-download">下載虛構紀錄 TXT ↓</button>':'<button class="button small" id="back-review">前往答疑 →</button>'}</div>`;
 }
 function renderMeeting(step,focus=false){
   meetingStep=step;
@@ -49,6 +49,29 @@ function renderMeeting(step,focus=false){
 document.querySelectorAll('[data-step]').forEach((tab,i)=>{tab.addEventListener('click',()=>renderMeeting(i));tab.addEventListener('keydown',e=>{let next;if(e.key==='ArrowRight')next=(i+1)%5;if(e.key==='ArrowLeft')next=(i+4)%5;if(e.key==='Home')next=0;if(e.key==='End')next=4;if(next!==undefined){e.preventDefault();renderMeeting(next,true);}});});
 $('meeting-next').addEventListener('click',()=>renderMeeting((meetingStep+1)%5));renderMeeting(0);
 function download(name,content){const u=URL.createObjectURL(new Blob(['\uFEFF',content],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),3000);}
+
+
+// Synthetic examples of the source tools' human-feedback flow. No model or persistent write.
+const feedbackExamples = [
+  {before:'pile cab', correct:'pile cap', kind:'語音疑點', memory:'術語／音近校正', record:'"pile cab" → "pile cap"', later:'熱詞提示＋校正表', explanation:'答案先附來源存入事實庫；經人工確認併入通用詞庫後，供下一次轉錄提示及後處理使用。', source:'ask_pack.py → facts_db.py → 確認併入詞庫 → hotwords.py / apply_fixes'},
+  {before:'字形 G12：讀作 8', correct:'3', kind:'PDF 字形疑點', memory:'同類字形記憶', record:'label: "3", confirmed: true', later:'同組更新＋字形字典', explanation:'確認字形標籤後，程式更新同組儲存格，保存字形記憶。之後遇到相符字形可再比對，表頭別名另存供同類文件使用。', source:'ai_tool.py glyphs / label → glyphs.json；learn_cad.py → 表頭別名'}
+];
+let feedbackMode=0;
+const feedbackConfirmed=[false,false];
+function renderFeedback(mode, focus=false){
+  feedbackMode=mode;const example=feedbackExamples[mode],confirmed=feedbackConfirmed[mode];
+  document.querySelectorAll('[data-feedback]').forEach((tab,i)=>{tab.setAttribute('aria-selected',String(i===mode));tab.tabIndex=i===mode?0:-1;});
+  const panel=$('feedback-panel');panel.setAttribute('aria-labelledby',`feedback-tab-${mode}`);panel.dataset.confirmed=String(confirmed);
+  panel.innerHTML=`<ol class="feedback-stages"><li><span class="feedback-number">01 / REVIEW</span><h5>${example.kind}</h5><p class="feedback-value">${example.before}</p><p>回到來源，由用戶確認正確讀法。</p></li><li><span class="feedback-number">02 / REMEMBER</span><h5>${example.memory}</h5><p class="feedback-value">${confirmed?example.record:'等待確認'}</p><p>${confirmed?'本頁示例：確認結果已加入流程狀態。':'未確認的猜測，先留在候選清單。'}</p></li><li><span class="feedback-number">03 / REUSE</span><h5>${example.later}</h5><p class="feedback-value">${confirmed?example.correct:'沿用前先確認'}</p><p>${confirmed?example.explanation:'按下方按鈕，看看確認後的記憶與再使用方式。'}</p></li></ol><div class="feedback-action"><button id="feedback-confirm" class="button ${confirmed?'':'primary'}">${confirmed?'重設這個示例 ↺':`模擬用戶確認「${example.correct}」 →`}</button><p id="feedback-status" role="status">${confirmed?'示例已確認・下次沿用的路徑已顯示':'示例尚未確認・按鈕只操作本頁示意'}</p></div><p class="feedback-source">${example.source}</p>`;
+  $('feedback-confirm').addEventListener('click',()=>{feedbackConfirmed[mode]=!confirmed;renderFeedback(mode);$('feedback-confirm').focus({preventScroll:true});});
+  if(!isReduced())panel.animate([{opacity:.45,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}],{duration:240,easing:'ease-out'});
+  if(focus)$(`feedback-tab-${mode}`).focus();
+}
+document.querySelectorAll('[data-feedback]').forEach((tab,i)=>{
+  tab.addEventListener('click',()=>renderFeedback(i));
+  tab.addEventListener('keydown',event=>{let next;if(['ArrowRight','ArrowLeft'].includes(event.key))next=1-i;else if(event.key==='Home')next=0;else if(event.key==='End')next=1;else return;event.preventDefault();renderFeedback(next,true);});
+});
+renderFeedback(0);
 
 async function loadTable(){
   const response=await fetch('evidence/table-preview.json');if(!response.ok)throw Error('資料無法載入');
@@ -109,7 +132,12 @@ document.querySelectorAll('[id^="site-view-"]').forEach(b=>b.addEventListener('c
 }));
 $('upload-inspect').addEventListener('click',()=>{const shown=!$('upload-states').hidden;$('upload-states').hidden=shown;$('upload-inspect').textContent=shown?'查看原流程如何處理 →':'收起流程 ↑';$('upload-inspect').setAttribute('aria-expanded',String(!shown));});
 $('upload-inspect').setAttribute('aria-controls','upload-states');$('upload-inspect').setAttribute('aria-expanded','false');
-const videoSteps=[['先定內容，再定分鏡','劇本 Skill 將主題拆成清晰段落及鏡頭；核心指令保持精簡，所需規格及參考資料按步驟讀取。'],['Whisper × FFmpeg × Remotion','以轉錄時間對齊說話、剪去停頓，配合程式動畫、字幕與圖像組件；將反覆執行的動作交給工具。'],['逐段檢查，再看整片','檢查字幕時間、轉場、構圖、音效及人聲；統一響度，再做輸出前質檢，避免只看「程式成功」就交貨。'],['輸出完成，才進入發佈','依流程輸出直式 1080 × 1920、60 fps 影片，接上自動發佈步驟；求職介紹片將由本人另拍素材。']];
+const videoSteps=[
+  ['先定內容，再定分鏡','劇本 Skill 將主題拆成段落與鏡頭；核心指令保持精簡，所需規格與元件參考按步驟讀取。劇本標籤再控制字幕、畫面及 Remotion 動畫。'],
+  ['Python × FFmpeg × Remotion','faster-whisper 對齊劇本；NumPy 以人聲響度辨識停頓，Python 呼叫 FFmpeg 剪接。OpenCV / rembg 處理人像，再由 React / Remotion 組合字幕與動畫。'],
+  ['量度聲音，也檢查畫面','FFmpeg 完成人聲 EQ、降噪與壓縮，master.py 統一響度並限制真峰值；ffprobe 檢查輸出規格，audit.py 重新轉錄核對內容，再檢查構圖、字幕及轉場。'],
+  ['先過檢查，再輸出及發佈','run_all.py 先檢查再渲染，記錄狀態方便針對失敗步驟重跑。流程輸出直式 1080 × 1920、60 fps 影片；求職介紹片由本人另拍素材。']
+];
 function showVideo(i){document.querySelectorAll('[data-video]').forEach((b,n)=>b.setAttribute('aria-pressed',String(n===i)));$('video-description').replaceChildren();const strong=document.createElement('strong');strong.textContent=videoSteps[i][0];const p=document.createElement('p');p.textContent=videoSteps[i][1];$('video-description').append(strong,p);if(!isReduced())$('video-description').animate([{opacity:.4,transform:'translateX(5px)'},{opacity:1,transform:'none'}],{duration:220});}
 document.querySelectorAll('[data-video]').forEach((b,i)=>b.addEventListener('click',()=>showVideo(i)));showVideo(0);
 const dialog=$('image-dialog');document.querySelectorAll('[data-zoom]').forEach(b=>b.addEventListener('click',()=>{$('image-dialog-title').textContent=b.dataset.title;$('dialog-image').src=b.dataset.zoom;$('dialog-image').alt=b.dataset.title;dialog.showModal();}));$('close-dialog').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
