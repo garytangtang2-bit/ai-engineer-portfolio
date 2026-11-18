@@ -1,0 +1,31 @@
+{
+  "dataset": "Synthetic cells; no company document or actual OCR image used",
+  "function": "original core.needs_review",
+  "scope": "Tests the review decision for supplied cell attributes, not OCR recognition or confidence calibration. The UI is a guide to this saved original-function result.",
+  "cases": [
+    {
+      "id": "ambiguous-header",
+      "text": "Mx-x",
+      "src": "img",
+      "conf": 0.95,
+      "doubt": "",
+      "needs_review": true
+    },
+    {
+      "id": "number-control",
+      "text": "128.50",
+      "src": "img",
+      "conf": 0.95,
+      "doubt": "",
+      "needs_review": false
+    },
+    {
+      "id": "explicit-doubt",
+      "text": "128.50",
+      "src": "pdf",
+      "conf": 1,
+      "doubt": "synthetic review flag",
+      "needs_review": true
+    }
+  ]
+}

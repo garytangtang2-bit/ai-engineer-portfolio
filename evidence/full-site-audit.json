@@ -1,0 +1,13 @@
+{
+  "source": "Entirely new fictional site; no company plan geometry is used",
+  "regions": 20,
+  "sheetPileRuns": 8,
+  "pileCaps": 43,
+  "ramp": true,
+  "drainage": true,
+  "axesX": 6,
+  "axesY": 6,
+  "terrainCellMetres": 0.5,
+  "siteDesign": "L-shaped demonstration campus: two work halls, north equipment yard, service court, access route and foundations",
+  "scope": "All geometry, coordinates, dimensions and levels are newly authored for this portfolio. Not an engineering design."
+}

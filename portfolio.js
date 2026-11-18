@@ -59,29 +59,54 @@ async function loadTable(){
     $('pdf-source-img').src=`assets/pdf-page-${p.page}.webp`;$('pdf-source-img').alt=`原始合成 PDF 第 ${p.page} 頁，50列乘20欄數值表格`;$('pdf-source-caption').textContent=`原 PDF 第 ${p.page} 頁 · 對照相同頁的 Excel 輸出。`;
     $('actual-table').innerHTML=`<caption class="sr-only">第 ${p.page} 頁實際 Excel 輸出：50 列、20 欄</caption><thead><tr><th scope="col">列</th>${Array.from({length:20},(_,c)=>`<th scope="col">${String.fromCharCode(65+c)}</th>`).join('')}</tr></thead><tbody>${p.rows.map((row,r)=>`<tr><th scope="row">${r+1}</th>${row.map((val,c)=>`<td><button tabindex="${r===0&&c===0?'0':'-1'}" data-r="${r}" data-c="${c}" aria-label="第${p.page}頁 ${String.fromCharCode(65+c)}${r+1}，${val.toFixed(2)}">${val.toFixed(2)}</button></td>`).join('')}</tr>`).join('')}</tbody>`;
     $('cell-info').textContent=`第 ${p.page} 頁 · 50 列 × 20 欄。點選或用方向鍵查看儲存格。`;
+    $('cell-location').textContent=`第 ${p.page} 頁・A1`;$('cell-value').textContent=p.rows[0][0].toFixed(2);
     $('excel-view').scrollTop=0;
   }
   sel.addEventListener('change',render);render();
-  $('actual-table').addEventListener('click',e=>{const b=e.target.closest('button[data-r]');if(!b)return;document.querySelectorAll('#actual-table button[tabindex="0"]').forEach(x=>x.tabIndex=-1);document.querySelectorAll('.selected-cell').forEach(x=>x.classList.remove('selected-cell'));b.tabIndex=0;b.classList.add('selected-cell');$('cell-info').textContent=`第 ${Number(sel.value)} 頁 · ${String.fromCharCode(65+Number(b.dataset.c))}${Number(b.dataset.r)+1} = ${b.textContent} · Excel 數值型儲存格`;});
+  $('actual-table').addEventListener('click',e=>{const b=e.target.closest('button[data-r]');if(!b)return;document.querySelectorAll('#actual-table button[tabindex="0"]').forEach(x=>x.tabIndex=-1);document.querySelectorAll('.selected-cell').forEach(x=>x.classList.remove('selected-cell'));b.tabIndex=0;b.classList.add('selected-cell');const location=`${String.fromCharCode(65+Number(b.dataset.c))}${Number(b.dataset.r)+1}`;$('cell-location').textContent=`第 ${Number(sel.value)} 頁・${location}`;$('cell-value').textContent=b.textContent;$('cell-info').textContent=`第 ${Number(sel.value)} 頁 · ${location} = ${b.textContent} · Excel 數值型儲存格`;});
   $('actual-table').addEventListener('keydown',e=>{const b=e.target.closest('button[data-r]');if(!b)return;let r=Number(b.dataset.r),c=Number(b.dataset.c);if(e.key==='ArrowRight')c++;else if(e.key==='ArrowLeft')c--;else if(e.key==='ArrowDown')r++;else if(e.key==='ArrowUp')r--;else return;e.preventDefault();const next=$('actual-table').querySelector(`button[data-r="${Math.max(0,Math.min(49,r))}"][data-c="${Math.max(0,Math.min(19,c))}"]`);next.click();next.focus({preventScroll:true});next.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});});
 }
 loadTable().catch(()=>{$('cell-info').textContent='預覽暫時無法載入；你仍可直接下載下方完整 Excel 與 PDF。';});
-function tableMode(source){$('source-view').hidden=!source;$('excel-view').hidden=source;$('show-source').setAttribute('aria-pressed',String(source));$('show-excel').setAttribute('aria-pressed',String(!source));$('show-source').classList.toggle('selected',source);$('show-excel').classList.toggle('selected',!source);$('cell-info').hidden=source;}
-$('show-source').addEventListener('click',()=>tableMode(true));$('show-excel').addEventListener('click',()=>tableMode(false));
-
-async function loadDrill(){
-  const response=await fetch('evidence/drill-cases.json');if(!response.ok)throw Error('資料無法載入');const cases=await response.json();let current;
-  function showWindow(i){const w=current.result.windows[i];$('window-calc').textContent=w?`${w.a.toFixed(2)}–${w.b.toFixed(2)} m\n${w.calc}\n\n加權有效 TCR = ${w.tcr.toFixed(2)}%`: '此情況沒有可計算窗口。';$('drill-window').value=String(i);document.querySelectorAll('#window-chart button').forEach((b,n)=>b.setAttribute('aria-pressed',String(n===Number(i))));}
-  function render(){current=cases.find(c=>c.id===$('drill-case').value);const r=current.result;
-    $('drill-result').replaceChildren();const strong=document.createElement('strong');strong.textContent=r.depth===null?'不建議岩面位置':`${r.depth.toFixed(2)} m 深`;
-    const info=document.createElement('span');info.textContent=r.depth===null?r.no_rock_reason:`原函數結果 · 85% 門檻 · 敏感度${r.stable?'穩定':'需留意變化'} · 工程師覆核`;$('drill-result').append(strong,info);
-    $('drill-window').innerHTML='';r.windows.forEach((w,i)=>$('drill-window').add(new Option(`${w.a.toFixed(1)}–${w.b.toFixed(1)} m · ${w.tcr.toFixed(1)}%`,String(i))));
-    $('window-chart').innerHTML=r.windows.map((w,i)=>`<button class="${w.tcr<85?'bad':''}" style="height:${Math.max(3,w.tcr)}%" data-window="${i}" tabindex="-1" aria-label="${w.a.toFixed(1)}至${w.b.toFixed(1)}米，${w.tcr.toFixed(1)}%" title="${w.a.toFixed(1)}–${w.b.toFixed(1)} m: ${w.tcr.toFixed(1)}%"></button>`).join('');
-    const idx=r.fail?r.windows.findIndex(w=>w.a===r.fail.a):0;showWindow(Math.max(0,idx));
-  }
-  $('drill-case').addEventListener('change',render);$('drill-window').addEventListener('change',e=>showWindow(Number(e.target.value)));$('window-chart').addEventListener('click',e=>{if(e.target.dataset.window!==undefined)showWindow(Number(e.target.dataset.window));});render();
+async function loadReviewRule(){
+  const response=await fetch('evidence/review-rule-audit.json');if(!response.ok)throw Error('Rule result unavailable');
+  const audit=await response.json(),example=audit.cases.find(c=>c.id==='ambiguous-header');
+  if(!example?.needs_review)throw Error('Unexpected review fixture');
+  const button=$('review-rule-run');button.disabled=false;button.textContent='查看判斷與修正方式 →';
+  button.addEventListener('click',()=>{
+    const open=button.getAttribute('aria-expanded')!=='true';button.setAttribute('aria-expanded',String(open));
+    $('review-rule-output').hidden=!open;button.textContent=open?'收起覆核案例 ↑':'查看判斷與修正方式 →';
+    $('review-rule-status').textContent=`原函數結果：待人覆核 · 保留讀值 ${example.text}`;
+  });
 }
-loadDrill().catch(()=>{$('drill-result').textContent='計算追蹤暫時無法載入；可下載原程式 Excel 報告查看。';});
+loadReviewRule().catch(()=>{$('review-rule-run').textContent='結果暫未載入，請查看下方測試紀錄';});
+function tableMode(source){$('source-view').hidden=!source;$('excel-view').hidden=source;$('show-source').setAttribute('aria-pressed',String(source));$('show-excel').setAttribute('aria-pressed',String(!source));$('show-source').classList.toggle('selected',source);$('show-excel').classList.toggle('selected',!source);$('cell-detail').hidden=source;$('table-zoom').hidden=source;}
+$('show-source').addEventListener('click',()=>tableMode(true));$('show-excel').addEventListener('click',()=>tableMode(false));
+$('table-zoom').addEventListener('click',()=>{const zoomed=$('table-zoom').getAttribute('aria-pressed')!=='true';$('table-zoom').setAttribute('aria-pressed',String(zoomed));$('excel-view').dataset.zoom=String(zoomed);$('table-zoom').textContent=zoomed?'一般數值 −':'放大數值 ＋';});
+
+const pdfSkillSteps=[
+  ['先認版面，避免讀錯欄。','Skill 先引導 AI 定位欄線、合併格與分頁邊界，建立資料之間的關係。','先分清欄位，才讀內容'],
+  ['讀細字，也要保留上下文。','按文件情況放大、使用 OCR 或字形比對，再將數字與正確的欄、列及跨頁記錄對齊。','細字、薄格與跨頁內容一起核對'],
+  ['輸出資料，同時留下覆核線索。','將結構化資料交給 Python 整理成 Excel；保留來源及警告，不確定的地方回到原圖讓人確認。','能確認的交付，有疑點的留待覆核']
+];
+function showPdfSkill(i){
+  document.querySelectorAll('[data-pdf-skill]').forEach((b,n)=>{b.setAttribute('aria-selected',String(n===i));b.tabIndex=n===i?0:-1;});
+  $('skill-document').dataset.stage=String(i);$('doc-callout').textContent=pdfSkillSteps[i][2];
+  const panel=$('pdf-skill-panel');panel.setAttribute('aria-labelledby',`skill-tab-${i}`);panel.replaceChildren();
+  const h=document.createElement('h4'),p=document.createElement('p');h.textContent=pdfSkillSteps[i][0];p.textContent=pdfSkillSteps[i][1];panel.append(h,p);
+  if(!isReduced())panel.animate([{opacity:.4,transform:'translateY(5px)'},{opacity:1,transform:'none'}],{duration:220});
+}
+document.querySelectorAll('[data-pdf-skill]').forEach((b,i)=>{
+  b.addEventListener('click',()=>showPdfSkill(i));
+  b.addEventListener('keydown',e=>{let n;if(e.key==='ArrowRight')n=(i+1)%3;else if(e.key==='ArrowLeft')n=(i+2)%3;else if(e.key==='Home')n=0;else if(e.key==='End')n=2;else return;e.preventDefault();showPdfSkill(n);document.querySelector(`[data-pdf-skill="${n}"]`).focus();});
+});
+document.querySelectorAll('[id^="site-view-"]').forEach(b=>b.addEventListener('click',()=>{
+  const plan=b.id==='site-view-plan',img=$('full-site-preview'),zoom=$('full-site-image');
+  const src=plan?'assets/els-full-plan.webp':'assets/els-full-site.webp';img.src=src;zoom.dataset.zoom=src;
+  const title=plan?'完整地盤 2D 圖則 · 全新虛構示例':'完整地盤 3D 模型 · 全新虛構示例';
+  img.alt=title;zoom.dataset.title=title;zoom.setAttribute('aria-label','放大'+title);
+  $('site-view-plan').setAttribute('aria-pressed',String(plan));$('site-view-3d').setAttribute('aria-pressed',String(!plan));
+  $('site-view-plan').classList.toggle('selected',plan);$('site-view-3d').classList.toggle('selected',!plan);
+}));
 $('upload-inspect').addEventListener('click',()=>{const shown=!$('upload-states').hidden;$('upload-states').hidden=shown;$('upload-inspect').textContent=shown?'查看原流程如何處理 →':'收起流程 ↑';$('upload-inspect').setAttribute('aria-expanded',String(!shown));});
 $('upload-inspect').setAttribute('aria-controls','upload-states');$('upload-inspect').setAttribute('aria-expanded','false');
 const videoSteps=[['先定內容，再定分鏡','劇本 Skill 將主題拆成清晰段落及鏡頭；核心指令保持精簡，所需規格及參考資料按步驟讀取。'],['Whisper × FFmpeg × Remotion','以轉錄時間對齊說話、剪去停頓，配合程式動畫、字幕與圖像組件；將反覆執行的動作交給工具。'],['逐段檢查，再看整片','檢查字幕時間、轉場、構圖、音效及人聲；統一響度，再做輸出前質檢，避免只看「程式成功」就交貨。'],['輸出完成，才進入發佈','依流程輸出直式 1080 × 1920、60 fps 影片，接上自動發佈步驟；求職介紹片將由本人另拍素材。']];
@@ -91,14 +116,25 @@ const dialog=$('image-dialog');document.querySelectorAll('[data-zoom]').forEach(
 
 // Load the original tool only when requested; closing releases its render loop.
 const elsOpen=$('els-inline-open'), elsFrame=$('els-frame');
+let elsReadyTimer;
+function waitForElsReady(started=performance.now()){
+ clearTimeout(elsReadyTimer);if($('els-inline').hidden)return;
+ try{
+  const editor=elsFrame.contentDocument?.getElementById('view')?.contentWindow?.__ed;
+  if(editor?.REGIONS?.length){$('els-load-state').textContent=`完整地盤已開啟 · ${editor.REGIONS.length} 分區 · 可旋轉、剖面及編輯`;$('els-rotate').disabled=false;return;}
+ }catch(e){/* Wait for the original inner editor to finish initialising. */}
+ if(performance.now()-started>120000){$('els-load-state').textContent='模型載入較慢，可使用上方「另頁開啟完整模型」。';return;}
+ elsReadyTimer=setTimeout(()=>waitForElsReady(started),300);
+}
 elsOpen.addEventListener('click',()=>{
   $('els-inline').hidden=false;elsOpen.setAttribute('aria-expanded','true');
-  $('els-load-state').textContent='載入原 ELS 編輯器…';
+  $('els-rotate').disabled=true;
+  $('els-load-state').textContent='載入完整地盤模型…';
   elsFrame.src='tools/els.html';
   $('els-inline').scrollIntoView({behavior:isReduced()?'instant':'smooth',block:'start'});
 });
-elsFrame.addEventListener('load',()=>{if(!$('els-inline').hidden){$('els-load-state').textContent='原編輯器已開啟 · DEMO 地盤 · 可旋轉、剖面及編輯';$('els-rotate').disabled=false;}});
-$('els-inline-close').addEventListener('click',()=>{$('els-rotate').disabled=true;$('els-rotate').setAttribute('aria-pressed','false');$('els-rotate').textContent='播放模型旋轉 ▶';$('els-inline').hidden=true;elsFrame.src='about:blank';elsOpen.setAttribute('aria-expanded','false');elsOpen.focus({preventScroll:true});});
+elsFrame.addEventListener('load',()=>waitForElsReady());
+$('els-inline-close').addEventListener('click',()=>{clearTimeout(elsReadyTimer);$('els-rotate').disabled=true;$('els-rotate').setAttribute('aria-pressed','false');$('els-rotate').textContent='播放模型旋轉 ▶';$('els-inline').hidden=true;elsFrame.src='about:blank';elsOpen.setAttribute('aria-expanded','false');elsOpen.focus({preventScroll:true});});
 
 $('els-rotate').addEventListener('click',()=>{
  try{const tool=elsFrame.contentDocument.getElementById('view').contentDocument;
