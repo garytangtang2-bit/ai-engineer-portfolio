@@ -7,19 +7,39 @@ const revealObserver = new IntersectionObserver(entries => entries.forEach(entry
   if (entry.isIntersecting) { entry.target.classList.add('seen'); revealObserver.unobserve(entry.target); }
 }), {threshold:.06});
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+const nav = $('navigation');
+const navSections = [...nav.querySelectorAll('a[href^="#"]')].map(link => ({ link, section: $(link.hash.slice(1)) }));
+let activeNavLink;
 let scheduled = false;
 function updateScroll() {
   const max = document.documentElement.scrollHeight - innerHeight;
+  const current = navSections.filter(({ section }) => section.getBoundingClientRect().top <= 100).at(-1)?.link;
+  if (current !== activeNavLink) {
+    activeNavLink?.removeAttribute('aria-current');
+    current?.setAttribute('aria-current', 'location');
+    activeNavLink = current;
+  }
   document.documentElement.style.setProperty('--scroll', max > 0 ? Math.min(1,scrollY/max) : 0);
   scheduled = false;
 }
 addEventListener('scroll', () => {if (!scheduled) {scheduled = true;requestAnimationFrame(updateScroll);}}, {passive:true});
 addEventListener('resize',updateScroll);updateScroll();
-const nav = $('navigation');
 const menu = document.querySelector('.menu-button');
 function closeMenu(){nav.classList.remove('open');menu.setAttribute('aria-expanded','false');menu.textContent='目錄 ＋';}
 menu.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')!=='true';menu.setAttribute('aria-expanded',String(open));menu.textContent=open?'關閉 ×':'目錄 ＋';nav.classList.toggle('open',open);});
 nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));
+
+function openArchitecture(hash) {
+  const section = $(hash.slice(1));
+  if (section instanceof HTMLDetailsElement && section.classList.contains('engineering-detail')) {
+    section.open = true;
+  }
+}
+document.querySelectorAll('.case-jump').forEach(link => {
+  link.addEventListener('click', () => openArchitecture(link.hash));
+});
+addEventListener('hashchange', () => openArchitecture(location.hash));
+openArchitecture(location.hash);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&nav.classList.contains('open')){closeMenu();menu.focus();}});
 document.addEventListener('click',e=>{if(!e.target.closest('.navbar'))closeMenu();});
 const caseObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(!entry.isIntersecting)return;document.querySelectorAll('.work-index a').forEach(link=>{if(link.hash==='#'+entry.target.id)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');});}),{rootMargin:'-15% 0px -60% 0px'});
@@ -130,8 +150,54 @@ document.querySelectorAll('[id^="site-view-"]').forEach(b=>b.addEventListener('c
   $('site-view-plan').setAttribute('aria-pressed',String(plan));$('site-view-3d').setAttribute('aria-pressed',String(!plan));
   $('site-view-plan').classList.toggle('selected',plan);$('site-view-3d').classList.toggle('selected',!plan);
 }));
-$('upload-inspect').addEventListener('click',()=>{const shown=!$('upload-states').hidden;$('upload-states').hidden=shown;$('upload-inspect').textContent=shown?'查看原流程如何處理 →':'收起流程 ↑';$('upload-inspect').setAttribute('aria-expanded',String(!shown));});
-$('upload-inspect').setAttribute('aria-controls','upload-states');$('upload-inspect').setAttribute('aria-expanded','false');
+async function loadUploadPreflight() {
+  const trigger = $('upload-inspect');
+  const result = $('upload-states');
+  const files = $('batch-files');
+  const modes = result.querySelectorAll('[data-batch]');
+  const labels = {
+    ready: '可處理', blocked: '缺少封面', prepared: '跳過 · 已準備',
+    changed: '重新排程 · 素材已替換', empty: '跳過 · 空檔',
+  };
+
+  try {
+    const response = await fetch('evidence/upload-preflight.json');
+    if (!response.ok) throw new Error('Preflight evidence unavailable');
+    const { initial, replay } = await response.json();
+    const snapshots = { initial, replay };
+
+    function showBatch(mode) {
+      const rows = snapshots[mode];
+      modes.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.batch === mode)));
+      files.replaceChildren(...rows.map(({ file, state }) => {
+        const row = document.createElement('div');
+        const name = document.createElement('dt');
+        const status = document.createElement('dd');
+        row.dataset.state = state;
+        name.textContent = file;
+        status.textContent = labels[state];
+        row.append(name, status);
+        return row;
+      }));
+      const queued = rows.filter(row => ['ready', 'changed'].includes(row.state)).length;
+      $('batch-result').textContent = `${queued} 個排入佇列 · ${rows.length - queued} 個需修正或略過`;
+      if (!isReduced()) files.animate([{ opacity: .6 }, { opacity: 1 }], { duration: 180 });
+    }
+
+    modes.forEach(button => button.addEventListener('click', () => showBatch(button.dataset.batch)));
+    trigger.addEventListener('click', () => {
+      result.hidden = !result.hidden;
+      trigger.setAttribute('aria-expanded', String(!result.hidden));
+      trigger.textContent = result.hidden ? '查看預檢結果 ↓' : '收起預檢結果 ↑';
+    });
+    showBatch('initial');
+    trigger.disabled = false;
+    trigger.textContent = '查看預檢結果 ↓';
+  } catch {
+    trigger.textContent = '未能載入預檢結果';
+  }
+}
+loadUploadPreflight();
 const videoSteps=[
   ['先定內容，再定分鏡','劇本 Skill 將主題拆成段落與鏡頭；核心指令保持精簡，所需規格與元件參考按步驟讀取。劇本標籤再控制字幕、畫面及 Remotion 動畫。'],
   ['Python × FFmpeg × Remotion','faster-whisper 對齊劇本；NumPy 以人聲響度辨識停頓，Python 呼叫 FFmpeg 剪接。OpenCV / rembg 處理人像，再由 React / Remotion 組合字幕與動畫。'],
@@ -140,6 +206,133 @@ const videoSteps=[
 ];
 function showVideo(i){document.querySelectorAll('[data-video]').forEach((b,n)=>b.setAttribute('aria-pressed',String(n===i)));$('video-description').replaceChildren();const strong=document.createElement('strong');strong.textContent=videoSteps[i][0];const p=document.createElement('p');p.textContent=videoSteps[i][1];$('video-description').append(strong,p);if(!isReduced())$('video-description').animate([{opacity:.4,transform:'translateX(5px)'},{opacity:1,transform:'none'}],{duration:220});}
 document.querySelectorAll('[data-video]').forEach((b,i)=>b.addEventListener('click',()=>showVideo(i)));showVideo(0);
+
+const productScreens = {
+  home: ['togoalai-live.webp', '正式站首頁', '公開首頁介紹筆記、練習及複習工具。切換上面三項可看公開模擬考試展示。', 1440, 700],
+  setup: ['togoalai-demo-setup.webp', '設定考試', '設定考試主題、涵蓋範圍及題量，再交給 AI 生成題目。', 896, 504],
+  question: ['togoalai-demo-question.webp', '作答介面', '作答時可看進度、選項及示例回饋。', 896, 504],
+  result: ['togoalai-demo-result.webp', '結果與弱點', '總分、分項成績及弱項建議在同一畫面，讓使用者知道下一步應複習甚麼。', 896, 504],
+};
+const productChoices = document.querySelectorAll('[data-product-screen]');
+const productZoom = $('togoal-zoom');
+productChoices.forEach(button => button.addEventListener('click', () => {
+  const view = button.dataset.productScreen;
+  const [name, title, description, width, height] = productScreens[view];
+  productChoices.forEach(choice => choice.setAttribute('aria-pressed', String(choice === button)));
+  const path = `assets/${name}`;
+  productZoom.dataset.screen = view;
+  productZoom.dataset.zoom = path;
+  productZoom.dataset.title = `ToGoalAi｜${title}`;
+  productZoom.setAttribute('aria-label', `放大 ToGoalAi ${title}`);
+  const screenshot = productZoom.querySelector('img');
+  screenshot.src = path;
+  screenshot.alt = `ToGoalAi 正式站公開畫面。${description}`;
+  screenshot.width = width;
+  screenshot.height = height;
+  $('product-screen-note').textContent = description;
+  if (!isReduced()) screenshot.animate([{ opacity: .6 }, { opacity: 1 }], { duration: 180 });
+}));
+
+const productRoutes = {
+  pdf: ['文字 PDF 或掃描件', 'unpdf 先取文字層。缺少有效文字時，交 Gemini 直接讀 PDF。'],
+  office: ['DOCX 講義或 PPTX 投影片', 'Mammoth 取出 Word 文字。JSZip 解開 PPTX，按順序讀投影片 XML。'],
+  web: ['教材或文章網址', 'Cheerio 從 HTML 取出正文，排除導覽及其他頁面元素。'],
+  youtube: ['附字幕或逐字稿的 YouTube 影片', 'Supadata API 取逐字稿，按長度分段生成筆記，合併、去重並重編段落索引。'],
+  audio: ['課堂錄音或筆記圖片', 'Gemini 多模態直接讀聲音或圖像，轉成結構化筆記段落。'],
+};
+const productRouteChoices = document.querySelectorAll('[data-product-route]');
+const productRouteSteps = $('product-route-steps');
+const productRouteText = productRouteSteps.querySelectorAll('dd');
+productRouteChoices.forEach(button => button.addEventListener('click', () => {
+  productRouteChoices.forEach(choice => choice.setAttribute('aria-pressed', String(choice === button)));
+  productRoutes[button.dataset.productRoute].forEach((step, index) => {
+    productRouteText[index].textContent = step;
+  });
+  if (!isReduced()) productRouteSteps.animate([{ opacity: .5 }, { opacity: 1 }], { duration: 180 });
+}));
+
+// Synthetic timeline with the editor's line, chunk and spoken-word time fields.
+const reelDemo = {
+  duration: 8,
+  lines: [
+    { tag: 'align', label: '對齊錄音', start: 0, end: 2.6, say: [['錄', .74]], chunks: [
+      { start: 0, end: 1.35, text: '先把錄音對齊劇本' }, { start: 1.35, end: 2.6, text: '保留字頭與字尾' },
+    ] },
+    { tag: 'captions', label: '字幕與動畫', start: 2.6, end: 5.4, say: [['同', 4.12]], chunks: [
+      { start: 2.6, end: 3.8, text: '載入字幕和畫面標籤' }, { start: 3.8, end: 5.4, text: '同一個時間軸同步合成' },
+    ] },
+    { tag: 'check', label: '輸出質檢', start: 5.4, end: 8, say: [['核', 6.16]], chunks: [
+      { start: 5.4, end: 6.75, text: '量度音量並核對規格' }, { start: 6.75, end: 8, text: '再按劇本檢查漏字' },
+    ] },
+  ],
+};
+const reelSlider = $('reel-position');
+const reelPlayer = $('reel-play');
+const reelVisual = $('reel-visual');
+const reelJumps = document.querySelectorAll('[data-reel-jump]');
+let reelFrame = 0;
+let activeReelChunk;
+
+function renderReel(time) {
+  const atEnd = time === reelDemo.duration;
+  const scene = atEnd ? reelDemo.lines.at(-1) : reelDemo.lines.find(line => time >= line.start && time < line.end);
+  const caption = atEnd ? scene.chunks.at(-1) : scene.chunks.find(chunk => time >= chunk.start && time < chunk.end);
+  const cue = scene.say[0][1];
+  const cueFired = time >= cue;
+  const formatted = time.toFixed(2);
+
+  reelSlider.value = time;
+  reelSlider.setAttribute('aria-valuetext', `${formatted} 秒`);
+  $('reel-time').textContent = `${formatted} / ${reelDemo.duration.toFixed(2)} s`;
+  reelVisual.dataset.scene = scene.tag;
+  reelVisual.dataset.cued = String(cueFired);
+  const graphicProgress = cueFired ? Math.min(1, (time - cue) * 3.8) : 0;
+  reelVisual.style.setProperty('--cue-amount', isReduced() && cueFired ? 1 : graphicProgress);
+  $('reel-cue').textContent = `${cue.toFixed(2)} s · ${cueFired ? '已觸發' : '等待'}`;
+
+  if (caption !== activeReelChunk) {
+    activeReelChunk = caption;
+    $('reel-scene-label').textContent = scene.label;
+    $('reel-caption').textContent = caption.text;
+    $('reel-caption-time').textContent = `${caption.start.toFixed(2)}–${caption.end.toFixed(2)} s`;
+    reelJumps.forEach(button => button.setAttribute('aria-pressed', String(Number(button.dataset.reelJump) === scene.start)));
+  }
+}
+
+function pauseReel() {
+  cancelAnimationFrame(reelFrame);
+  reelFrame = 0;
+  reelPlayer.textContent = Number(reelSlider.value) === reelDemo.duration ? '重播 ↻' : '播放 ▶';
+}
+
+reelPlayer.addEventListener('click', () => {
+  if (reelFrame) {
+    pauseReel();
+    return;
+  }
+  const position = Number(reelSlider.value);
+  const startedAt = performance.now() - (position === reelDemo.duration ? 0 : position * 1000);
+  reelPlayer.textContent = '暫停 Ⅱ';
+  function tick(now) {
+    const time = Math.min(reelDemo.duration, Math.max(0, (now - startedAt) / 1000));
+    renderReel(time);
+    if (time === reelDemo.duration) pauseReel();
+    else reelFrame = requestAnimationFrame(tick);
+  }
+  reelFrame = requestAnimationFrame(tick);
+});
+
+function seekReel(time) {
+  renderReel(time);
+  pauseReel();
+}
+reelSlider.addEventListener('input', () => seekReel(Number(reelSlider.value)));
+reelJumps.forEach(button => button.addEventListener('click', () => seekReel(Number(button.dataset.reelJump))));
+const reelVisibility = new IntersectionObserver(([entry]) => { if (!entry.isIntersecting && reelFrame) pauseReel(); });
+reelVisibility.observe($('reel-lab'));
+document.addEventListener('visibilitychange', () => { if (document.hidden && reelFrame) pauseReel(); });
+renderReel(0);
+
 const dialog=$('image-dialog');document.querySelectorAll('[data-zoom]').forEach(b=>b.addEventListener('click',()=>{$('image-dialog-title').textContent=b.dataset.title;$('dialog-image').src=b.dataset.zoom;$('dialog-image').alt=b.dataset.title;dialog.showModal();}));$('close-dialog').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
 
 // Load the original tool only when requested; closing releases its render loop.
@@ -151,7 +344,7 @@ function waitForElsReady(started=performance.now()){
   const editor=elsFrame.contentDocument?.getElementById('view')?.contentWindow?.__ed;
   if(editor?.REGIONS?.length){$('els-load-state').textContent=`完整地盤已開啟 · ${editor.REGIONS.length} 分區 · 可旋轉、剖面及編輯`;$('els-rotate').disabled=false;return;}
  }catch(e){/* Wait for the original inner editor to finish initialising. */}
- if(performance.now()-started>120000){$('els-load-state').textContent='模型載入較慢，可使用上方「另頁開啟完整模型」。';return;}
+ if(performance.now()-started>120000){$('els-load-state').textContent='模型載入較慢，可使用上方「開啟完整編輯器」。';return;}
  elsReadyTimer=setTimeout(()=>waitForElsReady(started),300);
 }
 elsOpen.addEventListener('click',()=>{
@@ -169,6 +362,102 @@ $('els-rotate').addEventListener('click',()=>{
  const control=tool.getElementById('rotBtn');if(!control)return;control.click();
  const on=control.classList.contains('on');$('els-rotate').setAttribute('aria-pressed',String(on));$('els-rotate').textContent=on?'暫停模型旋轉 Ⅱ':'播放模型旋轉 ▶';
  }catch(e){$('els-load-state').textContent='模型仍在準備，請稍後再試或另頁開啟。';}
+});
+
+const siteTour = $('site-tour');
+const tourFrame = $('site-tour-frame');
+const tourViews = [...siteTour.querySelectorAll('[data-tour-view]')];
+const tourSection = $('site-tour-section');
+const tourCut = $('site-tour-cut');
+const tourStatus = $('site-tour-status');
+const tourDescriptions = {
+  iso: '斜視可同時看到開挖分區、斜道和支護配置。',
+  plan: '俯視可沿斜道查看各施工區怎樣接通。',
+  front: '側視可比較各施工區標高。',
+};
+let tourEngine;
+let tourTimer;
+let tourTrigger;
+let tourView = 'iso';
+let sectionIsOpen = false;
+
+function showTourState() {
+  tourViews.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.tourView === tourView)));
+  tourSection.setAttribute('aria-pressed', String(sectionIsOpen));
+  $('site-tour-cut-control').hidden = !sectionIsOpen;
+  tourStatus.textContent = sectionIsOpen
+    ? '剖面已開啟。左右移動剖切線可比較不同位置的開挖與支護。'
+    : tourDescriptions[tourView];
+}
+
+function closeTourWithEscape(event) {
+  if (event.key !== 'Escape' || !siteTour.open) return;
+  event.preventDefault();
+  closeSiteTour();
+}
+
+function waitForTour(started) {
+  if (!siteTour.open) return;
+  const frame = tourFrame.contentDocument?.getElementById('view');
+  const renderer = frame?.contentWindow;
+  if (renderer?.__ready && renderer.__portfolioPreview) {
+    tourEngine = renderer.__portfolioPreview;
+    renderer.addEventListener('keydown', closeTourWithEscape);
+    tourFrame.contentWindow.addEventListener('keydown', closeTourWithEscape);
+    tourFrame.removeAttribute('aria-hidden');
+    $('site-tour-viewport').dataset.ready = 'true';
+    [...tourViews, tourSection, tourCut].forEach(control => { control.disabled = false; });
+    showTourState();
+    return;
+  }
+  if (performance.now() - started > 20000) {
+    tourFrame.hidden = true;
+    tourFrame.src = 'about:blank';
+    tourStatus.textContent = '3D 模型暫未載入。可查看目前的模型圖，或另開完整編輯器。';
+    return;
+  }
+  tourTimer = setTimeout(() => waitForTour(started), 120);
+}
+
+document.querySelectorAll('[data-site-tour]').forEach(trigger => trigger.addEventListener('click', () => {
+  tourTrigger = trigger;
+  tourView = 'iso';
+  sectionIsOpen = false;
+  tourCut.value = '55';
+  showTourState();
+  tourStatus.textContent = '正在建立 3D 模型…';
+  tourFrame.hidden = false;
+  tourFrame.setAttribute('aria-hidden', 'true');
+  siteTour.showModal();
+  tourFrame.src = 'tools/els.html?preview=1';
+  waitForTour(performance.now());
+}));
+
+tourViews.forEach(button => button.addEventListener('click', () => {
+  tourView = button.dataset.tourView;
+  tourEngine?.setView(tourView, isReduced());
+  showTourState();
+}));
+tourSection.addEventListener('click', () => {
+  sectionIsOpen = !sectionIsOpen;
+  tourEngine?.setSection(sectionIsOpen, Number(tourCut.value) / 100);
+  showTourState();
+});
+tourCut.addEventListener('input', () => tourEngine?.setSection(sectionIsOpen, Number(tourCut.value) / 100));
+function closeSiteTour() {
+  clearTimeout(tourTimer);
+  tourEngine = undefined;
+  tourFrame.hidden = true;
+  tourFrame.src = 'about:blank';
+  delete $('site-tour-viewport').dataset.ready;
+  [...tourViews, tourSection, tourCut].forEach(control => { control.disabled = true; });
+  siteTour.close();
+  tourTrigger?.focus({ preventScroll: true });
+}
+$('site-tour-close').addEventListener('click', closeSiteTour);
+siteTour.addEventListener('cancel', event => {
+  event.preventDefault();
+  closeSiteTour();
 });
 
 const motionButton=$('motion-toggle');

@@ -1,0 +1,39 @@
+{
+  "scope": "Original fileMatcher.js and UploadLog on synthetic placeholder files. Prepared statuses were seeded. No browser run or upload.",
+  "initial": [
+    {
+      "file": "1.mp4",
+      "state": "ready"
+    },
+    {
+      "file": "2.mp4",
+      "state": "blocked"
+    },
+    {
+      "file": "3.mp4",
+      "state": "ready"
+    },
+    {
+      "file": "4.mp4",
+      "state": "empty"
+    }
+  ],
+  "replay": [
+    {
+      "file": "1.mp4",
+      "state": "prepared"
+    },
+    {
+      "file": "2.mp4",
+      "state": "blocked"
+    },
+    {
+      "file": "3.mp4",
+      "state": "changed"
+    },
+    {
+      "file": "4.mp4",
+      "state": "empty"
+    }
+  ]
+}

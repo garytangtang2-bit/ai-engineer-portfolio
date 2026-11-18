@@ -3,101 +3,314 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>鄧嘉維 Gary Tang — AI Engineer 作品集</title>
 <meta name="description" content="鄧嘉維 Gary Tang 的 AI Engineer 求職作品集：設計部自動化、獨立上線的 ToGoalAi、實際工作流程與可操作成果。">
-<meta name="theme-color" content="#090e19"><meta property="og:title" content="Gary Tang · AI Engineering Portfolio"><meta property="og:description" content="把複雜需求，做成真正用得上的工具。">
+<meta name="theme-color" content="#090e19"><meta property="og:title" content="Gary Tang · AI Engineering Portfolio"><meta property="og:description" content="從工程自動化到上線產品。可操作的 3D 地盤、文件處理流程及 ToGoalAi 正式站展示。">
+<meta property="og:image" content="https://garytangtang2-bit.github.io/ai-engineer-portfolio/assets/els-tour-preview.webp"><meta property="og:image:alt" content="可互動的虛構地盤，展示開挖分區、支護及斜道。">
+<link rel="icon" href="assets/gary-tang.webp" type="image/webp">
 <link rel="preload" href="fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="styles.css"><script src="portfolio.js" defer></script>
 </head><body>
 <a class="skip" href="#main">跳至內容</a>
 <header class="bar"><div class="wrap navbar"><a class="identity" href="#top" aria-label="Gary Tang 首頁">GARY<span> TANG</span><b>.</b></a><button class="menu-button" aria-controls="navigation" aria-expanded="false">目錄 ＋</button><nav id="navigation" aria-label="主要導覽"><a href="#work">工程作品</a><a href="#approach">工程方法</a><a href="#experience">經歷</a><a class="nav-cv" href="assets/Gary-Tang-CV.pdf" target="_blank" rel="noopener">履歷 PDF ↗</a></nav></div><div class="scroll-progress" aria-hidden="true"></div></header>
 <main id="main">
 <section id="top" class="hero wrap">
-<div class="hero-copy"><p class="eyebrow hero-in"><i class="status-dot" aria-hidden="true"></i> AI ENGINEER 求職作品集 · 香港</p><h1 class="hero-in">鄧嘉維<span class="english-name">Gary Tang</span></h1><p class="hero-statement hero-in">把複雜需求，<br>做成<span class="accent">真正用得上的工具。</span></p><p class="hero-description hero-in">我用 Python 與 AI，讓同事更快完成會議紀錄與工程報表；亦獨立開發並上線 ToGoalAi 學習平台。尋找 AI Engineer 及自動化工程職位。</p><div class="hero-actions hero-in"><a class="button primary" href="#work">查看工程作品 <span aria-hidden="true">↓</span></a><a class="text-link" href="assets/Gary-Tang-CV.pdf" target="_blank" rel="noopener">查看履歷與聯絡方式 ↗</a></div><div class="hero-signature hero-in"><img src="assets/gary-tang.webp" width="56" height="56" alt="鄧嘉維個人照片"><p><strong>獨立開發 · AI 協作 · 實際交付</strong><span>Python / AI 自動化 / API 整合</span></p></div></div>
-<div class="hero-stage hero-in" aria-label="作品預覽"><div class="stage-orbit orbit-one" aria-hidden="true"></div><div class="stage-orbit orbit-two" aria-hidden="true"></div><a class="stage-product stage-product-main" href="#els"><div class="window-top"><span class="window-dots" aria-hidden="true">● ● ●</span><span>投標支援 · 完整地盤示例</span><span aria-hidden="true">↗</span></div><img src="assets/els-full-site.webp" alt="完整地盤投標模型：開挖分區、板樁、樁帽及斜道" width="1440" height="900"><div class="stage-caption"><span>01 / ENGINEERING</span><strong>把完整工程方案，帶進投標溝通</strong></div></a><a class="stage-product stage-product-small" href="#togoal"><img src="assets/togoalai-live.webp" alt="ToGoalAi 正式網站的實際首頁" width="1440" height="700"><span>ToGoalAi · 已上線 ↗</span></a><div class="stage-foot"><span class="stage-code" aria-hidden="true">INPUT → LOGIC → REVIEW → DELIVER</span><span>親手做過，讓作品說明。</span></div></div>
-<a class="hero-bottom" href="#meeting"><span>SELECTED WORK / 2026</span><span>先看 AI 會議案例 ↓</span></a>
+<div class="hero-copy"><p class="eyebrow hero-in"><i class="status-dot" aria-hidden="true"></i> AI ENGINEER 求職作品集 · 香港</p><h1 class="hero-in">鄧嘉維<span class="english-name">Gary Tang</span></h1><p class="hero-statement hero-in">讓工程流程少花時間，<br><span class="accent">把 AI 產品帶上線。</span></p><p class="hero-description hero-in">我用 Python 與 AI Skills 幫設計部加快會議紀錄及工程報表，也開發 3D 工具支援投標。獨立開發並上線 ToGoalAi。正在尋找香港 AI Engineer 職位。</p><div class="hero-actions hero-in"><a class="button primary" href="#work">查看工程作品 <span aria-hidden="true">↓</span></a><a class="text-link" href="assets/Gary-Tang-CV.pdf" target="_blank" rel="noopener">查看履歷與聯絡方式 ↗</a></div><div class="hero-signature hero-in"><img src="assets/gary-tang.webp" width="56" height="56" alt="鄧嘉維個人照片"><p><strong>獨立開發 · AI 協作 · 實際交付</strong><span>Python / AI 自動化 / API 整合</span></p></div></div>
+<div class="hero-stage hero-in" aria-label="作品預覽">
+  <div class="stage-orbit orbit-one" aria-hidden="true"></div><div class="stage-orbit orbit-two" aria-hidden="true"></div>
+  <button class="stage-product stage-product-main stage-tour" type="button" data-site-tour>
+    <span class="window-top"><span>投標支援 · 完整地盤示例</span><span aria-hidden="true">◇</span></span>
+    <img src="assets/els-tour-preview.webp" alt="" width="1280" height="800" fetchpriority="high">
+    <span class="stage-caption"><span>3D · 俯視 · 剖面</span><strong>操作完整地盤<span aria-hidden="true">↗</span></strong></span>
+  </button>
+  <a class="stage-product stage-product-small" href="#togoal"><img src="assets/togoalai-live.webp" alt="" width="1440" height="700"><span>ToGoalAi · 已上線 ↗</span></a>
+</div>
+<a class="hero-bottom" href="#meeting"><span>設計部自動化 · 產品開發 · 投標支援</span><span>操作會議案例 ↓</span></a>
 </section>
 <section id="work" class="work wrap">
-<div class="section-heading reveal"><div><p class="eyebrow">從工作現場，到獨立產品</p><h2>從理解問題開始。<br><span class="dim">把整個流程做完整。</span></h2></div><p>以下工具均由我從零開發，使用 AI 協作完成。Skills 是讓 AI 重複使用的操作指引，把經驗、工具及檢查接起來。</p></div>
-<p class="reading-guide"><span>快速選讀</span>先看代表作的用途與成果；各案例可展開技術詳情與驗證。</p>
+<div class="section-heading reveal"><div><p class="eyebrow">從工作現場，到獨立產品</p><h2>我做過的 AI 工程專案</h2></div><p>以下工具均由我從零開發，使用 AI 協作完成。Skills 是讓 AI 重複使用的操作指引，把經驗、工具及檢查接起來。</p></div>
+
 <nav class="work-index" aria-label="作品索引"><a href="#meeting"><span>01</span>會議紀錄</a><a href="#pdf"><span>02</span>PDF → Excel</a><a href="#togoal"><span>03</span>ToGoalAi</a><a href="#els"><span>04</span>投標地盤模型</a><a href="#drill"><span>05</span>複雜 PDF Skill</a><a href="#youtube"><span>06</span>上傳自動化</a><a href="#video"><span>07</span>影片 Skills</a></nav>
-<div class="selected-intro reveal"><p class="eyebrow">先看三個代表作</p><p>從同事日常工作，到公司投標需要。</p></div>
+<h3 class="selected-intro reveal">精選作品</h3>
 <div class="selected-paths reveal">
-  <a href="#meeting"><span class="path-number">01 / 團隊效率</span><strong>會議紀錄自動化</strong><p>把重聽、起草與覆核，接成有依據的交付流程。</p><span class="path-action">逐步操作流程 <i aria-hidden="true">↗</i></span><span class="path-evidence">本人工作紀錄・合成流程導覽</span></a>
-  <a href="#pdf"><span class="path-number">02 / 可用資料</span><strong>兩萬格 PDF 還原</strong><p>把 PDF 表格變回可計算的 Excel，減少工程師抄錄。</p><span class="path-action">核對實際輸出 <i aria-hidden="true">↗</i></span><span class="path-evidence">原程式・合成 PDF／Excel</span></a>
-  <a href="#els"><span class="path-number">03 / 投標支援</span><strong>完整地盤建模</strong><p>讓團隊用立體方案講解工程，支援爭取合約。</p><span class="path-action">探索完整地盤 <i aria-hidden="true">↗</i></span><span class="path-evidence">原編輯器・全新虛構地盤</span></a>
+  <a class="path-card path-meeting" href="#meeting">
+    <div class="path-media meeting-media" aria-hidden="true"><div class="path-wave"></div><span>附錄音 · 待覆核</span></div>
+    <div class="path-copy"><span class="path-number">設計部採用</span><strong>從會議錄影到可覆核紀錄</strong><p>原需最少 5 小時，現約 90 分鐘。人手集中用約 10 分鐘答疑。</p><span class="path-action">操作會議導覽 <i aria-hidden="true">↗</i></span></div>
+  </a>
+  <a class="path-card path-pdf" href="#pdf">
+    <div class="path-media"><img src="assets/pdf-page-1.webp" alt="" loading="lazy" width="1100" height="820"></div>
+    <div class="path-copy"><span class="path-number">工程師使用</span><strong>還原兩萬格資料供工程計算</strong><p>一份報表由 16 小時縮至 30 分鐘。已處理 30 多份文件。</p><span class="path-action">對照 PDF 與 Excel <i aria-hidden="true">↗</i></span></div>
+  </a>
+  <a class="path-card path-togoal" href="#togoal">
+    <div class="path-media"><img src="assets/togoalai-demo-result.webp" alt="" loading="lazy" width="896" height="504"></div>
+    <div class="path-copy"><span class="path-number">獨立開發 · 已正式上線</span><strong>用自己的教材備考</strong><p>ToGoalAi 串起來源問答、模擬試、弱點追蹤和簡報。</p><span class="path-action">查看產品示範 <i aria-hidden="true">↗</i></span></div>
+  </a>
 </div>
 
 <article id="meeting" class="case featured reveal">
-<div class="case-heading"><p class="project-id"><span>01</span>公司實務 / 設計部已採用</p><h3>把一場會議，<br>整理成有依據的紀錄。</h3><p class="case-summary">同事原本要重聽約 90 分鐘會議，再花數小時寫稿及審閱。我把轉錄、來源核對、答疑與交付接起來，讓人集中處理疑點。</p></div>
+<div class="case-heading"><p class="project-id"><span>01</span>公司實務 / 設計部已採用</p><h3>設計部的會議紀錄自動化</h3><p class="case-summary">同事原本要重聽約 90 分鐘會議，再花數小時寫稿及審閱。我把轉錄、來源核對、答疑與交付接起來。設計部同事只需集中處理疑點，就能把時間留給工程工作。</p><a class="case-jump" href="#meeting-architecture">查看實作架構 <span aria-hidden="true">↓</span></a></div>
 <dl class="case-facts"><div><dt>我的角色</dt><dd>獨立開發・AI 協作</dd></div><div><dt>實際採用</dt><dd>設計部工作流程</dd></div><div><dt>公開展示</dt><dd>合成流程導覽</dd></div></dl>
-<ol class="architecture" aria-label="實際會議紀錄架構"><li><span>INPUT</span>影片＋議程</li><li><span>LOCAL ASR</span>語音轉文字</li><li><span>AI + EVIDENCE</span>事實表與來源</li><li><span>HUMAN</span>疑點答覆</li><li><span>GATES</span>十項檢查交付</li></ol><p class="architecture-note">聽得清、可核對 → 寫稿；未確定 → 提問；無依據 → 排除。多引擎共識不當作正確保證，仍比對來源並由人答疑。</p><dl class="technology-strip" aria-label="實作技術與用途"><div><dt>音訊處理</dt><dd>Python / FFmpeg</dd></div><div><dt>本機轉錄</dt><dd>faster-whisper / Transformers</dd></div><div><dt>交付與記憶</dt><dd>python-docx / Excel COM / JSONL</dd></div></dl><div class="case-layout"><div class="case-copy"><h4>我實際做了甚麼</h4><ul class="key-points"><li><strong>先建事實表：</strong>逐項附時間與原句，分為可用、待確認與排除（A／B／C）。</li><li><strong>把寫作與核實分開：</strong>Python 保留議程框架；AI 只按確認事實寫英文稿。人處理疑點及最終審閱。</li><li><strong>只問必要問題：</strong>最多十問，每問附相關音段；鎖定 AI 答案後再交人核對。</li><li><strong>交付可延續：</strong>以 python-docx 及 Excel COM 產生 Word／下一次議程，保留格式、公式與圖形。</li><li><strong>每次修正都回流：</strong>用戶答覆與最終改稿存入有來源的知識庫；確認後更新熱詞、校正表及寫作規則，讓下次流程沿用。</li></ul>
-<div class="impact-block"><div><strong>約 70<span>%</span></strong><p>全流程耗時減少</p></div><div class="time-bars"><div><span>原流程</span><i style="--bar:100%"></i><b>≥ 5 小時</b></div><div><span>現流程</span><i style="--bar:30%"></i><b>約 90 分鐘</b></div></div><p class="evidence-note">本人工作紀錄：同為約 90 分鐘會議的完整交付。現時約 70 分鐘等待本機 ASR、10 分鐘程式／AI 處理、10 分鐘人手答疑；並非 90 分鐘全屬人手。</p></div>
-<details class="technical"><summary>展開技術：音訊、熱詞、回饋記憶與交付</summary><div>
-<p class="stack">Python · FFmpeg · faster-whisper · PyTorch / Transformers · python-docx · openpyxl · pywin32</p>
-<dl class="function-map">
-<div><dt>01 / 音訊與轉錄</dt><dd><code>subprocess</code> 呼叫 FFmpeg，將影片音訊整理為 16 kHz 單聲道 WAV；<code>multi_asr.py</code> 循序調用 faster-whisper 及 Transformers / PyTorch 的本機模型，保存帶起訖時間的 JSON。答疑時另切約 26 秒音段，讓人直接聽相關位置。</dd></div>
-<div><dt>02 / 領域熱詞，不靠通用轉錄硬猜</dt><dd><code>hotwords.py</code> 整合議程、既有術語、中英對照、畫面文字及已確認校正；分成 Whisper 用的短清單與 Qwen 用的較長清單，按模型上下文限制排序。<code>apply_fixes</code> 做確定性後處理；英文校正使用完整詞邊界，避免誤改其他單字。</dd></div>
-<div><dt>03 / 用戶答覆成為有來源的記憶</dt><dd><code>ask_pack.py --answers</code> 保存答覆，再由 <code>facts_db.py</code> 寫入 JSONL 事實庫，保留日期、來源及適用範圍。新答案可取代舊答案，但舊紀錄仍保留；術語、人名及機構先成為候選，經確認才併入詞庫。</dd></div>
-<div><dt>04 / 最終改稿也回流</dt><dd><code>learn_cycle.py</code> 比對草稿與用戶最終版，把刪除、補充及聽錯候選分開保存；<code>writer_pack.py</code> 下次按專案取用相關背景及寫作偏好。過往背景只作線索，本次事實仍要回到當次錄音核對。</dd></div>
-<div><dt>05 / 可檢查的 Word / Excel 交付</dt><dd><code>python-docx</code> 建立 Word；<code>openpyxl</code> 讀取議程資料，<code>pywin32 / Excel COM</code> 在原工作簿框架更新內容，保留格式、公式及圖形。<code>frame.py</code> 處理固定位，<code>flow_gate.py</code> 檢查交稿紀錄。</dd></div>
-</dl>
-<p>AI 負責事實抽取、分級、英文起草與語義核對；固定資料處理及結構檢查交給 Python。十項交付檢查涵蓋檔案、事實、固定段落、來源、鎖定答案、排除紀錄、覆蓋、遺漏、重複及流程語義，疑點未解只保留草稿。</p>
-<p>這是以知識庫、詞庫及規則更新建立的持續學習回路。六引擎包含多個 Whisper 衍生版本，仍可能出現共同錯誤；既有回測亦曾發現遺漏，因此保留來源與人工覆核。</p>
-</div></details></div>
-<div class="artifact meeting-artifact"><div class="artifact-header"><span><i class="status-dot" aria-hidden="true"></i>設計會議紀錄流程</span><span class="artifact-label">逐步導覽</span></div><div class="workflow-tabs" role="tablist" aria-label="會議紀錄流程步驟"><button role="tab" id="meeting-tab-0" aria-controls="meeting-panel" aria-selected="true" data-step="0"><span>01</span>輸入</button><button role="tab" id="meeting-tab-1" aria-controls="meeting-panel" aria-selected="false" tabindex="-1" data-step="1"><span>02</span>轉錄</button><button role="tab" id="meeting-tab-2" aria-controls="meeting-panel" aria-selected="false" tabindex="-1" data-step="2"><span>03</span>事實表</button><button role="tab" id="meeting-tab-3" aria-controls="meeting-panel" aria-selected="false" tabindex="-1" data-step="3"><span>04</span>答疑</button><button role="tab" id="meeting-tab-4" aria-controls="meeting-panel" aria-selected="false" tabindex="-1" data-step="4"><span>05</span>交付</button></div><div id="meeting-panel" class="workflow-panel" role="tabpanel" aria-labelledby="meeting-tab-0" tabindex="0"></div><div class="workflow-footer"><span id="meeting-position">01 / 05</span><button class="button small" id="meeting-next">下一步 →</button></div><p class="artifact-footnote">依原流程製作的互動導覽；文字為虛構示例，這裏不執行 ASR 或模型。</p></div></div>
+<ol class="architecture" aria-label="實際會議紀錄架構"><li><span>INPUT</span>影片＋議程</li><li><span>LOCAL ASR</span>語音轉文字</li><li><span>AI + EVIDENCE</span>事實表與來源</li><li><span>HUMAN</span>疑點答覆</li><li><span>GATES</span>十項檢查交付</li></ol><p class="architecture-note">聽得清、可核對 → 寫稿。未確定 → 提問。無依據 → 排除。多引擎共識不當作正確保證，仍比對來源並由人答疑。</p><dl class="technology-strip" aria-label="實作技術與用途"><div><dt>音訊處理</dt><dd>Python / FFmpeg</dd></div><div><dt>本機轉錄</dt><dd>faster-whisper / Transformers</dd></div><div><dt>交付與記憶</dt><dd>python-docx / Excel COM / JSONL</dd></div></dl><div class="case-layout"><div class="case-copy"><h4>同事怎樣使用</h4><ul class="key-points"><li>放入錄影和議程。工具先記錄各項事實及錄音位置，草擬英文會議紀錄。</li><li>同事最多覆核十個疑點，可直接聽相關片段。確認後交付 Word 紀錄與下一次 Excel 議程。</li><li>答案及改稿會保存作為日後參考。確認的術語可減少往後重複答疑。</li></ul>
+<div class="impact-block"><div><strong>約 70<span>%</span></strong><p>全流程耗時減少</p></div><div class="time-bars"><div><span>原流程</span><i style="--bar:100%"></i><b>≥ 5 小時</b></div><div><span>現流程</span><i style="--bar:30%"></i><b>約 90 分鐘</b></div></div><p class="evidence-note">本人工作紀錄：同為約 90 分鐘會議的完整交付。現時約 70 分鐘等待本機 ASR、10 分鐘程式／AI 處理、10 分鐘人手答疑。並非 90 分鐘全屬人手。</p></div>
+</div>
+<div class="artifact meeting-artifact"><div class="artifact-header"><span><i class="status-dot" aria-hidden="true"></i>設計會議紀錄流程</span><span class="artifact-label">逐步導覽</span></div><div class="workflow-tabs" role="tablist" aria-label="會議紀錄流程步驟"><button role="tab" id="meeting-tab-0" aria-controls="meeting-panel" aria-selected="true" data-step="0"><span>01</span>輸入</button><button role="tab" id="meeting-tab-1" aria-controls="meeting-panel" aria-selected="false" tabindex="-1" data-step="1"><span>02</span>轉錄</button><button role="tab" id="meeting-tab-2" aria-controls="meeting-panel" aria-selected="false" tabindex="-1" data-step="2"><span>03</span>事實表</button><button role="tab" id="meeting-tab-3" aria-controls="meeting-panel" aria-selected="false" tabindex="-1" data-step="3"><span>04</span>答疑</button><button role="tab" id="meeting-tab-4" aria-controls="meeting-panel" aria-selected="false" tabindex="-1" data-step="4"><span>05</span>交付</button></div><div id="meeting-panel" class="workflow-panel" role="tabpanel" aria-labelledby="meeting-tab-0" tabindex="0"></div><div class="workflow-footer"><span id="meeting-position">01 / 05</span><button class="button small" id="meeting-next">下一步 →</button></div><p class="artifact-footnote">依原流程製作的互動導覽。文字為虛構示例，這裏不執行 ASR 或模型。</p></div></div>
+<details id="meeting-architecture" class="technical engineering-detail">
+  <summary><span><span class="engineering-kicker">技術架構</span><strong>從本機轉錄、可追溯事實，到 Word／Excel 交付</strong></span><span class="engineering-toggle" aria-hidden="true"></span></summary>
+  <div class="engineering-body">
+    <ol class="engineering-path" aria-label="實作流程">
+      <li><span class="engineering-component">subprocess · FFmpeg · faster-whisper</span><h4>對齊轉錄與領域詞庫</h4><p>將錄影轉為 16 kHz 單聲道 WAV，六個本機 ASR 引擎各存帶起訖時間的 JSON。<code>hotwords.py</code> 從議程、畫面文字、中英對照及人工校正編排提示，按引擎分短、長清單。錄音轉錄後再用含詞邊界的規則校正。</p></li>
+      <li><span class="engineering-component">frame.py · writer_pack.py · TSV</span><h4>以資料約束寫稿範圍</h4><p>Python 從議程固定段落、標題與項目次序。AI 按專案讀相應音段、術語和背景，逐項提交附時間碼、原句及 A／B／C 分級的事實表。英文稿引用已確認事實，排除項另外留痕。</p></li>
+      <li><span class="engineering-component">ask_pack.py · SHA-256 · JSONL</span><h4>鎖定答疑，累積可重用記憶</h4><p>每問配約 26 秒錄音，先鎖存 AI 答案及雜湊。人答覆後，<code>facts_db.py</code> 保存日期、來源及適用範圍，保留舊版本。<code>learn_cycle.py</code> 將改稿的刪減、補充和誤聽分開，確認後更新術語候選及寫稿規則。</p></li>
+      <li><span class="engineering-component">flow_gate.py · python-docx · pywin32</span><h4>交稿前驗證與輸出</h4><p>Python 驗固定段落、來源欄位、答覆和檢查檔是否晚於定稿，另接語義覆蓋與查重。未答疑只可出待核草稿。Word 用 python-docx，openpyxl 讀議程，Excel COM 更新原活頁簿以保留公式及圖形。</p></li>
+    </ol>
+    <dl class="engineering-notes">
+      <div><dt>工程取捨</dt><dd>多個引擎同意仍可能誤聽，尤其是罕見名詞。這套流程以錄音時間碼、人工確認及十項交稿檢查控制出稿。歷史記憶按範圍帶入寫稿包，本次事實仍回到當次來源。</dd></div>
+      <div><dt>如何核對</dt><dd>上面的五步導覽可試未答疑到可交付的狀態。<a href="#feedback-lab">操作術語確認與回流示例 ↓</a>，看新答案如何成為下次流程的參考。</dd></div>
+    </dl>
+  </div>
+</details>
 <section id="feedback-lab" class="feedback-lab" aria-labelledby="feedback-title">
-  <div class="feedback-heading"><div><p class="eyebrow">HUMAN FEEDBACK → REUSABLE KNOWLEDGE</p><h4 id="feedback-title">用戶改一次，<br>讓下一次有依據。</h4></div><p>我設計的回饋機制，會把確認答案整理成詞庫、字形記憶或寫作規則，再供 AI 與程式沿用。用下面的合成例子，看看「確認 → 記錄 → 再使用」如何接起來。</p></div>
+  <div class="feedback-heading"><div><p class="eyebrow">HUMAN FEEDBACK → REUSABLE KNOWLEDGE</p><h4 id="feedback-title">用戶改一次，<br>讓下一次有依據。</h4></div><p>我設計的回饋機制，會把確認答案整理成詞庫、字形記憶或寫作規則，再供 AI 與程式沿用。用下面的合成例子，試試確認結果後下一次會怎樣使用。</p></div>
   <div class="feedback-tabs" role="tablist" aria-label="回饋機制案例"><button role="tab" id="feedback-tab-0" data-feedback="0" aria-controls="feedback-panel" aria-selected="true">語音：熱詞與校正</button><button role="tab" id="feedback-tab-1" data-feedback="1" aria-controls="feedback-panel" aria-selected="false" tabindex="-1">PDF：字形與別名</button></div>
   <div id="feedback-panel" role="tabpanel" aria-labelledby="feedback-tab-0"></div>
-  <p class="artifact-footnote">合成流程示意。按鈕只切換本頁狀態，不執行模型或修改實際知識庫；實際系統由程式保存記憶，再經確認套用。</p>
+  <p class="artifact-footnote">合成流程示意。按鈕只切換本頁狀態，不執行模型或修改實際知識庫。實際系統由程式保存記憶，再經確認套用。</p>
 </section></article>
 
-<article id="pdf" class="case featured reveal"><div class="case-heading"><p class="project-id"><span>02</span>公司實務 / 工程師使用 · 30 多份文件</p><h3>兩萬格數據，<br>從 PDF 回到可計算的 Excel。</h3><p class="case-summary">工程師收到的報表原本由 Excel 輸出成 PDF，卻要再把數萬格數據放回公司工作簿計算。我做的是恢復表格結構、數值與可覆核的 Excel。</p></div>
+<article id="pdf" class="case featured reveal"><div class="case-heading"><p class="project-id"><span>02</span>公司實務 / 工程師使用 · 30 多份文件</p><h3>兩萬格數據，<br>從 PDF 回到可計算的 Excel。</h3><p class="case-summary">工程師收到的報表原本由 Excel 輸出成 PDF，卻要再把數萬格數據放回公司工作簿計算。我做的是恢復表格結構、數值與可覆核的 Excel。</p><a class="case-jump" href="#pdf-architecture">查看實作架構 <span aria-hidden="true">↓</span></a></div>
 <dl class="case-facts"><div><dt>我的角色</dt><dd>獨立工具開發</dd></div><div><dt>實際採用</dt><dd>工程師・30 多份文件</dd></div><div><dt>公開展示</dt><dd>原程式合成輸出</dd></div></dl>
-<dl class="technology-strip" aria-label="實作技術與用途"><div><dt>讀取與定位</dt><dd>PyMuPDF / OpenCV / NumPy</dd></div><div><dt>辨字與記憶</dt><dd>RapidOCR / ONNX Runtime / 字形字典</dd></div><div><dt>工具與輸出</dt><dd>Flask / openpyxl</dd></div></dl><div class="case-layout"><div class="case-copy"><h4>為甚麼不用模型逐格抄？</h4><p>這是結構與數值還原問題。能直接從文字層、格線與字形解決，就交給 Python；有疑點才標示覆核。</p><ul class="key-points"><li><strong>辨識表格：</strong>自動定位或手動選區，處理跨頁、合併儲存格及欄位對齊。</li><li><strong>按文件選路徑：</strong>文字層直接讀取；影像或 CAD 報表以 OpenCV、字形比對及 OCR 輔助。</li><li><strong>還原為數值：</strong>以 openpyxl 輸出可運算儲存格，檢查版以顏色及 Report 標出疑點。</li><li><strong>修正能被沿用：</strong>按外形將相同字形分組，確認一次即可更新同組儲存格；字形、表頭別名及修正紀錄保存後，供同類文件再用。</li></ul>
-<div class="impact-block"><div><strong>約 97<span>%</span></strong><p>個案處理時間減少</p></div><div class="time-bars"><div><span>人手轉換</span><i style="--bar:100%"></i><b>16 小時</b></div><div><span>使用工具</span><i style="--bar:3.125%"></i><b>30 分鐘</b></div></div><p class="evidence-note">本人工作紀錄：約 20,000 格報表由 16 小時減至 30 分鐘，按此估算約省 97% 時間；30 多份文件已處理。不同文件及覆核時間會有差異。</p></div>
-<details class="technical"><summary>Python 怎樣處理？驗證涵蓋甚麼？</summary><div><p class="stack">Python · PyMuPDF · OpenCV / NumPy · RapidOCR / ONNX Runtime · Windows OCR · openpyxl · Flask</p>
-<ul class="key-points"><li><strong>先用文件本身的資料：</strong>PyMuPDF 讀文字、向量及頁面座標；OpenCV / NumPy 處理格線、字形分組與形狀比對。文字層能直接讀的內容，不再逐格交給模型。</li><li><strong>辨字有多個核對來源：</strong>影像路徑結合字形引擎、<code>render_check.py</code> 以原字型重畫比對，以及 <code>ocr3.py</code> 的第三讀法；後者可用 RapidOCR / ONNX Runtime，不能載入時退回 Windows OCR。有差異便標記。</li><li><strong>用戶修正會變成記憶：</strong><code>ai_tool.py glyphs / label</code> 更新 <code>glyphs.json</code>；<code>learn_cad.py</code> 保存向量字形及表頭別名，<code>header_memory.json</code> 記住表頭配對。修正履歷另存 <code>ai_log.json</code>，避免只改完當次 Excel 就遺失經驗。</li></ul><dl class="function-map"><div><dt>定位與結構</dt><dd><code>find_table_regions</code> 找表格；<code>analyse_region</code>／<code>build_grid</code> 重建欄列。</dd></div><div><dt>數值與疑點</dt><dd><code>parse_number</code> 解析數值；<code>needs_review</code> 標出需人核對的儲存格。</dd></div><div><dt>執行與交付</dt><dd><code>process_pdf</code> 組織轉換；<code>build_workbook</code> 以 openpyxl 匯出 Excel。</dd></div></dl><p>右方資料由原轉換程式實際跑出：20 頁 × 50 列 × 20 欄，20,000 個合成數值。逐格核對 Excel 全部吻合。</p><p>這次驗證指定表格範圍、使用文字層，未啟用額外影像 OCR 核對；不代表掃描 PDF 的準確率，也不等同公司案例的處理時間。</p><a class="text-link" href="evidence/pdf-audit.json" target="_blank" rel="noopener">讀取驗證紀錄 JSON ↗</a></div></details>
-<div class="review-example"><p class="eyebrow">遇到疑點，怎樣處理？</p><h4>讀到文字，也可能讀錯欄名。</h4><p>合成例子：影像辨識讀出 <code>Mx-x</code>，但這類欄名的 x／y 容易混淆。原程式保留讀值，交人回看原圖。</p><button id="review-rule-run" class="button small" aria-expanded="false" aria-controls="review-rule-output" disabled>載入原規則結果…</button><div id="review-rule-output" hidden><ol><li><strong>觸發：</strong>影像讀值符合容易混淆的欄名規則。</li><li><strong>Python：</strong><code>needs_review</code> 標記待人覆核，不猜成另一個欄名。</li><li><strong>修正：</strong>人回看來源及欄位關係，確認後才修改或保留。</li></ol><p id="review-rule-status" role="status"></p></div><p class="evidence-note">原函數已用三個合成儲存格測試；此互動展示已儲存的判斷，沒有即時執行 OCR。<a href="evidence/review-rule-audit.json" target="_blank" rel="noopener">查看測試紀錄 ↗</a></p></div></div>
-<div class="artifact pdf-artifact"><div class="artifact-header"><span>原程式 · 真實匯出結果</span><span class="artifact-label">合成測試資料</span></div><div class="proof-stat"><strong>20,000 <span>/ 20,000</span></strong><span>Excel 數值逐格吻合</span><p class="proof-scope">20 頁合成數值表 · 文字層／指定選區測試，非掃描 OCR 準確率。</p></div><div class="table-toolbar"><div class="segmented" role="group" aria-label="查看轉換結果"><button class="selected" id="show-excel" aria-pressed="true">Excel 輸出</button><button id="show-source" aria-pressed="false">原 PDF</button></div><button id="table-zoom" class="table-zoom" aria-pressed="false" aria-controls="excel-view">放大數值 ＋</button><label>頁數 <select id="pdf-page" aria-label="PDF 頁數"></select></label></div><div id="excel-view" class="sheet-scroll" tabindex="0" role="region" aria-label="實際 Excel 數值預覽，可左右捲動"><table id="actual-table"></table></div><div id="source-view" class="pdf-source" hidden><img id="pdf-source-img" loading="lazy" src="assets/pdf-page-1.webp" alt="原始合成 PDF 第一頁，50 列乘 20 欄數值表格" width="1100" height="820"><p id="pdf-source-caption">原 PDF 第 1 頁。切換頁數可對照相同頁的 Excel 輸出。</p></div><div id="cell-detail" class="cell-detail"><span id="cell-location">第 1 頁・A1</span><strong id="cell-value">0.01</strong><p id="cell-info" class="cell-info" role="status">點選儲存格查看位置及實際數值，橫向捲動可看全部 20 欄。</p></div><div class="artifact-downloads"><a class="button small" href="evidence/20000-cells-source.pdf" target="_blank" rel="noopener">原 PDF ↗</a><a class="button small primary" href="evidence/20000-cells-converted.xlsx" download>下載真實 Excel ↓</a></div></div></div></article>
+<dl class="technology-strip" aria-label="實作技術與用途"><div><dt>讀取與定位</dt><dd>PyMuPDF / OpenCV / NumPy</dd></div><div><dt>辨字與記憶</dt><dd>RapidOCR / ONNX Runtime / 字形字典</dd></div><div><dt>工具與輸出</dt><dd>Flask / openpyxl</dd></div></dl><div class="case-layout"><div class="case-copy"><h4>工程師如何由文件回到計算</h4><ul class="key-points"><li>上載文件後可自動尋表或指定範圍，工具還原合併格、欄列與數字。</li><li>輸出的 Excel 可以運算。檢查表把待核對的格位集中列出，工程師可直接處理例外。</li><li>確認一個錯字可一併更新同形字，修正也可供同類文件沿用。</li></ul>
+<div class="impact-block"><div><strong>約 97<span>%</span></strong><p>個案處理時間減少</p></div><div class="time-bars"><div><span>人手轉換</span><i style="--bar:100%"></i><b>16 小時</b></div><div><span>使用工具</span><i style="--bar:3.125%"></i><b>30 分鐘</b></div></div><p class="evidence-note">本人工作紀錄：約 20,000 格報表由 16 小時減至 30 分鐘，按此估算約省 97% 時間。30 多份文件已處理。不同文件及覆核時間會有差異。</p></div>
 
-<article id="togoal" class="case reveal"><div class="case-heading"><p class="project-id"><span>03</span>個人產品 / 獨立開發 · 已正式上線</p><h3>ToGoalAi。<br>把一個想法，做到有人可以用。</h3><p class="case-summary">大學期間，我由需求、介面、資料流程到部署，獨立使用 AI 開發這個學習平台。它把學習資料整理、檢索與 AI 輔助輸出接起來，證明我可以完成一個持續運行的產品。</p></div>
-<dl class="case-facts"><div><dt>我的角色</dt><dd>獨立產品開發</dd></div><div><dt>產品狀態</dt><dd>已正式上線</dd></div><div><dt>公開展示</dt><dd>正式站實際截圖</dd></div></dl><div class="product-window"><div class="browser-bar"><span class="window-dots" aria-hidden="true">● ● ●</span><span>togoalai.com / zh-TW</span><a href="https://www.togoalai.com/zh-TW" target="_blank" rel="noopener">開啟正式站 ↗</a></div><button class="image-zoom" data-zoom="assets/togoalai-live.webp" data-title="ToGoalAi 正式站實際畫面" aria-label="放大 ToGoalAi 正式站截圖"><img src="assets/togoalai-live.webp" alt="ToGoalAi 正式站截圖：學習資料整理、AI 練習及複習功能介紹" width="1440" height="700" loading="lazy"><span>檢視實際畫面 ↗</span></button></div><div class="product-story"><div><h4>我的負責範圍</h4><ul class="key-points"><li>從 UI／UX、功能需求到產品迭代，以 AI 協作獨立實作。</li><li>建立 RAG（先檢索資料，再由 AI 生成）流程，串接 Supabase 資料庫及 API。</li><li>接入 Google、收件及寄件 API，串連資料與通知。</li><li>使用 GitHub 管理版本，透過 Vercel 部署上線。</li></ul></div><div><h4>最難的部分，怎樣拆解？</h4><p>自動產生 PPT，難處是內容及組件是否真正符合用戶意圖。我把模糊要求拆成點列式問題，並保留人手修改，讓使用者逐步控制輸出。</p><p class="evidence-note">畫面來自公開正式站；架構與個人開發範圍依本人專案陳述。部分功能需要登入，實際操作以正式站版本為準。</p><a class="button primary" href="https://www.togoalai.com/zh-TW" target="_blank" rel="noopener">親自探索 ToGoalAi ↗</a></div></div></article>
+<div class="review-example"><p class="eyebrow">遇到疑點，怎樣處理？</p><h4>讀到文字，也可能讀錯欄名。</h4><p>合成例子：影像辨識讀出 <code>Mx-x</code>，但這類欄名的 x／y 容易混淆。原程式保留讀值，交人回看原圖。</p><button id="review-rule-run" class="button small" aria-expanded="false" aria-controls="review-rule-output" disabled>載入原規則結果…</button><div id="review-rule-output" hidden><ol><li><strong>觸發：</strong>影像讀值符合容易混淆的欄名規則。</li><li><strong>Python：</strong><code>needs_review</code> 標記待人覆核，不猜成另一個欄名。</li><li><strong>修正：</strong>人回看來源及欄位關係，確認後才修改或保留。</li></ol><p id="review-rule-status" role="status"></p></div><p class="evidence-note">原函數已用三個合成儲存格測試。此互動展示已儲存的判斷，沒有即時執行 OCR。<a href="evidence/review-rule-audit.json" target="_blank" rel="noopener">查看測試紀錄 ↗</a></p></div></div>
+<div class="artifact pdf-artifact"><div class="artifact-header"><span>原程式 · 真實匯出結果</span><span class="artifact-label">合成測試資料</span></div><div class="proof-stat"><strong>20,000 <span>/ 20,000</span></strong><span>Excel 數值逐格吻合</span><p class="proof-scope">20 頁合成數值表 · 文字層／指定選區測試，非掃描 OCR 準確率。</p></div><div class="table-toolbar"><div class="segmented" role="group" aria-label="查看轉換結果"><button class="selected" id="show-excel" aria-pressed="true">Excel 輸出</button><button id="show-source" aria-pressed="false">原 PDF</button></div><button id="table-zoom" class="table-zoom" aria-pressed="false" aria-controls="excel-view">放大數值 ＋</button><label>頁數 <select id="pdf-page" aria-label="PDF 頁數"></select></label></div><div id="excel-view" class="sheet-scroll" tabindex="0" role="region" aria-label="實際 Excel 數值預覽，可左右捲動"><table id="actual-table"></table></div><div id="source-view" class="pdf-source" hidden><img id="pdf-source-img" loading="lazy" src="assets/pdf-page-1.webp" alt="原始合成 PDF 第一頁，50 列乘 20 欄數值表格" width="1100" height="820"><p id="pdf-source-caption">原 PDF 第 1 頁。切換頁數可對照相同頁的 Excel 輸出。</p></div><div id="cell-detail" class="cell-detail"><span id="cell-location">第 1 頁・A1</span><strong id="cell-value">0.01</strong><p id="cell-info" class="cell-info" role="status">點選儲存格查看位置及實際數值，橫向捲動可看全部 20 欄。</p></div><div class="artifact-downloads"><a class="button small" href="evidence/20000-cells-source.pdf" target="_blank" rel="noopener">原 PDF ↗</a><a class="button small primary" href="evidence/20000-cells-converted.xlsx" download>下載真實 Excel ↓</a></div></div></div><details id="pdf-architecture" class="technical engineering-detail">
+  <summary><span><span class="engineering-kicker">技術架構</span><strong>按頁分流、重建網格、寫入可計算的數值</strong></span><span class="engineering-toggle" aria-hidden="true"></span></summary>
+  <div class="engineering-body">
+    <ol class="engineering-path" aria-label="實作流程">
+      <li><span class="engineering-component">process_pdf · PyMuPDF</span><h4>先判斷 PDF 提供甚麼</h4><p>帶文字層的頁面讀 <code>rawdict</code> 字元框、字型與頁面座標，排除不可見文字。掃描件以影像路徑處理。有足夠 CAD 向量字形時走 <code>cad_flow</code>，圖內嵌入的影像表另讀。</p></li>
+      <li><span class="engineering-component">find_table_regions · build_grid</span><h4>把字元放回正確格位</h4><p>按頁辨認有線表及無線文字區，也接受使用者選區。OpenCV 萃取水平／垂直線，NumPy 整理交點與邊界，利用儲存格框及文字框重建欄列、合併格和表頭。按原圖解析度及像素預算裁切。</p></li>
+      <li><span class="engineering-component">render_check.py · RapidOCR · ONNX Runtime</span><h4>交叉核對易混字形</h4><p>字形引擎辨字後，可用原字型重畫比對，再用 <code>ocr3.py</code> 呼叫 RapidOCR 或 Windows OCR 覆核。人工標籤更新相同字形組及 <code>glyphs.json</code>，CAD 字形和表頭別名可在同類文件沿用。</p></li>
+      <li><span class="engineering-component">parse_number · needs_review · openpyxl</span><h4>保留數值型別及覆核清單</h4><p>資料儲存格轉成可加總的數字。保留原讀值與修正履歷，疑似誤讀和合計不符可在檢查版的 Report 找到對應工作表、格位和原因。Flask 提供上傳、預覽、選區及匯出入口。</p></li>
+    </ol>
+    <dl class="engineering-notes">
+      <div><dt>工程取捨</dt><dd>文字與座標可直接判定時，優先跑確定性解析。只在影像、表頭或難辨字形使用額外辨識，保留覆核欄位，讓工程師可以檢查例外再運算。</dd></div>
+      <div><dt>如何核對</dt><dd>合成測試用原程式處理 20 頁、20,000 個數值，指定選區及文字層的擷取時間為 34.06 秒。另行匯出 Excel 後逐格核對，全部吻合。<a href="evidence/pdf-audit.json" target="_blank" rel="noopener">查看逐格驗證紀錄 ↗</a></dd></div>
+    </dl>
+  </div>
+</details>
+</article>
+
+<article id="togoal" class="case togoal-case reveal">
+  <div class="case-heading"><p class="project-id"><span>03</span>個人產品 / 獨立開發 · 已正式上線</p>
+    <h3>ToGoalAi。<br>把教材變成自己的學習工具。</h3>
+    <p class="case-summary">我把 ToGoalAi 定位為可按個人目標客製的 NotebookLM 式學習平台。學生可以用同一份教材做筆記、練口試、出題和追蹤弱點，教師可以把教材做成可編輯簡報。由需求、介面、API 到部署，我獨立開發並上線整個產品。</p>
+    <a class="case-jump" href="#togoal-architecture">查看功能架構與 API <span aria-hidden="true">↓</span></a>
+  </div>
+<dl class="case-facts"><div><dt>我的角色</dt><dd>獨立全端開發</dd></div><div><dt>產品狀態</dt><dd>已正式上線</dd></div><div><dt>技術組合</dt><dd>Next.js · TypeScript · Supabase</dd></div></dl><div class="product-window">
+  <div class="browser-bar"><span class="window-dots" aria-hidden="true">● ● ●</span><span>togoalai.com / zh-TW</span><a href="https://www.togoalai.com/zh-TW" target="_blank" rel="noopener">開啟正式站 ↗</a></div>
+  <div class="segmented product-views" role="group" aria-label="切換 ToGoalAi 公開畫面">
+    <button type="button" data-product-screen="setup" aria-pressed="true">設定考試</button>
+    <button type="button" data-product-screen="question" aria-pressed="false">作答介面</button>
+    <button type="button" data-product-screen="result" aria-pressed="false">結果與弱點</button>
+    <button type="button" data-product-screen="home" aria-pressed="false">正式站首頁</button>
+  </div>
+  <button class="image-zoom product-picture" id="togoal-zoom" data-screen="setup" data-zoom="assets/togoalai-demo-setup.webp" data-title="ToGoalAi｜設定考試" aria-label="放大 ToGoalAi 設定考試">
+    <img src="assets/togoalai-demo-setup.webp" alt="ToGoalAi 公開畫面顯示如何設定模擬考試" width="896" height="504" loading="lazy">
+    <span>放大畫面 ↗</span>
+  </button>
+  <p id="product-screen-note" class="artifact-footnote product-screen-note" role="status">設定考試主題、涵蓋範圍及題量，再交給 AI 生成題目。可切換查看作答與結果。</p>
+</div>
+<div class="product-story">
+  <div><h4>從整理到複習，都用自己的教材</h4><ul class="key-points"><li><strong>讀懂：</strong>把 PDF、Word、YouTube、網頁或課堂錄音放進筆記本，生成筆記、心智圖與記憶卡。</li><li><strong>練習：</strong>按主題、題量與範圍設模擬試，亦可對着麥克風練口試。</li><li><strong>跟進：</strong>根據答題紀錄找出弱項，再安排複習及針對弱項出題。</li></ul></div>
+  <div><h4>把備課意圖留在教師手上</h4><p>授課對象、重點與表達方式往往未在第一句需求寫清楚。我將要求拆成點列問題及逐頁大綱，容許老師修改每頁簡報和組件，最後匯出 PowerPoint。</p><p class="evidence-note">上方為正式站公開展示。產品另有考卷匯入、學生評語及讀書計劃，部分功能需登入。</p><a class="button primary" href="https://www.togoalai.com/zh-TW" target="_blank" rel="noopener">親自探索 ToGoalAi ↗</a></div>
+</div>
+<details id="togoal-architecture" class="technical engineering-detail">
+  <summary><span><span class="engineering-kicker">技術架構</span><strong>從多格式教材、RAG 和模型路由，做到可營運的學習平台</strong></span><span class="engineering-toggle" aria-hidden="true"></span></summary>
+  <div class="engineering-body">
+    <div class="product-route">
+      <h4>試看不同教材的處理路徑</h4>
+      <div class="product-route-choices" role="group" aria-label="選擇教材來源">
+        <button type="button" data-product-route="pdf" aria-pressed="true">PDF</button>
+        <button type="button" data-product-route="office" aria-pressed="false">Word／PPT</button>
+        <button type="button" data-product-route="web" aria-pressed="false">網頁</button>
+        <button type="button" data-product-route="youtube" aria-pressed="false">YouTube</button>
+        <button type="button" data-product-route="audio" aria-pressed="false">音訊／圖片</button>
+      </div>
+      <dl id="product-route-steps" class="product-route-steps" aria-live="polite">
+        <div><dt>輸入</dt><dd>文字 PDF 或掃描件</dd></div>
+        <div><dt>匯入處理</dt><dd>unpdf 先取文字層。缺少有效文字時，交 Gemini 直接讀 PDF。</dd></div>
+        <div><dt>共用資料</dt><dd>Supabase 儲存教材與筆記段落，供問答、出題及複習讀取。</dd></div>
+      </dl>
+    </div>
+    <ol class="engineering-path" aria-label="ToGoalAi 功能架構">
+      <li><span class="engineering-component">Next.js · React · TypeScript · Supabase</span><h4>教材匯入與筆記本</h4><p>Next.js 路由按檔案類型處理，再將來源文字、摘要及有索引的段落寫入 Supabase。Mammoth 讀 DOCX，JSZip 讀 PPTX 投影片 XML，Cheerio 取網頁正文。圖片、音訊與缺少文字層的 PDF 可走 Gemini 多模態路徑。</p></li>
+      <li><span class="engineering-component">RAG · Supabase · ReadableStream</span><h4>以原教材回答及標示出處</h4><p>同時以帳戶 ID 和選取的教材 ID 限定檢索範圍。把筆記標成來源編號及段落索引，沒有可用段落時讀取來源文字。將取出的內容附到模型上下文，以串流回傳答案，並要求模型標示引用，方便逐段對照。</p></li>
+      <li><span class="engineering-component">Gemini API · OpenAI API · Anthropic API · DeepSeek API</span><h4>按功能選模型並控制 token</h4><p>模型設定集中管理可用方案、積分及輸入輸出上限。過長教材才用 Gemini Flash-Lite 壓縮，個別單來源對話可重用 Gemini 上下文快取。生成路徑可在暫時性錯誤後重試，部分功能設定模型後備。</p></li>
+      <li><span class="engineering-component">Web Speech API · Markmap · 定期複習</span><h4>將答案變成下一次練習</h4><p>口試由瀏覽器辨識語音，把文字送給後端評分。答題結果記錄至弱點清單，供弱項解說和重練取用。心智圖以 Markmap 渲染 Markdown。原碼另有 1、3、7 天的複習排程及費曼／蘇格拉底等可切換學習模式。</p></li>
+      <li><span class="engineering-component">逐頁大綱 · JSON 版型 · PptxGenJS</span><h4>生成、修訂及匯出同一份簡報</h4><p>先確認教學重點、頁數及語言，產生可討論及修改的逐頁大綱，再生成表格、時間線等 JSON 組件。前端可改內容或只交模型修一頁，以 PptxGenJS 將目前版本匯出為 PPTX。</p></li>
+      <li><span class="engineering-component">Google OAuth · Resend API · Stripe · Vercel</span><h4>帳戶、點數、付款及部署</h4><p>以 Supabase Auth 接 Google 登入，Supabase Storage 管理檔案。Resend 發歡迎及低點數通知，Stripe Webhook 處理訂閱與續期。錢包按有效期扣點，部分生成失敗路徑補回點數。GitHub 管版本，Vercel 部署及執行定時任務。</p></li>
+    </ol>
+    <dl class="engineering-notes">
+      <div><dt>甚麼由程式處理</dt><dd>TypeScript 處理檔案分流、帳戶範圍、積分和匯出格式，模型集中處理教材理解、出題及回饋。另以 Python 的 <code>json</code> 和 <code>os</code> 批量維護五種語言的 SEO 設定。</dd></div>
+      <div><dt>如何核對</dt><dd>架構依 GitHub 原始碼核對。上方可切換正式站公開實際畫面，亦可開產品查看已開放功能與方案。<a href="https://www.togoalai.com/zh-TW/terms" target="_blank" rel="noopener">查看 ToGoalAi 點數條款 ↗</a></dd></div>
+    </dl>
+  </div>
+</details>
+</article>
 
 <article id="els" class="case reveal">
   <div class="case-heading"><p class="project-id"><span>04</span>公司實務 / 投標支援 · 完整地盤示例</p>
-    <h3>把工程圖則變成立體方案，<br>支援公司投標、爭取項目。</h3>
-    <p class="case-summary">我以 AI 協作開發地盤建模 Skill 與編輯器，把平面圖則整理成完整、可操作的 3D 地盤模型。投標團隊可以展示開挖、支護與地盤各部分的關係，讓工程方案更容易被理解，支援公司爭取工程合約。</p>
+    <h3>以完整地盤模型支援投標</h3>
+    <p class="case-summary">我以 AI 協作開發地盤建模 Skill 與編輯器。投標團隊可用同一個模型交代開挖、支護和施工動線，討論時直接切平面或剖面，協助公司爭取工程合約。</p><a class="case-jump" href="#els-architecture">查看實作架構 <span aria-hidden="true">↓</span></a>
   </div>
 <dl class="case-facts"><div><dt>我的角色</dt><dd>Skill 與編輯器開發</dd></div><div><dt>實際用途</dt><dd>投標方案溝通</dd></div><div><dt>公開展示</dt><dd>全新虛構地盤</dd></div></dl>
   <dl class="technology-strip" aria-label="實作技術與用途"><div><dt>方案資料</dt><dd>AI Skills / JavaScript config</dd></div><div><dt>3D 操作</dt><dd>Three.js / OrbitControls</dd></div><div><dt>圖則與交付</dt><dd>2D SVG / HTML 匯出</dd></div></dl><div class="site-scope" aria-label="全新虛構地盤示例的配置"><div><strong>20</strong><span>標高與開挖分區</span></div><div><strong>8</strong><span>段板樁支護</span></div><div><strong>43</strong><span>組樁帽</span></div><p>連同斜道、排水預留區、軸線及 2D 圖則，以全新虛構地盤展示整體工程關係。</p></div>
   <div class="els-showcase full-site-showcase">
     <div class="site-preview-bar"><div class="segmented" role="group" aria-label="地盤畫面"><button id="site-view-3d" class="selected" aria-pressed="true">完整 3D 地盤</button><button id="site-view-plan" aria-pressed="false">2D 圖則</button></div><span class="artifact-label">全新虛構地盤 · 非公司項目</span></div>
     <button class="image-zoom" id="full-site-image" data-zoom="assets/els-full-site.webp" data-title="完整地盤模型 · 全新虛構示例" aria-label="放大完整地盤模型"><img id="full-site-preview" src="assets/els-full-site.webp" alt="全新虛構完整地盤：20個分區、8段板樁、43組樁帽、斜道及排水區" width="1600" height="1000" loading="lazy"><span>放大完整地盤 ↗</span></button>
-    <div class="site-action-bar"><div><h4>用 3D／2D，把投標方案講清楚。</h4><p>全新虛構地盤，載入原編輯器；可旋轉、剖面及修改，協助團隊討論方案。</p></div><div class="els-actions"><button class="button primary" id="els-inline-open" aria-controls="els-inline" aria-expanded="false">操作完整地盤 →</button><a class="button" href="tools/els.html" target="_blank" rel="noopener">另頁開啟完整模型 ↗</a></div></div>
+    <div class="site-action-bar"><div><h4>從施工動線看到支護剖面</h4><p>先體驗原引擎的旋轉、俯視及剖面，再試編輯標高或匯出圖則。</p></div><div class="els-actions"><button class="button primary" type="button" data-site-tour>探索 3D 地盤 →</button><button class="button" id="els-inline-open" aria-controls="els-inline" aria-expanded="false">在頁內編輯</button><a class="text-link" href="tools/els.html" target="_blank" rel="noopener">開啟完整編輯器 ↗</a></div></div>
   </div>
   <div id="els-inline" class="els-inline" hidden><div class="inline-toolbar"><p id="els-load-state" role="status">載入完整地盤模型…</p><div class="inline-controls"><button id="els-rotate" class="button small" aria-pressed="false" disabled>播放模型旋轉 ▶</button><button id="els-inline-close" class="button small">關閉工具 ×</button></div></div><div class="inline-scroll"><iframe id="els-frame" title="原 ELS 編輯器：全新虛構完整地盤" allow="fullscreen" allowfullscreen></iframe></div><p class="artifact-footnote">試試「開啟剖面」、「2D 圖則」，或「開始編輯」調整分區。原工具在瀏覽器本地執行。</p></div>
-  <div class="product-story"><div><h4>工程能力，連到投標需要</h4><ul class="key-points"><li><strong>完整呈現方案：</strong>把不同標高、開挖區、板樁、樁帽、斜道與排水區放在同一個模型，讓整體關係一目了然。</li><li><strong>方便投標溝通：</strong>以立體、平面及剖面視角講解方案，支援投標簡報與工程討論。</li><li><strong>可修改、可交付：</strong>調整分區、檢視土方量，並匯出 HTML，讓團隊繼續查看與討論。</li></ul></div><div><h4>以完整虛構地盤展示能力</h4><p>為作品集重新設計 L 形地盤，包含兩個施工區、設備平台、中央庭院、場內運輸及基礎分區。外形、座標、尺寸、標高及組件位置全部另建，沒有沿用公司項目的地盤幾何。</p><p class="evidence-note">用途及業務價值依本人專案陳述。模型供方案展示與溝通，土方為估算，正式工程仍需覆核。需要 WebGL；建議桌面或平板橫向操作。</p></div></div>
-  <details class="technical"><summary>建模 Skill 與編輯器如何分工？</summary><div><p class="stack">AI Skills · config.js · JavaScript · Three.js · 2D SVG</p><ul class="key-points"><li><strong>資料與畫面分開：</strong>Skill 把圖則資訊整理為軸線、標高、多邊形及組件配置；編輯器讀取配置，讓同一套資料維持可修改。</li><li><strong>瀏覽器負責互動：</strong>Three.js 呈現場地與支護，OrbitControls 控制視角，CSS2DRenderer 顯示標高；不需每次操作都呼叫 AI。</li><li><strong>固定計算交給程式：</strong><code>computeVolumes</code> 以地表網格比較現有地面與設計面，估算挖填；<code>build2DConfig</code> 產生平面圖，<code>configText</code> 保存修改。</li></ul><p>此處已實測修改標高 → 2D 同步 → 復原。完整模型是另建的虛構資料，土方與工程參數僅供展示及覆核。</p></div></details>
+  <div class="product-story"><div><h4>投標團隊怎樣使用</h4><ul class="key-points"><li><strong>完整呈現方案：</strong>把不同標高、開挖區、板樁、樁帽、斜道與排水區放在同一個模型，讓整體關係一目了然。</li><li><strong>方便投標溝通：</strong>以立體、平面及剖面視角講解方案，支援投標簡報與工程討論。</li><li><strong>可修改、可交付：</strong>調整分區、檢視土方量，並匯出 HTML，讓團隊繼續查看與討論。</li></ul></div><div><h4>虛構地盤涵蓋完整工程關係</h4><p>作品集的 L 形地盤是全新設計，包含兩個施工區、設備平台、中央庭院、場內運輸及基礎分區。外形、尺寸、標高及構件位置重新建立。</p><p class="evidence-note">操作需要 WebGL，建議使用桌面或橫向平板。</p></div></div>
+<details id="els-architecture" class="technical engineering-detail">
+  <summary><span><span class="engineering-kicker">技術架構</span><strong>從圖則提取配置，再用同一資料生成 3D、平面及剖面</strong></span><span class="engineering-toggle" aria-hidden="true"></span></summary>
+  <div class="engineering-body">
+    <ol class="engineering-path" aria-label="實作流程">
+      <li><span class="engineering-component">AI Skill · GRID / LEVELS / REGIONS</span><h4>把圖則整理成可編輯配置</h4><p>Skill 將軸線、分區邊界、標高及構件位置整理成 JavaScript 配置。各區記錄多邊形及孔洞、標高與資料狀態，另外描述斜道、排水、板樁及樁帽。修改的是工程資料，可重新生成畫面。</p></li>
+      <li><span class="engineering-component">Three.js · OrbitControls · CSS2DRenderer</span><h4>由幾何生成可操作地盤</h4><p>瀏覽器把平面座標及標高轉成 3D 網格和構件，以 CSS2DRenderer 畫標高標籤。OrbitControls 控制視角，<code>applySection</code> 更新剖面，操作時可查看同一配置的不同視角。</p></li>
+      <li><span class="engineering-component">Float64Array · computeVolumes</span><h4>將估算交給確定性計算</h4><p>取樣網格逐格比較現有地面及設計面，將正負高差乘格面積後分開加總挖填量，並列出各區估算。此合成地盤以 0.5 米為取樣格距。</p></li>
+      <li><span class="engineering-component">build2DConfig · pushUndo · configText</span><h4>同步平面、復原及交付</h4><p>以現有分區及標高派生 2D 配置，平面輸出將米轉為毫米。編輯器保存可復原的修改狀態，<code>configText</code> 序列化現況，可存專案或匯出可瀏覽 HTML。</p></li>
+    </ol>
+    <dl class="engineering-notes">
+      <div><dt>工程取捨</dt><dd>以一份分區和標高資料派生各個視圖及估算，團隊修方案時可以在同一處修改並即時重看。AI 協助整理圖則，渲染與計算由 JavaScript 執行。</dd></div>
+      <div><dt>如何核對</dt><dd>原編輯器使用全新虛構地盤。可在上方調整一區標高、打開 2D 圖則核對更新，再按復原。已實測 3D 與 2D 同步及匯出。土方量屬方案估算。</dd></div>
+    </dl>
+  </div>
+</details>
 </article>
 
 <article id="drill" class="case reveal">
-  <div class="case-heading"><p class="project-id"><span>05</span>AI Skills / 複雜 PDF 理解 · 工程師使用</p><h3>讓 AI 讀懂複雜 PDF，<br>再把資料變成可用的 Excel。</h3><p class="case-summary">我把複雜工程 PDF 的判讀方法整理成可重用 Skill。面對多欄版面、跨頁記錄、合併儲存格及極細文字，AI 按固定步驟理解文件，再配合 Python 抽取、整理及核對資料，交給工程師使用。</p></div>
+  <div class="case-heading"><p class="project-id"><span>05</span>AI Skills / 複雜 PDF 理解 · 工程師使用</p><h3>讓 AI 掌握複雜 PDF 的版面與資料關係</h3><p class="case-summary">工程師要從多欄、跨頁及極細字的工程 PDF 整理資料。我把判讀方法寫成可重用的 AI Skill，再由 Python 處理擷取與整理，將資料連同覆核位置交給工程師。</p><a class="case-jump" href="#drill-architecture">查看實作架構 <span aria-hidden="true">↓</span></a></div>
 <dl class="case-facts"><div><dt>我的角色</dt><dd>判讀 Skill＋Python</dd></div><div><dt>實際採用</dt><dd>工程師・20 份文件</dd></div><div><dt>公開展示</dt><dd>合成流程導覽</dd></div></dl>
-  <dl class="technology-strip" aria-label="實作技術與用途"><div><dt>版面與細字</dt><dd>PyMuPDF / OpenCV / NumPy</dd></div><div><dt>辨識輔助</dt><dd>RapidOCR / 數字模板比對</dd></div><div><dt>可編輯交付</dt><dd>AI Skills / XlsxWriter</dd></div></dl><div class="case-layout"><div class="case-copy"><ul class="key-points"><li><strong>把判讀經驗寫成規則：</strong>先認版面與欄位關係，再處理數字、文字及跨頁延續，避免只抽到一堆失去上下文的文字。</li><li><strong>由 AI 協調，工具執行：</strong>按文件情況使用文字層、放大檢視、OCR 及字形比對；固定整理與檢查交給 Python。</li><li><strong>交付可用的資料：</strong>保留來源與疑點，輸出可編輯、可計算的 Excel；不能確認的內容留待人手覆核。</li></ul><div class="impact-block"><div><strong>約 95<span>%</span></strong><p>個案處理時間減少</p></div><div class="time-bars"><div><span>原流程</span><i style="--bar:100%"></i><b>5 小時</b></div><div><span>使用 Skill</span><i style="--bar:5%"></i><b>15 分鐘</b></div></div><p class="evidence-note">本人工作紀錄：工程師使用，已處理 20 份文件。數據與疑點仍由使用者覆核。</p></div><details class="technical"><summary>展開技術：版面、細字與可覆核 Excel</summary><div><p class="stack">Python · PyMuPDF · OpenCV / NumPy · RapidOCR · digit_ocr · XlsxWriter</p><dl class="function-map"><div><dt>先理解文件，再取資料</dt><dd>Skill 引導 AI 先辨識欄線、合併格與跨頁關係；<code>gi_pipeline.py</code> 配合 PyMuPDF 的文字座標及 OpenCV 影像處理，將資料放回正確欄位，處理掃描傾斜與極薄儲存格。</dd></div><div><dt>細數字不只交給通用 OCR</dt><dd><code>digit_ocr.py</code> 由同版式向量 PDF 建立數字模板，以 NumPy / OpenCV 正規化、分字及近鄰比對；配合 RapidOCR 讀其他文字。這讓 AI 有工具核對細字，而非只憑一張縮圖猜測。</dd></div><div><dt>規則整理與公式輸出</dt><dd><code>xlsx_pdf_layout.py</code> 使用 XlsxWriter 建立合併格、數值與公式工作表，保留來源頁及需要覆核的位置。以已確認案例重跑，記錄差異與警告，讓工程師知道甚麼仍要檢查。</dd></div></dl><p>Skill 將判讀經驗、例外與工具用法拆成可重用步驟；讀取與計算交給 Python，AI 處理版面理解及例外判斷。</p></div></details></div>
+  <dl class="technology-strip" aria-label="實作技術與用途"><div><dt>版面與細字</dt><dd>PyMuPDF / OpenCV / NumPy</dd></div><div><dt>辨識輔助</dt><dd>RapidOCR / 數字模板比對</dd></div><div><dt>可編輯交付</dt><dd>AI Skills / XlsxWriter</dd></div></dl><div class="case-layout"><div class="case-copy"><ul class="key-points"><li><strong>把判讀經驗寫成規則：</strong>先認版面與欄位關係，再處理數字、文字及跨頁延續，避免只抽到一堆失去上下文的文字。</li><li><strong>由 AI 協調，工具執行：</strong>按文件情況使用文字層、放大檢視、OCR 及字形比對。固定整理與檢查交給 Python。</li><li><strong>交付可用的資料：</strong>保留來源與疑點，輸出可編輯、可計算的 Excel。不能確認的內容留待人手覆核。</li></ul><div class="impact-block"><div><strong>約 95<span>%</span></strong><p>個案處理時間減少</p></div><div class="time-bars"><div><span>原流程</span><i style="--bar:100%"></i><b>5 小時</b></div><div><span>使用 Skill</span><i style="--bar:5%"></i><b>15 分鐘</b></div></div><p class="evidence-note">本人工作紀錄：工程師使用，已處理 20 份文件。數據與疑點仍由使用者覆核。</p></div></div>
   <div class="artifact pdf-skill-artifact"><div class="artifact-header"><span>複雜 PDF → 可覆核資料</span><span class="artifact-label">Skill 流程導覽</span></div><div class="skill-tabs" role="tablist" aria-label="PDF Skill 判讀步驟"><button role="tab" id="skill-tab-0" data-pdf-skill="0" aria-selected="true" aria-controls="pdf-skill-panel">01 認版面</button><button role="tab" id="skill-tab-1" data-pdf-skill="1" aria-selected="false" aria-controls="pdf-skill-panel" tabindex="-1">02 讀資料</button><button role="tab" id="skill-tab-2" data-pdf-skill="2" aria-selected="false" aria-controls="pdf-skill-panel" tabindex="-1">03 交付覆核</button></div>
-    <div class="skill-document" id="skill-document" data-stage="0"><img src="assets/complex-pdf-guide.svg" alt="複雜工程報表的版面示意：多欄、合併格、細字、不同分段及跨頁延續；使用合成資料" width="560" height="590" loading="lazy"><div class="doc-highlight doc-highlight-layout" aria-hidden="true"></div><div class="doc-highlight doc-highlight-data" aria-hidden="true"></div><div class="doc-highlight doc-highlight-review" aria-hidden="true"></div><span class="doc-callout" id="doc-callout">先分清欄位，才讀內容</span></div>
-    <div id="pdf-skill-panel" class="skill-explanation" role="tabpanel" aria-labelledby="skill-tab-0"><h4>先認版面，避免讀錯欄。</h4><p>Skill 先引導 AI 定位欄線、合併格與分頁邊界，建立資料之間的關係。</p></div><div class="artifact-downloads"><a class="button small" href="evidence/drill-original-report.xlsx" download>查看原程式 Excel 輸出 ↓</a></div><p class="artifact-footnote">依實際判讀流程編排；版面及文字為合成示意，下載檔亦使用合成資料。此頁不運行 AI。</p>
+    <div class="skill-document" id="skill-document" data-stage="0"><img src="assets/complex-pdf-guide.svg" alt="複雜工程報表的版面示意：多欄、合併格、細字、不同分段及跨頁延續。使用合成資料" width="560" height="590" loading="lazy"><div class="doc-highlight doc-highlight-layout" aria-hidden="true"></div><div class="doc-highlight doc-highlight-data" aria-hidden="true"></div><div class="doc-highlight doc-highlight-review" aria-hidden="true"></div><span class="doc-callout" id="doc-callout">先分清欄位，才讀內容</span></div>
+    <div id="pdf-skill-panel" class="skill-explanation" role="tabpanel" aria-labelledby="skill-tab-0"><h4>先認版面，避免讀錯欄。</h4><p>Skill 先引導 AI 定位欄線、合併格與分頁邊界，建立資料之間的關係。</p></div><div class="artifact-downloads"><a class="button small" href="evidence/drill-original-report.xlsx" download>查看原程式 Excel 輸出 ↓</a></div><p class="artifact-footnote">依實際判讀流程編排。版面及文字為合成示意，下載檔亦使用合成資料。此頁不運行 AI。</p>
   </div></div>
+<details id="drill-architecture" class="technical engineering-detail">
+  <summary><span><span class="engineering-kicker">技術架構</span><strong>以版面結構約束 OCR，追蹤跨頁與缺頁</strong></span><span class="engineering-toggle" aria-hidden="true"></span></summary>
+  <div class="engineering-body">
+    <ol class="engineering-path" aria-label="實作流程">
+      <li><span class="engineering-component">AI Skill · gi_pipeline.py · PyMuPDF</span><h4>識別文件版面及可用來源</h4><p>Skill 指引 AI 先判斷文件版式、欄位關係和跨頁位置，再選工具。Python 讀取每頁文字框及字型資訊，區分向量文字與掃描頁，保留來源頁碼。</p></li>
+      <li><span class="engineering-component">OpenCV 形態學 · NumPy · RapidOCR</span><h4>分隔極薄欄位與細字</h4><p>先以 OpenCV 的方向性形態學找欄線，再按格裁切，減少相鄰欄互相干擾。<code>digit_ocr.py</code> 由同版式向量頁做數字模板，將切出的字形正規化後配對，其他文字可用 RapidOCR。</p></li>
+      <li><span class="engineering-component">_group_pages · merge_pages</span><h4>把分頁接回同一筆記錄</h4><p>向量頁按識別欄及標頭數值分組。掃描頁利用較穩定的欄位與相鄰頁推斷歸屬。按資料區段排序並核對連續性、印刷頁數，遇到缺頁或離群頁記錄原因。</p></li>
+      <li><span class="engineering-component">xlsx_pdf_layout.py · XlsxWriter</span><h4>從結構化記錄到覆核交付</h4><p>按合併後的欄列輸出可編輯儲存格、數值及公式。程式亦可將核對位置標到來源頁圖，讓工程師從異常的位置返回原文件。</p></li>
+    </ol>
+    <dl class="engineering-notes">
+      <div><dt>工程取捨</dt><dd>先以版面和欄位規則縮小判讀範圍，再處理文字。以模板減少極細數字的辨識錯誤，對缺頁或資料斷層保留待覆核狀態。</dd></div>
+      <div><dt>如何核對</dt><dd>上方可逐步對照多欄、跨頁及覆核導覽，並下載原程式以合成項目輸出的 Excel。</dd></div>
+    </dl>
+  </div>
+</details>
 </article>
 
-<article id="youtube" class="case reveal"><div class="case-heading"><p class="project-id"><span>06</span>個人自動化 / 批次上傳</p><h3>把上傳的重複操作，<br>變成有檢查、有邊界的流程。</h3><p class="case-summary">我在大學期間開始開發上傳工作流；目前本機版本使用 Playwright 操作 YouTube Studio。重點是批次配對、錯誤處理與發佈前確認，讓重複任務可以穩定重跑。</p></div><dl class="technology-strip" aria-label="實作技術與用途"><div><dt>流程執行</dt><dd>Node.js / Playwright</dd></div><div><dt>檔案與狀態</dt><dd>fs / path / 上傳日誌</dd></div><div><dt>封面處理</dt><dd>Chromium Canvas / JPEG</dd></div></dl><div class="case-layout"><div class="case-copy"><ul class="key-points"><li><strong>檔案自動配對：</strong>按編號對應影片、標題與封面，排除空檔及未完成檔案。</li><li><strong>單項失敗可追蹤：</strong>缺件逐項記錄，其他完整項目仍可繼續；上傳紀錄避免重複。</li><li><strong>保留最後控制：</strong>封面壓縮與欄位填寫自動處理，預設停在發佈前，明確指令才提交。</li></ul><details class="technical"><summary>技術與操作界線</summary><div><p class="stack">Node.js · Playwright · fs / path / crypto · Chromium Canvas</p><ul class="key-points"><li><strong>任務先整理再操作：</strong><code>fileMatcher.js</code> 以編號配對並檢查必要檔案；上傳日誌攔截重複項目。檔案和狀態由程式處理，不需要模型逐次判斷。</li><li><strong>自動處理封面限制：</strong><code>thumbnail.js</code> 借已啟動的 Chromium Canvas 重新編碼 JPEG，調整品質及尺寸以符合 2 MB 限制；快取鍵包含來源路徑雜湊，避免同名封面互相覆蓋。</li><li><strong>瀏覽器執行與狀態記錄：</strong>Playwright 操作 YouTube Studio，缺件與失敗逐項回報，預設保留發佈前確認。</li></ul><p>導覽依目前本機版本的檔案匹配與上傳檢查邏輯編排。這裏不操作帳戶，也不會上傳或發佈影片。</p></div></details></div><div class="artifact"><div class="artifact-header"><span>批次任務 · 檢查導覽</span><span class="artifact-label">虛構檔案</span></div><div class="artifact-body"><div class="batch-files"><span>01.mp4 <b>已就緒</b></span><span>01 · 標題 <b>已配對</b></span><span>01.jpg <b>已配對</b></span><span>02.mp4 <b class="warning">缺少封面</b></span></div><button id="upload-inspect" class="button primary">查看原流程如何處理 →</button><ol id="upload-states" class="upload-states" hidden><li><span>01</span><div><strong>檢查批次與必要檔案</strong><p>完整項目進入佇列；缺件項目記錄原因，留待修正。</p></div></li><li><span>02</span><div><strong>查上傳日誌、處理封面</strong><p>避免重複工作，再填入原有標題及說明。</p></div></li><li><span>03</span><div><strong>停在發佈前</strong><p>保留最後確認；導覽到此結束，沒有帳戶操作。</p></div></li></ol></div></div></div></article>
+<article id="youtube" class="case reveal"><div class="case-heading"><p class="project-id"><span>06</span>個人自動化 / 批次上傳</p><h3>把影片上傳做成可重跑的批次流程</h3><p class="case-summary">我在大學期間開始開發 YouTube 批次上傳工具，讓每批影片、標題與封面自動配對。人可先查缺件及進度，再決定何時發佈，減少逐條操作和重傳。</p><a class="case-jump" href="#youtube-architecture">查看實作架構 <span aria-hidden="true">↓</span></a></div><dl class="technology-strip" aria-label="實作技術與用途"><div><dt>流程執行</dt><dd>Node.js / Playwright</dd></div><div><dt>檔案與狀態</dt><dd>fs / path / 上傳日誌</dd></div><div><dt>封面處理</dt><dd>Chromium Canvas / JPEG</dd></div></dl><div class="case-layout"><div class="case-copy"><ul class="key-points"><li><strong>檔案自動配對：</strong>按編號對應影片、標題與封面，排除空檔及未完成檔案。</li><li><strong>單項失敗可追蹤：</strong>缺件逐項記錄，其他完整項目仍可繼續。上傳紀錄避免重複。</li><li><strong>保留最後控制：</strong>封面壓縮與欄位填寫自動處理，預設停在發佈前，明確指令才提交。</li></ul></div><div class="artifact batch-artifact">
+  <div class="artifact-header"><span>上傳前的批次預檢</span><span class="artifact-label">合成檔案</span></div>
+  <div class="artifact-body">
+    <p class="batch-intro">四個測試檔案中，有一個欠封面，另有一個空檔。比較首次掃描與更換其中一段素材後重跑的結果。</p>
+    <button id="upload-inspect" class="button primary" aria-expanded="false" aria-controls="upload-states" disabled>載入預檢結果…</button>
+    <div id="upload-states" hidden>
+      <div class="segmented batch-controls" role="group" aria-label="預檢模式"><button type="button" data-batch="initial" aria-pressed="true">首次預檢</button><button type="button" data-batch="replay" aria-pressed="false">換檔後重跑</button></div>
+      <p id="batch-result" role="status"></p>
+      <dl id="batch-files" class="batch-files"></dl>
+    </div>
+  </div>
+  <p class="artifact-footnote">原配對及日誌函式的合成測試結果。已擬備紀錄為測試預設，驗證範圍為本地預檢。</p>
+</div></div>
+<details id="youtube-architecture" class="technical engineering-detail">
+  <summary><span><span class="engineering-kicker">技術架構</span><strong>批次預檢、瀏覽器執行與可重跑狀態</strong></span><span class="engineering-toggle" aria-hidden="true"></span></summary>
+  <div class="engineering-body">
+    <ol class="engineering-path" aria-label="實作流程">
+      <li><span class="engineering-component">fileMatcher.js · fs / path</span><h4>按素材編號建立工作項</h4><p>掃描批次檔案，自然排序 <code>1, 2, 10</code>，用編號配對影片、標題說明和封面。排除空檔和暫存檔，記錄缺件及欄位過長原因。Dry run 可先看佇列而毋須開瀏覽器。</p></li>
+      <li><span class="engineering-component">thumbnail.js · Chromium Canvas · JPEG</span><h4>自動適配封面檔案</h4><p>在既有 Chromium 裏用 Canvas 重編 JPEG，以品質與尺寸迭代滿足工具設定的 2 MB 限制。快取鍵加入來源路徑雜湊，讓不同批次的同名封面各自保存。</p></li>
+      <li><span class="engineering-component">YouTube Studio · Playwright</span><h4>將等候與提交設成不同階段</h4><p>等對應檔名的編輯表單就緒才填標題、說明及封面。其他影片可先處理，逾時的保留給重試。預設停在準備完成，明確指定發佈才進入提交分支。</p></li>
+      <li><span class="engineering-component">UploadLog · JSON · size:mtimeMs</span><h4>區分重跑、重複與換檔</h4><p>以上傳批次與檔名為鍵，記錄準備完成、已發佈或失敗，保留步驟、錯誤及影片 URL。重跑以檔案大小及修改時間比對同名檔，跳過同一份已處理素材，換檔可重新排程。</p></li>
+    </ol>
+    <dl class="engineering-notes">
+      <div><dt>工程取捨</dt><dd>檔案配對、欄位驗證及重跑判斷用固定規則執行。外部平台提交另設明確開關，預檢即可處理缺件，減少重複操作和誤發。</dd></div>
+      <div><dt>如何核對</dt><dd>上方預檢由原 <code>scanBatch</code> 與 <code>UploadLog</code> 讀取合成檔及測試日誌。重跑模式可核對缺件、空檔、已擬備及同名換檔的不同結果。<a href="evidence/upload-preflight.json" target="_blank" rel="noopener">查看預檢測試紀錄 ↗</a></dd></div>
+    </dl>
+  </div>
+</details>
+</article>
 
-<article id="video" class="case reveal"><div class="case-heading"><p class="project-id"><span>07</span>AI Skills / 影片製作與發佈</p><h3>從劇本到成片，<br>把創作流程寫成可重用的 Skills。</h3><p class="case-summary">我把劇本、剪接、字幕、程式動畫、音效及人聲處理分成明確步驟，由 AI 讀取所需規則及工具，逐段製作與質檢，最後接到發佈流程。</p></div><dl class="technology-strip" aria-label="實作技術與用途"><div><dt>聲音與剪接</dt><dd>Python / NumPy / FFmpeg</dd></div><div><dt>對位與去背</dt><dd>faster-whisper / rembg / ONNX Runtime</dd></div><div><dt>動畫與輸出</dt><dd>React / Remotion / ffprobe</dd></div></dl><div class="video-pipeline" aria-label="影片 Skill 架構"><button data-video="0" aria-pressed="true"><span>01 / PLAN</span><strong>劇本與分鏡</strong></button><span class="pipeline-arrow" aria-hidden="true">→</span><button data-video="1" aria-pressed="false"><span>02 / BUILD</span><strong>剪接與動畫</strong></button><span class="pipeline-arrow" aria-hidden="true">→</span><button data-video="2" aria-pressed="false"><span>03 / CHECK</span><strong>音畫質檢</strong></button><span class="pipeline-arrow" aria-hidden="true">→</span><button data-video="3" aria-pressed="false"><span>04 / SHIP</span><strong>輸出與發佈</strong></button></div><div class="video-description" id="video-description" role="status"></div><details class="technical video-technical"><summary>展開技術：Python 如何串連剪接、音訊及動畫？</summary><div><p class="stack">Python · subprocess · NumPy · faster-whisper · FFmpeg / ffprobe · OpenCV · rembg · ONNX Runtime · React / Remotion</p><dl class="function-map"><div><dt>語音對位與保留字頭字尾</dt><dd><code>prep.py</code> 以 faster-whisper 取得逐字時間，再對齊劇本；NumPy 計算 10 毫秒音訊區段的 RMS 響度，配合底噪與人聲門檻切停頓。Whisper 時間作參考，實際修剪仍檢查人聲，避免削掉較輕的字頭字尾。</dd></div><div><dt>FFmpeg 處理剪接與聲音</dt><dd>Python 透過 <code>subprocess</code> 調用 FFmpeg 命令列工具，處理分段、拼接、高通、降噪、de-esser、EQ、壓縮與響度。<code>master.py</code> 量度後調整整片至目標 −14 LUFS，限制真峰值及影片碼率，再量一次輸出。</dd></div><div><dt>人像、字幕與程式動畫</dt><dd><code>cutout.py / vbg.py</code> 使用 OpenCV、rembg 與 ONNX Runtime；可用 DirectML 處理 GPU 去背。Remotion / React 讀取 <code>timeline.json</code>，按時間組合真人、字幕及動畫；<code>ffprobe</code> 核對尺寸、幀率、時長與碼率。</dd></div><div><dt>把重試成本控制在必要步驟</dt><dd><code>run_all.py</code> 把流程分階段並記錄 JSON 狀態，先做規則與素材檢查才進入重型渲染；Skill 核心保持精簡，細節按需讀取，避免每次都把全部指令送入模型。</dd></div></dl></div></details><p class="evidence-note">求職介紹影片會由我另行拍攝，再使用這套流程製作；此處展示已開發的 Skill 架構。</p></article>
+<article id="video" class="case reveal"><div class="case-heading"><p class="project-id"><span>07</span>AI Skills / 影片製作與發佈</p><h3>從劇本、剪接到發佈的影片製作 Skills</h3><p class="case-summary">需要多次製作短片時，我用 Skills 把劇本、字幕、剪接、動畫、音效及人聲處理接在一起。同一套時間軸協調各段輸出，遇到問題可回到指定階段改，再接到發佈流程。</p><a class="case-jump" href="#video-architecture">查看實作架構 <span aria-hidden="true">↓</span></a></div><dl class="technology-strip" aria-label="實作技術與用途"><div><dt>聲音與剪接</dt><dd>Python / NumPy / FFmpeg</dd></div><div><dt>對位與去背</dt><dd>faster-whisper / rembg / ONNX Runtime</dd></div><div><dt>動畫與輸出</dt><dd>React / Remotion / ffprobe</dd></div></dl><div class="video-pipeline" aria-label="影片 Skill 架構"><button data-video="0" aria-pressed="true"><span>01 / PLAN</span><strong>劇本與分鏡</strong></button><span class="pipeline-arrow" aria-hidden="true">→</span><button data-video="1" aria-pressed="false"><span>02 / BUILD</span><strong>剪接與動畫</strong></button><span class="pipeline-arrow" aria-hidden="true">→</span><button data-video="2" aria-pressed="false"><span>03 / CHECK</span><strong>音畫質檢</strong></button><span class="pipeline-arrow" aria-hidden="true">→</span><button data-video="3" aria-pressed="false"><span>04 / SHIP</span><strong>輸出與發佈</strong></button></div><div class="video-description" id="video-description" role="status"></div><div class="artifact reel-lab" id="reel-lab">
+  <div class="artifact-header"><span>沿時間軸看字幕與動畫對位</span><span class="artifact-label">合成時間軸</span></div>
+  <div class="reel-layout">
+    <div class="reel-visual" id="reel-visual" data-scene="align">
+      <span class="reel-scene-label" id="reel-scene-label">對齊錄音</span>
+      <div class="reel-graphic" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <p class="reel-caption" id="reel-caption">先把錄音對齊劇本</p>
+    </div>
+    <div class="reel-controls">
+      <div class="reel-transport"><button type="button" class="button small primary" id="reel-play">播放 ▶</button><span id="reel-time">0.00 / 8.00 s</span></div>
+      <label class="sr-only" for="reel-position">時間軸位置</label>
+      <input type="range" id="reel-position" min="0" max="8" value="0" step="0.01" aria-describedby="reel-tip">
+      <div class="reel-segments" role="group" aria-label="跳到片段"><button type="button" data-reel-jump="0" aria-pressed="true">對位</button><button type="button" data-reel-jump="2.6" aria-pressed="false">字幕與動畫</button><button type="button" data-reel-jump="5.4" aria-pressed="false">交付質檢</button></div>
+      <dl class="reel-cues"><div><dt>字幕區間</dt><dd id="reel-caption-time">0.00–1.35 s</dd></div><div><dt>動畫觸發</dt><dd id="reel-cue">0.74 s · 等待</dd></div></dl>
+      <p id="reel-tip">拖動時間軸或選片段。留意字幕何時換行，以及畫面何時按標記觸發。</p>
+    </div>
+  </div>
+  <p class="artifact-footnote">本頁以合成畫面示範 <code>timeline.json</code> 的段落、字幕區間與字詞時間碼。正式剪輯以 Remotion 渲染。</p>
+</div>
+<details id="video-architecture" class="technical engineering-detail">
+  <summary><span><span class="engineering-kicker">技術架構</span><strong>用劇本標籤、時間軸與檢查報告驅動製作</strong></span><span class="engineering-toggle" aria-hidden="true"></span></summary>
+  <div class="engineering-body">
+    <ol class="engineering-path" aria-label="實作流程">
+      <li><span class="engineering-component">AI Skills · 分鏡標籤 · timeline.json</span><h4>將劇本變成渲染輸入</h4><p>劇本 Skill 按需讀取規則與組件規格，輸出可供剪接套用的段落、字幕及畫面標籤。時間軸為片段、字幕、音效及動畫提供共同時間座標。</p></li>
+      <li><span class="engineering-component">prep.py · faster-whisper · NumPy · FFmpeg</span><h4>對齊逐字時間，保住字頭字尾</h4><p>Whisper 給逐字時間碼並對齊劇本。NumPy 每 10 毫秒量度 RMS，估底噪、人聲及停頓，調整落刀位置以保留輕聲字頭字尾。Python 以 <code>subprocess</code> 呼叫 FFmpeg 做剪接和音訊處理。</p></li>
+      <li><span class="engineering-component">rembg · ONNX Runtime / DirectML · Remotion</span><h4>共用時間軸合成人像與動畫</h4><p>OpenCV 及 rembg 處理人像遮罩，可用 DirectML 加速。React／Remotion 應用時間軸組合真人、字幕和程式動畫，按切畫面時間加音效。FFmpeg 人聲鏈包含降噪、EQ、去齒音及壓縮。</p></li>
+      <li><span class="engineering-component">run_all.py · master.py · ffprobe · audit.py</span><h4>預檢、母帶處理及重聽</h4><p>先驗規格和時間軸，再進 GPU 或重型渲染。輸出以 −14 LUFS 為目標並限制真峰值，ffprobe 查規格，audit 重新轉錄對照劇本。JSON 記任務進度，檢查失敗時針對該階段修正及重跑。</p></li>
+    </ol>
+    <dl class="engineering-notes">
+      <div><dt>工程取捨</dt><dd>標籤與時間軸作為各步驟的共同輸入。生成元件前先校驗規格，渲染後查漏字、音質和影片規格，降低全片重做的成本。通過檢查後才進發佈流程。</dd></div>
+      <div><dt>如何核對</dt><dd>上方可拖動合成時間軸，對照原時間欄位與字幕、程式動畫。求職介紹片會由我另行拍攝，再用這套流程製作。</dd></div>
+    </dl>
+  </div>
+</details>
+</article>
 </section>
 
-<section id="approach" class="approach"><div class="wrap"><div class="section-heading reveal"><div><p class="eyebrow">我怎樣做 AI 工程</p><h2>能力不只在產出。<br><span class="dim">也在成本、穩定與控制。</span></h2></div><p>把 AI 接上工作流程之前，我先分清楚甚麼需要判斷、甚麼應該由程式保證。</p></div><div class="approach-grid"><article class="reveal"><span class="mono">01 / EXPLORE</span><h3>用強模型探索全流程</h3><p>先跑通需求、輸入、例外與交付，找出真正需要推理的部分。</p></article><article class="reveal"><span class="mono">02 / ENGINEER</span><h3>固定邏輯回到 Python</h3><p>格式、數值、檔案、驗證交給程式，減少模型呼叫及輸出波動。Skills 只按需載入參考資料。</p></article><article class="reveal"><span class="mono">03 / EVALUATE</span><h3>用輕量模型與例外回測</h3><p>記錄 token 及訂閱用量，以輕量模型及例外案例回測。用戶答覆、字形修正及最終改稿回流知識庫，經確認再更新詞庫與規則。</p></article></div><div class="engineering-note reveal"><span aria-hidden="true">↳</span><p>作品集本身也遵循同樣方法：靜態網站、本地 3D 引擎、原程式預先生成資料，互動時毋須消耗模型 token。</p></div></div></section>
+<section id="approach" class="approach"><div class="wrap"><div class="section-heading reveal"><div><p class="eyebrow">我怎樣做 AI 工程</p><h2>能力不只在產出。<br><span class="dim">也在成本、穩定與控制。</span></h2></div><p>把 AI 接上工作流程之前，我先分清楚甚麼需要判斷、甚麼應該由程式保證。</p></div><div class="approach-grid"><article class="reveal"><span class="mono">01 / EXPLORE</span><h3>用強模型探索全流程</h3><p>先跑通需求、輸入、例外與交付，找出真正需要推理的部分。</p></article><article class="reveal"><span class="mono">02 / ENGINEER</span><h3>固定邏輯回到 Python</h3><p>格式、數值、檔案、驗證交給程式，減少模型呼叫及輸出波動。Skills 只按需載入參考資料。</p></article><article class="reveal"><span class="mono">03 / EVALUATE</span><h3>用輕量模型與例外回測</h3><p>記錄 token 及訂閱用量，以輕量模型及例外案例回測。用戶答覆、字形修正及最終改稿回流知識庫，經確認再更新詞庫與規則。</p></article></div><article class="job-workflow reveal" id="job-workflow">
+  <div><h3>我也把 AI 用在求職</h3><p>我曾用 AI 搜尋及整理職缺。這次的求職流程指定用 Vercel Labs 的 <code>agent-desktop</code> Skill，讓 AI 透過 Windows UI Automation 讀取介面、操作桌面，再讀一次確認結果。</p></div>
+  <div><ol><li>搜尋並記錄職缺要求。</li><li>按職位、年資、通勤地點和薪酬篩選。</li><li>我先審閱履歷及作品，再進入申請階段。</li></ol><a class="text-link" href="https://github.com/vercel-labs/agent-desktop/tree/main/skills/agent-desktop" target="_blank" rel="noopener">查看 agent-desktop Skill ↗</a></div>
+</article>
+<div class="engineering-note reveal"><span aria-hidden="true">↳</span><p>作品集本身也遵循同樣方法：靜態網站、本地 3D 引擎、原程式預先生成資料，互動時毋須消耗模型 token。</p></div></div></section>
 
-<section id="experience" class="experience wrap reveal"><div><p class="eyebrow">經歷與背景</p><h2>從需求溝通，<br>走到工程交付。</h2><p>公共行政背景讓我習慣整理流程與協調需求；自主開發和工作現場，讓我把需求落成工具。</p></div><div class="timeline"><article><span class="timeline-date">2026.09 — 現在</span><h3>Assistant AI and design Administrator</h3><p class="organisation">Kin Wing Engineering Co. Ltd · 設計部</p><ul><li>獨立開發設計部會議紀錄流程及工程文件工具。</li><li>開發複雜 PDF 判讀 Skill 與完整地盤模型，支援工程資料整理及投標方案展示。</li></ul></article><article><span class="timeline-date">大學期間 — 現在</span><h3>自主 AI 產品與自動化開發</h3><p>獨立開發 ToGoalAi、上傳工作流及影片 Skills，從需求、UI、串接到部署持續迭代。</p></article><article><span class="timeline-date">2023 — 2024</span><h3>政治大學港澳同學會 · 會長</h3><p>帶領 15 人幹部團隊，將 AI 協作引入行政文件與預算流程；向逾百名新生及家長介紹資訊。</p></article><article><span class="timeline-date">2022 — 2023</span><h3>政治大學學生會 · 活動核心團隊</h3><p>統籌百餘攤位與逾千人參與的活動，整理 SOP 及行政範本供後續團隊沿用。</p></article><article><span class="timeline-date">2026.06 畢業</span><h3>國立政治大學 · 公共行政學系</h3><p>學位經 HKCAAVQ 評估為等同香港榮譽學士學位。</p><div class="credentials"><span>Claude 101</span><span>AI Fluency</span><span>粵語 · 普通話 · 英文</span></div></article></div></section>
-<section class="closing wrap reveal"><p class="eyebrow">LET’S BUILD WHAT MATTERS</p><h2>期待把同樣的方法，<br>帶到下一個團隊。</h2><p>如果團隊需要有人理解業務、動手搭建，並把 AI 成本與交付品質一起考慮，歡迎透過履歷內的聯絡方式找我。</p><a class="button primary" href="assets/Gary-Tang-CV.pdf" target="_blank" rel="noopener">查看履歷與聯絡方式 ↗</a></section>
+<section id="experience" class="experience wrap reveal"><div><p class="eyebrow">經歷與背景</p><h2>從需求溝通，<br>走到工程交付。</h2><p>公共行政背景讓我習慣整理流程與協調需求。自主開發和工作現場，讓我把需求落成工具。</p></div><div class="timeline"><article><span class="timeline-date">2026.09 — 現在</span><h3>Assistant AI and design Administrator</h3><p class="organisation">Kin Wing Engineering Co. Ltd · 設計部</p><ul><li>獨立開發設計部會議紀錄流程及工程文件工具。</li><li>開發複雜 PDF 判讀 Skill 與完整地盤模型，支援工程資料整理及投標方案展示。</li></ul></article><article><span class="timeline-date">大學期間 — 現在</span><h3>自主 AI 產品與自動化開發</h3><p>獨立開發 ToGoalAi、上傳工作流及影片 Skills，從需求、UI、串接到部署持續迭代。</p></article><article><span class="timeline-date">2023 — 2024</span><h3>政治大學港澳同學會 · 會長</h3><p>帶領 15 人幹部團隊，將 AI 協作引入行政文件與預算流程。向逾百名新生及家長介紹資訊。</p></article><article><span class="timeline-date">2022 — 2023</span><h3>政治大學學生會 · 活動核心團隊</h3><p>統籌百餘攤位與逾千人參與的活動，整理 SOP 及行政範本供後續團隊沿用。</p></article><article><span class="timeline-date">2026.06 畢業</span><h3>國立政治大學 · 公共行政學系</h3><p>學位經 HKCAAVQ 評估為等同香港榮譽學士學位。</p><div class="credentials"><span>Claude 101</span><span>AI Fluency</span><span>粵語 · 普通話 · 英文</span></div></article></div></section>
+<section class="closing wrap reveal"><h2>期待把同樣的方法，<br>帶到下一個團隊。</h2><p>我正在尋找香港 AI Engineer 職位。歡迎透過履歷內的聯絡方式安排面談，討論如何把你團隊的流程及產品需求做成可交付的工具。</p><a class="button primary" href="assets/Gary-Tang-CV.pdf" target="_blank" rel="noopener">查看履歷與聯絡方式 ↗</a></section>
 </main><footer class="wrap footer"><span>鄧嘉維 Gary Tang · AI Engineering Portfolio</span><div class="footer-controls"><a href="https://github.com/garytangtang2-bit/ai-engineer-portfolio/tree/portfolio" target="_blank" rel="noopener">網站原始碼 ↗</a><button id="motion-toggle" aria-pressed="false">暫停裝飾動效</button><a href="#top">回到頂部 ↑</a></div></footer>
 <dialog id="image-dialog" aria-labelledby="image-dialog-title"><div class="dialog-bar"><h2 id="image-dialog-title"></h2><button id="close-dialog" aria-label="關閉圖片">關閉 ×</button></div><img id="dialog-image" alt=""><p>按 Esc 或關閉按鈕返回作品集。</p></dialog>
+<dialog id="site-tour" aria-labelledby="site-tour-title" aria-describedby="site-tour-help">
+  <header class="site-tour-header">
+    <div><p class="eyebrow">投標支援 · 全新虛構地盤</p><h2 id="site-tour-title">探索完整地盤</h2></div>
+    <button type="button" id="site-tour-close" class="button small" autofocus aria-label="關閉 3D 地盤">關閉 ×</button>
+  </header>
+  <div class="site-tour-layout">
+    <div class="site-tour-viewport" id="site-tour-viewport">
+      <img src="assets/els-tour-preview.webp" width="1280" height="800" alt="虛構地盤模型，含開挖分區、板樁、樁帽及斜道">
+      <iframe id="site-tour-frame" title="可拖動的 3D 地盤模型" tabindex="-1" hidden></iframe>
+    </div>
+    <div class="site-tour-controls">
+      <p id="site-tour-help">拖動旋轉，滾輪或雙指縮放。也可以直接切換視角及拖動剖切線。</p>
+      <div class="site-tour-views" role="group" aria-label="地盤視角">
+        <button type="button" data-tour-view="iso" aria-pressed="true" disabled>斜視</button>
+        <button type="button" data-tour-view="plan" aria-pressed="false" disabled>俯視</button>
+        <button type="button" data-tour-view="front" aria-pressed="false" disabled>側視</button>
+      </div>
+      <button type="button" id="site-tour-section" aria-pressed="false" disabled><span class="section-symbol" aria-hidden="true"></span>開啟剖面</button>
+      <label id="site-tour-cut-control" for="site-tour-cut" hidden>剖面位置
+        <input type="range" id="site-tour-cut" min="0" max="100" value="55" disabled>
+      </label>
+      <p id="site-tour-status" role="status">正在建立 3D 模型…</p>
+      <a class="text-link" href="tools/els.html" target="_blank" rel="noopener">開啟完整編輯器 ↗</a>
+    </div>
+  </div>
+</dialog>
 </body></html>

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ELS 編輯器</title>
+<link rel="icon" href="../assets/gary-tang.webp" type="image/webp">
 <style>
   :root{ --bg:#eef1f4; --panel:#ffffff; --ink:#1d262e; --muted:#6a747d; --line:#dde2e7; --accent:#1d262e; --blue:#1f3fbf; --warn:#a35f00; }
   *{box-sizing:border-box}
@@ -20,6 +21,8 @@
   #doc .vol{color:var(--muted);font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
   .sp{flex:1}
   #view{position:fixed;inset:46px 0 0 0;border:0;width:100%;height:calc(100% - 46px);display:none;background:#e7eaed}
+  .guided-preview #bar,.guided-preview #home{display:none}
+  .guided-preview #view{inset:0;height:100%}
   #home{position:fixed;inset:46px 0 0 0;overflow:auto;padding:40px 16px}
   .wrap{max-width:860px;margin:0 auto;display:grid;gap:18px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
@@ -131,6 +134,59 @@ function checkConfig(cfg) {
 function editorPage(cfg) {
   return TPL.replace('/*__CONFIG__*/', () => '/*<ELS-CONFIG>*/\n' + cfg + '\n/*</ELS-CONFIG>*/')
     .replace('__TPL__', () => TPL_B64).replace('__ED2D__', () => ED2D_B64);
+}
+
+function loadGuidedPreview(cfg) {
+  const controls = [
+    'const studio = document.createElement("canvas");',
+    'studio.width = 4;',
+    'studio.height = 256;',
+    'const context = studio.getContext("2d");',
+    'const backdrop = context.createLinearGradient(0, 0, 0, studio.height);',
+    'backdrop.addColorStop(0, "#0b1423");',
+    'backdrop.addColorStop(1, "#263f56");',
+    'context.fillStyle = backdrop;',
+    'context.fillRect(0, 0, studio.width, studio.height);',
+    'scene.background = new THREE.CanvasTexture(studio);',
+    'scene.background.colorSpace = THREE.SRGBColorSpace;',
+    'layers.label.visible = false;',
+    'VIEWS.iso.tgt.set(CENTER.x, -10, CENTER.z);',
+    'function fitPreview() {',
+    '  camera.zoom = Math.min(.79, camera.aspect * .57);',
+    '  camera.updateProjectionMatrix();',
+    '}',
+    'fitPreview();',
+    'addEventListener("resize", fitPreview);',
+    'window.__portfolioPreview = {',
+    '  setView(name, instant) {',
+    '    if (!Object.hasOwn(VIEWS, name)) return;',
+    '    if (instant) anim = null;',
+    '    goView(name, instant);',
+    '  },',
+    '  setSection(enabled, position) {',
+    '    sec.on = enabled;',
+    '    sec.t = position;',
+    '    $("secOn").checked = enabled;',
+    '    $("secPos").value = position;',
+    '    applySection();',
+    '  },',
+    '};',
+  ].join('\n');
+  const previewStyle = `<style>
+    #panel, #legend, #title, #toggle, #presentExit, #editor, #hint { display: none !important; }
+    #app canvas { cursor: grab; }
+    #app canvas:active { cursor: grabbing; }
+    @media (max-width: 480px) {
+      .lbl.dim { display: none !important; }
+      .lbl.grid { width: 16px; height: 16px; font-size: 9px; }
+    }
+  </style>`;
+  const preview = editorPage(cfg)
+    .replace('</head>', previewStyle + '</head>')
+    .replace('window.__ed = {', () => controls + '\nwindow.__ed = {');
+  document.body.classList.add('guided-preview');
+  $('view').srcdoc = preview;
+  $('view').style.display = 'block';
 }
 
 /* ---------- 最近開過（只存喺呢部電腦呢個瀏覽器） ---------- */
@@ -383,5 +439,12 @@ $('gApply').onclick = () => {
 renderRecent();
 window.__app = { S, openText, load, save, currentCfg, extractConfig, parseSurvey, fitAffine, setGround };
 </script>
-<script>load(b64dec($("appSample").textContent),"DEMO.els",null);</script></body>
+<script>
+  const sampleConfig = b64dec($("appSample").textContent);
+  if (new URLSearchParams(location.search).get('preview') === '1') {
+    loadGuidedPreview(sampleConfig);
+  } else {
+    load(sampleConfig, "DEMO.els", null);
+  }
+</script></body>
 </html>
