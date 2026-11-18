@@ -29,45 +29,164 @@ function closeMenu(){nav.classList.remove('open');menu.setAttribute('aria-expand
 menu.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')!=='true';menu.setAttribute('aria-expanded',String(open));menu.textContent=open?'關閉 ×':'目錄 ＋';nav.classList.toggle('open',open);});
 nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));
 
-function openArchitecture(hash) {
-  const section = $(hash.slice(1));
-  if (section instanceof HTMLDetailsElement && section.classList.contains('engineering-detail')) {
-    section.open = true;
-  }
+const galleryLinks = [...document.querySelectorAll('.project-gallery a')];
+const galleryCases = galleryLinks.map(link => $(link.hash.slice(1)));
+const caseNames = galleryLinks.map(link => link.querySelector('.tile-copy strong').textContent);
+const caseNeighbors = [$('case-prev'), $('case-next')];
+
+function selectCase(activeCase) {
+  const index = galleryCases.indexOf(activeCase);
+  galleryCases.forEach((item, itemIndex) => {
+    item.hidden = itemIndex !== index;
+    const link = galleryLinks[itemIndex];
+    if (itemIndex === index) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  });
+  const previous = (index - 1 + galleryCases.length) % galleryCases.length;
+  const next = (index + 1) % galleryCases.length;
+  caseNeighbors[0].href = galleryLinks[previous].hash;
+  caseNeighbors[0].textContent = '← ' + caseNames[previous];
+  caseNeighbors[1].href = galleryLinks[next].hash;
+  caseNeighbors[1].textContent = caseNames[next] + ' →';
 }
-document.querySelectorAll('.case-jump').forEach(link => {
-  link.addEventListener('click', () => openArchitecture(link.hash));
-});
-addEventListener('hashchange', () => openArchitecture(location.hash));
-openArchitecture(location.hash);
+
+function openCaseAnchor(hash) {
+  const target = $(hash.slice(1));
+  const activeCase = target?.closest('#case-view > .case');
+  if (!activeCase) return;
+  selectCase(activeCase);
+  const detail = target.closest('details');
+  if (detail) detail.open = true;
+  if (target.id === 'meeting-demo' && meetingStep !== 3) renderMeeting(3);
+  return target;
+}
+
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&nav.classList.contains('open')){closeMenu();menu.focus();}});
 document.addEventListener('click',e=>{if(!e.target.closest('.navbar'))closeMenu();});
-const caseObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(!entry.isIntersecting)return;document.querySelectorAll('.work-index a').forEach(link=>{if(link.hash==='#'+entry.target.id)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');});}),{rootMargin:'-15% 0px -60% 0px'});
-document.querySelectorAll('.case').forEach(el=>caseObserver.observe(el));
+
+const introChoices = [...document.querySelectorAll('[data-intro]')];
+const introScenes = [...document.querySelectorAll('[data-intro-scene]')];
+const introActions = [...document.querySelectorAll('[data-intro-action]')];
+introChoices.forEach(choice => choice.addEventListener('click', () => {
+  const selected = choice.dataset.intro;
+  introChoices.forEach(button => button.setAttribute('aria-pressed', String(button === choice)));
+  introScenes.forEach(scene => { scene.hidden = scene.dataset.introScene !== selected; });
+  introActions.forEach(action => { action.hidden = action.dataset.introAction !== selected; });
+}));
+
+const engineeringDecisions = {
+  meeting: {
+    stages: [['程式', '處理錄音與議程'], ['模型', '整理有來源的事實'], ['人手', '確認不清楚的內容'], ['程式', '檢查後匯出文件']],
+    note: '把核對留給人，把可重複的交付檢查寫成 Python。',
+  },
+  pdf: {
+    stages: [['程式', '找出文字與欄列'], ['辨識', '讀取難辨字形'], ['人手', '核對疑點和來源'], ['程式', '寫成可計算 Excel']],
+    note: '有文字及座標的頁面可直接解析。影像和難辨字才加上辨識。',
+  },
+  togoal: {
+    stages: [['程式', '限於本人所選教材'], ['模型', '過長才壓縮'], ['模型', '按教材回答'], ['程式', '串流顯示答案']],
+    note: '長教材才用較輕量模型壓縮。單來源對話可重用 Gemini 上下文快取。',
+  },
+};
+const decisionChoices = [...document.querySelectorAll('[data-decision]')];
+decisionChoices.forEach(choice => choice.addEventListener('click', () => {
+  if (choice.getAttribute('aria-pressed') === 'true') return;
+  const decision = engineeringDecisions[choice.dataset.decision];
+  decisionChoices.forEach(button => button.setAttribute('aria-pressed', String(button === choice)));
+  $('decision-path').replaceChildren(...decision.stages.map(([role, action]) => {
+    const stage = document.createElement('li');
+    const label = document.createElement('span');
+    const text = document.createElement('strong');
+    label.textContent = role;
+    text.textContent = action;
+    stage.append(label, text);
+    return stage;
+  }));
+  $('decision-note').textContent = decision.note;
+}));
 
 let meetingStep=0,reviewed=false;
+const confirmedMinutes = 'The next submission is scheduled for Thursday, 22 October 2026.';
 const factRows=`<table class="facts"><thead><tr><th>等級</th><th>事實與來源</th><th>去向</th></tr></thead><tbody><tr><td><span class="confidence">A</span></td><td>西側圖則待顧問回覆<span class="quote">18:32「已經交咗，等緊顧問覆。」</span></td><td>進草稿</td></tr><tr><td><span class="confidence pending">B</span></td><td>下次提交日期未確認<span class="quote">19:06「下星期…四？再確認。」</span></td><td>回問</td></tr><tr><td><span class="confidence exclude">C</span></td><td>舊議程的完成日期<span class="quote">本次會議沒有支持原句</span></td><td>排除表</td></tr></tbody></table>`;
 function meetingContent(step){
   if(step===0)return `<h4>先準備完整輸入</h4><p>影片提供本次討論，舊議程提供框架。兩者用途不同，不能把舊狀態直接當新事實。</p><div class="file-stack"><div class="file-card"><span class="file-type">MP4</span><div><strong>約 90 分鐘會議影片</strong><small>本機錄音、畫面與時間定位</small></div></div><div class="file-card"><span class="file-type">PDF</span><div><strong>上次議程與固定框架</strong><small>專案卡、人物卡、既有格式</small></div></div></div>`;
   if(step===1)return `<h4>六引擎轉錄，程式先整理</h4><p>FFmpeg 先整理音訊；faster-whisper 與 Transformers 依序轉錄。議程、畫面及已確認校正組成熱詞，按各模型的上下文限制載入。</p><div class="asr-engines">${['qwen17','hf_jacky_turbo','w_large_v3','hf_buzz','glm_nano','w_large_v2'].map(x=>`<span>${x}</span>`).join('')}</div><p class="asr-note">多個引擎有共同技術來源，仍需來源核對及人手處理疑點。</p>`;
   if(step===2)return `<h4>先確認事實，再寫英文紀錄</h4><p>每項附時間及原句。高信心事實進草稿；不確定項目回問，無依據項目留在排除紀錄。</p>${factRows}`;
-  if(step===3)return `<h4>人只回答真正的疑點</h4><p>正式工具以 FFmpeg 切出相關音段，提問前先鎖定 AI 答案。用戶答覆另存入有來源、日期及適用範圍的知識庫。</p><div class="review-question"><p><strong>示例疑點：下次提交日期？</strong></p><span class="quote">19:06 · 相關音段約 26 秒（此導覽不提供公司錄音）</span><p>覆核者已確認：星期四。</p><button class="button small ${reviewed?'':'primary'}" id="confirm-review" ${reviewed?'disabled':''}>${reviewed?'已記錄覆核答案 ✓':'記錄這項覆核答案 →'}</button></div><p class="review-status">${reviewed?'答案已記錄，可前往交付。':'尚未覆核：交付維持草稿。'}</p>`;
+  if (step === 3) return `
+    <h4>下次提交是哪一天？</h4>
+    <p>AI 標記了聽不清的日期，把有時間碼的片段交給同事確認。</p>
+    <div class="review-question" data-confirmed="${reviewed}">
+      <span class="quote"><time datetime="2026-10-12">2026.10.12</time> 會議 · 19:06 原句示例</span>
+      <blockquote>「下星期……四？再確認。」</blockquote>
+      <div class="meeting-human"><span>同事回覆示例</span><p>「我核實咗，係 <time datetime="2026-10-22">10 月 22 日星期四</time>。」</p></div>
+      ${reviewed ? '<p class="meeting-confirmed">✓ 已記錄覆核答案</p>'
+        : '<button class="button small primary" id="confirm-review">記錄同事回覆</button>'}
+    </div>
+    ${reviewed ? `<div class="meeting-output" id="meeting-output-trace">
+      <span>英文紀錄已更新</span>
+      <p lang="en">${confirmedMinutes}</p>
+      <small>來源 19:06 · 同事已確認 · 此答疑通過交稿檢查</small>
+      <a href="#meeting-architecture">查看原流程檢查與回饋 ↓</a>
+    </div>` : '<p class="meeting-review-notice">缺少確定的回覆時，交付維持草稿。</p>'}`;
   return `<h4>${reviewed?'覆核完成，才交付。':'疑點未答，先保留草稿。'}</h4><p>${reviewed?'原流程會更新來源核對及交稿檢查，再產生以下交付。這裏可下載虛構文字示例。':'你可返回「答疑」記錄覆核答案，看看交付狀態怎樣改變。'}</p><ul class="delivery-list ${reviewed?'':'locked'}"><li>英文會議紀錄 · TXT / Word</li><li>下一次議程 · Excel</li><li>來源、排除表與檢查紀錄</li><li>learn_cycle → 刪除／補充／聽錯候選 → 詞庫與規則</li></ul><div style="margin-top:1.2rem">${reviewed?'<button class="button small primary" id="minutes-download">下載虛構紀錄 TXT ↓</button>':'<button class="button small" id="back-review">前往答疑 →</button>'}</div>`;
 }
 function renderMeeting(step,focus=false){
   meetingStep=step;
-  document.querySelectorAll('[data-step]').forEach((tab,i)=>{tab.setAttribute('aria-selected',String(i===step));tab.tabIndex=i===step?0:-1;});
-  const panel=$('meeting-panel');panel.setAttribute('aria-labelledby',`meeting-tab-${step}`);panel.innerHTML=meetingContent(step);
-  if(!isReduced())panel.animate([{opacity:.35,transform:'translateY(7px)'},{opacity:1,transform:'translateY(0)'}],{duration:250,easing:'ease-out'});
-  $('meeting-position').textContent=`0${step+1} / 05`;
-  $('meeting-next').textContent=step===4?'從頭查看 ↺':'下一步 →';
-  $('confirm-review')?.addEventListener('click',()=>{reviewed=true;renderMeeting(3);$('meeting-next').focus();});
+  document.querySelectorAll('[data-step]').forEach((tab, index) => {
+    tab.setAttribute('aria-selected', String(index === step));
+    tab.tabIndex = index === step ? 0 : -1;
+  });
+  const panel = $('meeting-panel');
+  panel.setAttribute('aria-labelledby', `meeting-tab-${step}`);
+  panel.innerHTML = meetingContent(step);
+  if (!isReduced()) {
+    panel.getAnimations().forEach(animation => animation.cancel());
+    panel.animate([{ opacity: .5, transform: 'translateY(5px)' }, { opacity: 1, transform: 'translateY(0)' }], {
+      duration: 250, easing: 'ease-out',
+    });
+  }
+  const demo = $('meeting-demo');
+  const delivery = $('meeting-state');
+  demo.style.setProperty('--workflow-progress', (step + 1) / 5);
+  delivery.textContent = reviewed ? '已覆核 · 可交付' : '待覆核 · 草稿';
+  delivery.dataset.confirmed = String(reviewed);
+  $('meeting-position').textContent = `0${step + 1} / 05`;
+  const next = $('meeting-next');
+  next.textContent = step === 4 ? '從頭查看 ↺' : step === 3 ? (reviewed ? '查看交付 →' : '查看待覆核草稿 →') : '下一步 →';
+  next.classList.toggle('primary', step === 3 && reviewed);
+  $('confirm-review')?.addEventListener('click', () => {
+    reviewed = true;
+    renderMeeting(3);
+    next.focus({ preventScroll: true });
+  });
   $('back-review')?.addEventListener('click',()=>renderMeeting(3,true));
-  $('minutes-download')?.addEventListener('click',()=>download('示例會議紀錄.txt','公開互動導覽 · 虛構文字\n\nWest-side drawings were submitted and are awaiting the consultant’s response.\nThe next submission is scheduled for Thursday (human confirmation recorded).\n\n來源示例：18:32 / 19:06\n此檔案是流程導覽資料，並非公司原會議紀錄。'));
+  $('minutes-download')?.addEventListener('click', () => download('示例會議紀錄.txt', `公開互動導覽 · 虛構文字\n2026.10.12 會議\n\nWest-side drawings were submitted and are awaiting the consultant’s response.\n${confirmedMinutes} (Human confirmation recorded.)\n\n來源示例 18:32 / 19:06\n文字為流程導覽示例。`));
   if(focus)$(`meeting-tab-${step}`).focus();
 }
 document.querySelectorAll('[data-step]').forEach((tab,i)=>{tab.addEventListener('click',()=>renderMeeting(i));tab.addEventListener('keydown',e=>{let next;if(e.key==='ArrowRight')next=(i+1)%5;if(e.key==='ArrowLeft')next=(i+4)%5;if(e.key==='Home')next=0;if(e.key==='End')next=4;if(next!==undefined){e.preventDefault();renderMeeting(next,true);}});});
-$('meeting-next').addEventListener('click',()=>renderMeeting((meetingStep+1)%5));renderMeeting(0);
+$('meeting-next').addEventListener('click', () => {
+  if (meetingStep === 4) reviewed = false;
+  renderMeeting((meetingStep + 1) % 5);
+});
+
+selectCase($('meeting'));
+renderMeeting(location.hash === '#meeting-demo' ? 3 : 0);
+const initialCaseTarget = openCaseAnchor(location.hash);
+if (initialCaseTarget) requestAnimationFrame(() => initialCaseTarget.scrollIntoView({ behavior: 'instant' }));
+addEventListener('hashchange', () => {
+  const target = openCaseAnchor(location.hash);
+  if (target) target.scrollIntoView({ behavior: isReduced() ? 'instant' : 'smooth' });
+});
+document.addEventListener('click', event => {
+  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  const link = event.target.closest('a[href^="#"]');
+  if (!link) return;
+  const target = openCaseAnchor(link.hash);
+  if (event.detail === 0 && target) {
+    target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
+  }
+});
 function download(name,content){const u=URL.createObjectURL(new Blob(['\uFEFF',content],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),3000);}
 
 
