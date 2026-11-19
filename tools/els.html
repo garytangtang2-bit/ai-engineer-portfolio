@@ -137,14 +137,19 @@ function editorPage(cfg) {
 }
 
 function loadGuidedPreview(cfg) {
+  const search = new URLSearchParams(location.search);
+  const portfolio = search.get('scene') === 'portfolio';
+  const lowQuality = portfolio && search.get('quality') === 'low';
+  const startColor = portfolio ? '#0c1422' : '#0b1423';
+  const endColor = portfolio ? '#21374e' : '#263f56';
   const controls = [
     'const studio = document.createElement("canvas");',
     'studio.width = 4;',
     'studio.height = 256;',
     'const context = studio.getContext("2d");',
     'const backdrop = context.createLinearGradient(0, 0, 0, studio.height);',
-    'backdrop.addColorStop(0, "#0b1423");',
-    'backdrop.addColorStop(1, "#263f56");',
+    'backdrop.addColorStop(0, ' + JSON.stringify(startColor) + ');',
+    'backdrop.addColorStop(1, ' + JSON.stringify(endColor) + ');',
     'context.fillStyle = backdrop;',
     'context.fillRect(0, 0, studio.width, studio.height);',
     'scene.background = new THREE.CanvasTexture(studio);',
@@ -157,7 +162,24 @@ function loadGuidedPreview(cfg) {
     '}',
     'fitPreview();',
     'addEventListener("resize", fitPreview);',
+    ...(portfolio ? [
+      'VIEWS.front.pos = [CENTER.x - 165 * BB.s, 34 * BB.s, CENTER.z + 12 * BB.s];',
+      'VIEWS.front.tgt.set(CENTER.x, -8, CENTER.z);',
+      'const canvas = renderer.domElement;',
+      'canvas.tabIndex = 0;',
+      'canvas.setAttribute("aria-label", "地盤 3D 模型。可拖動旋轉，方向鍵平移。");',
+      'controls.listenToKeyEvents(canvas);',
+      'let rotationRequested = false;',
+      'let dragging = false;',
+      'controls.addEventListener("start", () => { dragging = true; controls.autoRotate = false; });',
+      'controls.addEventListener("end", () => { dragging = false; controls.autoRotate = rotationRequested; });',
+    ] : []),
     'window.__portfolioPreview = {',
+    ...(portfolio ? [
+      '  setRotate(on) { rotationRequested = on; controls.autoRotate = on && !dragging; },',
+      '  setPaused(paused) { window.__pause = paused; },',
+      '  draw() { window.__renderOnce(); },',
+    ] : []),
     '  setView(name, instant) {',
     '    if (!Object.hasOwn(VIEWS, name)) return;',
     '    if (instant) anim = null;',
@@ -176,15 +198,24 @@ function loadGuidedPreview(cfg) {
     #panel, #legend, #title, #toggle, #presentExit, #editor, #hint { display: none !important; }
     #app canvas { cursor: grab; }
     #app canvas:active { cursor: grabbing; }
+    #app canvas:focus-visible { outline: 2px solid #a9dfff; outline-offset: -5px; }
     @media (max-width: 480px) {
       .lbl.dim { display: none !important; }
       .lbl.grid { width: 16px; height: 16px; font-size: 9px; }
     }
   </style>`;
-  const preview = editorPage(cfg)
+  let page = editorPage(cfg);
+  if (portfolio) page = page.replace('(now - anim.s) / 800', '(now - anim.s) / 420');
+  if (lowQuality) {
+    page = page.replace('const DPR = Math.min(devicePixelRatio, 1.5);', 'const DPR = Math.min(devicePixelRatio, 1);')
+      .replace('sun.shadow.mapSize.set(4096, 4096);', 'sun.shadow.mapSize.set(2048, 2048);')
+      .replace('samples: 4, stencilBuffer: true', 'samples: 2, stencilBuffer: true');
+  }
+  const preview = page
     .replace('</head>', previewStyle + '</head>')
     .replace('window.__ed = {', () => controls + '\nwindow.__ed = {');
   document.body.classList.add('guided-preview');
+  $('view').title = 'ELS 地盤模型';
   $('view').srcdoc = preview;
   $('view').style.display = 'block';
 }

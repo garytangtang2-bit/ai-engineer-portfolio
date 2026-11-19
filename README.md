@@ -1,6 +1,6 @@
 # Gary Tang · AI Engineering Portfolio
 
-中文 AI Engineer 求職作品集。三個精選案例提供可操作的成果。其餘十一個入口收納實際開發的工具與工作流。
+中文 AI Engineer 求職作品集。首頁先展示交付成果，三個精選案例在同頁開啟互動示範。其他工具集中在六個入口。
 
 [開啟作品集](https://garytangtang2-bit.github.io/ai-engineer-portfolio/) · [履歷 PDF](assets/Gary-Tang-CV.pdf)
 
@@ -12,22 +12,22 @@
 
 - **會議紀錄**：用虛構資料重現原流程。採用附時間碼的同事回覆後，可即場核對及下載更新的英文紀錄。
 - **PDF → Excel**：點選數值會標出合成原 PDF 的對應位置。完整測試由原 Python 程式處理 20 頁及 20,000 格，涵蓋文字層及指定選區。可下載兩個檔案及查看逐格核對紀錄。
-- **ToGoalAi**：可切換正式站的出題、作答與弱項分析畫面，並查看五種教材匯入及來源問答的工程決定。
+- **ToGoalAi**：以獨立交付為主，介紹介面、前後端、API、RAG 與部署。可切換正式站畫面，並操作五種教材的匯入分流。
 - **投標地盤模型**：同一 Three.js 引擎支援快速 3D 導覽和完整編輯器。全新虛構地盤涵蓋 20 個分區、8 段板樁、43 組樁帽、斜道、排水區及 2D 圖則。導覽可旋轉、切換視角和移動剖切線，展示投標方案的施工與支護關係。
 - **複雜 PDF 判讀 Skill**：介紹如何讓 AI 按版面、細字、跨頁及覆核規則理解複雜文件，配合工具交付 Excel。互動是流程導覽，版面採合成示意；可下載原程式的合成 Excel 輸出。
 - **上傳／影片 Skills**：以原配對程式的合成結果比較兩輪批次預檢，並用可拖動的合成時間軸展示字幕及動畫標記。
-- **其他工具**：涵蓋 Excel 公式預檢、PDF 批註與合併、CAD、模型檢查、講座摘要、程式動畫、內容同步、排程復原及 AI 輔助求職。
+- **其他工具**：涵蓋 Excel 公式預檢、PDF 批註與合併、CAD、模型檢查、講座摘要、程式動畫及內容同步。
 
 公司成效、採用量及投標用途來自本人工作紀錄及陳述，屬個案結果。地盤模型為全新虛構配置；PDF 與 Excel 測試採合成資料。個人聯絡方式只在 PDF 履歷。
 
 ## 介面
 
-原生 HTML／CSS／JavaScript，響應式排版、鍵盤可用的流程頁籤及表格、可關閉圖片對話框、按需載入 3D、可暫停模型旋轉，並尊重 `prefers-reduced-motion`。
+原生 HTML／CSS／JavaScript。示範視窗可按 Esc 關閉，保留舊作品錨點。首屏及展示區共用一個 Three.js 場景，電腦版先顯示 WebP 預覽，手機按鈕啟動低像素密度的模型。投標展示支援 2D、3D 及剖切，旋轉可暫停，並尊重 `prefers-reduced-motion`。
 
 ## 技術與回饋機制
 
-作品索引列出交付和個案成效，所選案例顯示操作示例。展開技術區可看 Python 調用 FFmpeg、faster-whisper／Transformers 本機轉錄、PyMuPDF／OpenCV 表格及字形、RapidOCR／ONNX Runtime、Office 輸出，以及 Remotion 影片製作。
+主打作品卡列出交付和個案成效。試玩視窗顯示操作示例和工程取捨，包括 Python 調用 FFmpeg、faster-whisper 本機轉錄、PyMuPDF／OpenCV 表格與字形，以及 Word、Excel 輸出。影片卡介紹 Remotion 的時間軸及上傳預檢。
 
 雙模式回饋示例展示「用戶確認 → 記憶更新 → 下次沿用」：語音術語進入經確認的熱詞／校正流程，PDF 字形更新同組讀值並保存字典。示例只操作合成的頁面狀態，不寫入真實知識庫或呼叫模型。實際機制以有來源的知識庫、詞庫及規則累積經驗；候選資料先確認再套用。
 
-第三方授權位於 `fonts/*-OFL.txt` 及 `tools/vendor/three/LICENSE`。
+第三方授權位於 `fonts/*-OFL.txt` 及 `tools/vendor/three/LICENSE`。技術標誌取自 [Simple Icons](https://github.com/simple-icons/simple-icons)。

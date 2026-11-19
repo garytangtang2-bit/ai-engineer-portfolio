@@ -3,39 +3,6 @@ document.documentElement.classList.add('js');
 const $ = id => document.getElementById(id);
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const isReduced = () => reduceMotion.matches;
-const galleryLinks = [...document.querySelectorAll('.project-gallery a')];
-const galleryCases = galleryLinks.map(link => $(link.hash.slice(1)));
-const moreProjects = $('more-projects');
-moreProjects.open = false;
-
-function selectCase(activeCase) {
-  galleryCases.forEach((item, index) => {
-    const current = item === activeCase;
-    item.hidden = !current;
-    const link = galleryLinks[index];
-    if (current) {
-      link.setAttribute('aria-current', 'location');
-      if (moreProjects.contains(link)) moreProjects.open = true;
-    } else {
-      link.removeAttribute('aria-current');
-    }
-  });
-}
-
-function openCaseAnchor(hash) {
-  const target = $(hash.slice(1));
-  const activeCase = target?.closest('#case-view > .case');
-  if (!activeCase) return;
-  selectCase(activeCase);
-  let detail = target.parentElement.closest('details');
-  while (detail) {
-    detail.open = true;
-    detail = detail.parentElement.closest('details');
-  }
-  if (target.matches('details')) target.open = true;
-  return target;
-}
-
 let meetingStep=0,reviewed=false;
 const confirmedMinutes = 'The next submission is scheduled for Thursday, 22 October 2026.';
 const factRows=`<table class="facts"><thead><tr><th>等級</th><th>事實與來源</th><th>去向</th></tr></thead><tbody><tr><td><span class="confidence">A</span></td><td>西側圖則待顧問回覆<span class="quote">18:32「已經交咗，等緊顧問覆。」</span></td><td>進草稿</td></tr><tr><td><span class="confidence pending">B</span></td><td>下次提交日期未確認<span class="quote">19:06「下星期…四？再確認。」</span></td><td>回問</td></tr><tr><td><span class="confidence exclude">C</span></td><td>舊議程的完成日期<span class="quote">本次會議沒有支持原句</span></td><td>排除表</td></tr></tbody></table>`;
@@ -86,30 +53,6 @@ $('minutes-download').addEventListener('click', () => {
   download('示例會議紀錄.txt', `虛構文字示例\n2026.10.12 會議\n\nWest-side drawings were submitted and are awaiting the consultant’s response.\n${confirmedMinutes}\n\n來源示例 18:32 / 19:06 · 同事已確認`);
 });
 
-selectCase($('meeting'));
-renderMeeting(0);
-const initialCaseTarget = openCaseAnchor(location.hash);
-if (initialCaseTarget) requestAnimationFrame(() => initialCaseTarget.scrollIntoView());
-addEventListener('hashchange', () => {
-  const target = openCaseAnchor(location.hash);
-  if (target) target.scrollIntoView();
-  else if (!location.hash) selectCase($('meeting'));
-});
-document.addEventListener('click', event => {
-  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-  const link = event.target.closest('a[href^="#"]');
-  if (!link) return;
-  const target = openCaseAnchor(link.hash);
-  if (!target) return;
-  event.preventDefault();
-  if (location.hash !== link.hash) history.pushState(null, '', link.hash);
-  const picker = link.closest('.project-gallery');
-  if (!picker || innerWidth < 760) target.scrollIntoView();
-  if (event.detail === 0) {
-    target.setAttribute('tabindex', '-1');
-    target.focus({ preventScroll: true });
-  }
-});
 
 function download(name, content) {
   const url = URL.createObjectURL(new Blob(['\uFEFF', content], {type: 'text/plain;charset=utf-8'}));
@@ -139,7 +82,6 @@ document.querySelectorAll('[data-feedback]').forEach((tab,i)=>{
   tab.addEventListener('click',()=>renderFeedback(i));
   tab.addEventListener('keydown',event=>{let next;if(['ArrowRight','ArrowLeft'].includes(event.key))next=1-i;else if(event.key==='Home')next=0;else if(event.key==='End')next=1;else return;event.preventDefault();renderFeedback(next,true);});
 });
-renderFeedback(0);
 
 // Show the same first nine cells as the crop of the synthetic source PDF.
 function showQuickCells(rows) {
@@ -180,14 +122,11 @@ async function loadTable(){
     $('cell-location').textContent=`第 ${p.page} 頁・A1`;$('cell-value').textContent=p.rows[0][0].toFixed(2);
     $('excel-view').scrollTop=0;
   }
-  sel.addEventListener('change',render);render();
+  sel.addEventListener('change', render);
   $('actual-table').addEventListener('click',e=>{const b=e.target.closest('button[data-r]');if(!b)return;document.querySelectorAll('#actual-table button[tabindex="0"]').forEach(x=>x.tabIndex=-1);document.querySelectorAll('.selected-cell').forEach(x=>x.classList.remove('selected-cell'));b.tabIndex=0;b.classList.add('selected-cell');const location=`${String.fromCharCode(65+Number(b.dataset.c))}${Number(b.dataset.r)+1}`;$('cell-location').textContent=`第 ${Number(sel.value)} 頁・${location}`;$('cell-value').textContent=b.textContent;$('cell-info').textContent=`第 ${Number(sel.value)} 頁 · ${location} = ${b.textContent} · Excel 數值型儲存格`;});
   $('actual-table').addEventListener('keydown',e=>{const b=e.target.closest('button[data-r]');if(!b)return;let r=Number(b.dataset.r),c=Number(b.dataset.c);if(e.key==='ArrowRight')c++;else if(e.key==='ArrowLeft')c--;else if(e.key==='ArrowDown')r++;else if(e.key==='ArrowUp')r--;else return;e.preventDefault();const next=$('actual-table').querySelector(`button[data-r="${Math.max(0,Math.min(49,r))}"][data-c="${Math.max(0,Math.min(19,c))}"]`);next.click();next.focus({preventScroll:true});next.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});});
+  return render;
 }
-loadTable().catch(() => {
-  $('cell-match').textContent = '預覽暫未載入，可下載 Excel 及原 PDF。';
-  $('cell-info').textContent = '預覽暫未載入。';
-});
 async function loadReviewRule(){
   const response=await fetch('evidence/review-rule-audit.json');if(!response.ok)throw Error('Rule result unavailable');
   const audit=await response.json(),example=audit.cases.find(c=>c.id==='ambiguous-header');
@@ -199,15 +138,14 @@ async function loadReviewRule(){
     $('review-rule-status').textContent=`原函數結果：待人覆核 · 保留讀值 ${example.text}`;
   });
 }
-loadReviewRule().catch(()=>{$('review-rule-run').textContent='結果暫未載入，請查看下方測試紀錄';});
 function tableMode(source){$('source-view').hidden=!source;$('excel-view').hidden=source;$('show-source').setAttribute('aria-pressed',String(source));$('show-excel').setAttribute('aria-pressed',String(!source));$('show-source').classList.toggle('selected',source);$('show-excel').classList.toggle('selected',!source);$('cell-detail').hidden=source;$('table-zoom').hidden=source;}
 $('show-source').addEventListener('click',()=>tableMode(true));$('show-excel').addEventListener('click',()=>tableMode(false));
 $('table-zoom').addEventListener('click',()=>{const zoomed=$('table-zoom').getAttribute('aria-pressed')!=='true';$('table-zoom').setAttribute('aria-pressed',String(zoomed));$('excel-view').dataset.zoom=String(zoomed);$('table-zoom').textContent=zoomed?'一般數值 −':'放大數值 ＋';});
 
 const pdfSkillSteps=[
-  ['先認版面，避免讀錯欄。','Skill 先引導 AI 定位欄線、合併格與分頁邊界，建立資料之間的關係。','先分清欄位，才讀內容'],
-  ['讀細字，也要保留上下文。','按文件情況放大、使用 OCR 或字形比對，再將數字與正確的欄、列及跨頁記錄對齊。','細字、薄格與跨頁內容一起核對'],
-  ['輸出資料，同時留下覆核線索。','將結構化資料交給 Python 整理成 Excel；保留來源及警告，不確定的地方回到原圖讓人確認。','能確認的交付，有疑點的留待覆核']
+  ['先認版面','Skill 先引導 AI 定位欄線、合併格與分頁邊界，建立資料之間的關係。','先分清欄位，才讀內容'],
+  ['讀細字與上下文','按文件情況放大、使用 OCR 或字形比對，再將數字與正確的欄、列及跨頁記錄對齊。','細字、薄格與跨頁內容一起核對'],
+  ['保留覆核線索','將結構化資料交給 Python 整理成 Excel；保留來源及警告，不確定的地方回到原圖讓人確認。','能確認的交付，有疑點的留待覆核']
 ];
 function showPdfSkill(i){
   document.querySelectorAll('[data-pdf-skill]').forEach((b,n)=>{b.setAttribute('aria-selected',String(n===i));b.tabIndex=n===i?0:-1;});
@@ -219,14 +157,6 @@ document.querySelectorAll('[data-pdf-skill]').forEach((b,i)=>{
   b.addEventListener('click',()=>showPdfSkill(i));
   b.addEventListener('keydown',e=>{let n;if(e.key==='ArrowRight')n=(i+1)%3;else if(e.key==='ArrowLeft')n=(i+2)%3;else if(e.key==='Home')n=0;else if(e.key==='End')n=2;else return;e.preventDefault();showPdfSkill(n);document.querySelector(`[data-pdf-skill="${n}"]`).focus();});
 });
-document.querySelectorAll('[id^="site-view-"]').forEach(b=>b.addEventListener('click',()=>{
-  const plan=b.id==='site-view-plan',img=$('full-site-preview'),zoom=$('full-site-image');
-  const src=plan?'assets/els-full-plan.webp':'assets/els-full-site.webp';img.src=src;zoom.dataset.zoom=src;
-  const title=plan?'完整地盤 2D 圖則 · 全新虛構示例':'完整地盤 3D 模型 · 全新虛構示例';
-  img.alt=title;zoom.dataset.title=title;zoom.setAttribute('aria-label','放大'+title);
-  $('site-view-plan').setAttribute('aria-pressed',String(plan));$('site-view-3d').setAttribute('aria-pressed',String(!plan));
-  $('site-view-plan').classList.toggle('selected',plan);$('site-view-3d').classList.toggle('selected',!plan);
-}));
 async function loadUploadPreflight() {
   const files = $('batch-files');
   const modes = $('upload-states').querySelectorAll('[data-batch]');
@@ -267,7 +197,6 @@ async function loadUploadPreflight() {
     $('batch-result').textContent = '未能載入預檢結果。';
   }
 }
-loadUploadPreflight();
 const productScreens = {
   home: ['togoalai-live.webp', '正式站首頁', '公開首頁介紹筆記、練習及複習工具。切換上面三項可看公開模擬考試展示。', 1440, 700],
   setup: ['togoalai-demo-setup.webp', '設定考試', '設定考試主題、涵蓋範圍及題量，再交給 AI 生成題目。', 896, 504],
@@ -276,16 +205,21 @@ const productScreens = {
 };
 const productChoices = document.querySelectorAll('[data-product-screen]');
 const productZoom = $('togoal-zoom');
+const productPicture = $('togoal-picture');
+function zoomProduct(enlarged) {
+  productZoom.setAttribute('aria-pressed', String(enlarged));
+  productZoom.textContent = enlarged ? '縮回畫面 −' : '放大畫面 ＋';
+  productPicture.dataset.enlarged = String(enlarged);
+  productPicture.scrollLeft = 0;
+}
+productZoom.addEventListener('click', () => zoomProduct(productZoom.getAttribute('aria-pressed') !== 'true'));
 productChoices.forEach(button => button.addEventListener('click', () => {
   const view = button.dataset.productScreen;
   const [name, title, description, width, height] = productScreens[view];
   productChoices.forEach(choice => choice.setAttribute('aria-pressed', String(choice === button)));
   const path = `assets/${name}`;
-  productZoom.dataset.screen = view;
-  productZoom.dataset.zoom = path;
-  productZoom.dataset.title = `ToGoalAi｜${title}`;
-  productZoom.setAttribute('aria-label', `放大 ToGoalAi ${title}`);
-  const screenshot = productZoom.querySelector('img');
+  zoomProduct(false);
+  const screenshot = productPicture.querySelector('img');
   screenshot.src = path;
   screenshot.alt = `ToGoalAi 正式站公開畫面。${description}`;
   screenshot.width = width;
@@ -390,131 +324,410 @@ reelJumps.forEach(button => button.addEventListener('click', () => seekReel(Numb
 const reelVisibility = new IntersectionObserver(([entry]) => { if (!entry.isIntersecting && reelFrame) pauseReel(); });
 reelVisibility.observe($('reel-lab'));
 document.addEventListener('visibilitychange', () => { if (document.hidden && reelFrame) pauseReel(); });
-renderReel(0);
 
-const dialog=$('image-dialog');document.querySelectorAll('[data-zoom]').forEach(b=>b.addEventListener('click',()=>{$('image-dialog-title').textContent=b.dataset.title;$('dialog-image').src=b.dataset.zoom;$('dialog-image').alt=b.dataset.title;dialog.showModal();}));$('close-dialog').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
 
-// Load the original tool only when requested; closing releases its render loop.
-const elsOpen=$('els-inline-open'), elsFrame=$('els-frame');
-let elsReadyTimer;
-function waitForElsReady(started=performance.now()){
- clearTimeout(elsReadyTimer);if($('els-inline').hidden)return;
- try{
-  const editor=elsFrame.contentDocument?.getElementById('view')?.contentWindow?.__ed;
-  if(editor?.REGIONS?.length){$('els-load-state').textContent=`完整地盤已開啟 · ${editor.REGIONS.length} 分區 · 可旋轉、剖面及編輯`;$('els-rotate').disabled=false;return;}
- }catch(e){/* Wait for the original inner editor to finish initialising. */}
- if(performance.now()-started>120000){$('els-load-state').textContent='模型載入較慢，可使用上方「開啟完整編輯器」。';return;}
- elsReadyTimer=setTimeout(()=>waitForElsReady(started),300);
+// Load comparison data on the first visit to the PDF demo, and build the large grid only on demand.
+const fullPdf = $('pdf-full-view');
+let pdfTable;
+let fullPdfReady = false;
+function preparePdf() {
+  pdfTable ??= loadTable().catch(() => {
+    $('cell-match').textContent = '預覽暫未載入，可下載 Excel 及原 PDF。';
+    $('cell-info').textContent = '預覽暫未載入。';
+    pdfTable = undefined;
+  });
+  return pdfTable;
 }
-elsOpen.addEventListener('click',()=>{
-  $('els-inline').hidden=false;elsOpen.setAttribute('aria-expanded','true');
-  $('els-rotate').disabled=true;
-  $('els-load-state').textContent='載入完整地盤模型…';
-  elsFrame.src='tools/els.html';
-  $('els-inline').scrollIntoView({behavior:'instant',block:'start'});
-});
-elsFrame.addEventListener('load',()=>waitForElsReady());
-$('els-inline-close').addEventListener('click',()=>{clearTimeout(elsReadyTimer);$('els-rotate').disabled=true;$('els-rotate').setAttribute('aria-pressed','false');$('els-rotate').textContent='播放模型旋轉 ▶';$('els-inline').hidden=true;elsFrame.src='about:blank';elsOpen.setAttribute('aria-expanded','false');elsOpen.focus({preventScroll:true});});
-
-$('els-rotate').addEventListener('click',()=>{
- try{const tool=elsFrame.contentDocument.getElementById('view').contentDocument;
- const control=tool.getElementById('rotBtn');if(!control)return;control.click();
- const on=control.classList.contains('on');$('els-rotate').setAttribute('aria-pressed',String(on));$('els-rotate').textContent=on?'暫停模型旋轉 Ⅱ':'播放模型旋轉 ▶';
- }catch(e){$('els-load-state').textContent='模型仍在準備，請稍後再試或另頁開啟。';}
+fullPdf.addEventListener('toggle', async () => {
+  if (!fullPdf.open || fullPdfReady) return;
+  const render = await preparePdf();
+  if (!fullPdf.open || fullPdfReady || !render) return;
+  fullPdfReady = true;
+  render();
+  loadReviewRule().catch(() => {
+    $('review-rule-run').textContent = '結果暫未載入，請查看下方測試紀錄';
+  });
 });
 
-const siteTour = $('site-tour');
-const tourFrame = $('site-tour-frame');
-const tourViews = [...siteTour.querySelectorAll('[data-tour-view]')];
+const videoCase = $('video');
+let uploadPreflightReady = false;
+videoCase.addEventListener('toggle', () => {
+  if (videoCase.open && !uploadPreflightReady) {
+    uploadPreflightReady = true;
+    renderReel(Number(reelSlider.value));
+    loadUploadPreflight();
+  }
+  if (!videoCase.open && reelFrame) pauseReel();
+});
+
+const caseDialog = $('case-dialog');
+const imageDialog = $('image-dialog');
+const primaryCases = [...caseDialog.querySelectorAll('[data-case-title]')];
+let meetingReady = false;
+let caseTrigger;
+let imageTrigger;
+
+function closeOnBackdrop(dialog) {
+  dialog.addEventListener('click', event => {
+    if (event.target !== dialog) return;
+    const bounds = dialog.getBoundingClientRect();
+    if (event.clientX < bounds.left || event.clientX > bounds.right ||
+        event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
+  });
+}
+
+document.querySelectorAll('[data-zoom]').forEach(button => button.addEventListener('click', () => {
+  imageTrigger = button;
+  $('image-dialog-title').textContent = button.dataset.title;
+  $('dialog-image').src = button.dataset.zoom;
+  $('dialog-image').alt = button.dataset.title;
+  imageDialog.showModal();
+  $('close-dialog').focus({ preventScroll: true });
+  updateModelActivity();
+}));
+$('close-dialog').addEventListener('click', () => imageDialog.close());
+imageDialog.addEventListener('close', () => {
+  imageTrigger?.focus({ preventScroll: true });
+  updateModelActivity();
+});
+closeOnBackdrop(imageDialog);
+closeOnBackdrop(caseDialog);
+
+const legacyAnchors = {
+  'case-view': 'work',
+  'els-frame': 'els-editor-link',
+  'els-inline': 'site-tour',
+  'els-inline-close': 'site-tour',
+  'els-inline-open': 'site-model-open',
+  'els-load-state': 'site-tour-status',
+  'els-rotate': 'hero-model-open',
+  jobs: 'other-work',
+  'jobs-architecture': 'other-work',
+  recovery: 'other-work',
+  'recovery-architecture': 'other-work',
+  'site-tour-close': 'site-tour',
+  'site-tour-frame': 'site-tour-viewport',
+};
+function hashTarget(hash) {
+  try {
+    const id = decodeURIComponent(hash.slice(1));
+    return $(legacyAnchors[id] ?? id);
+  } catch {
+    return null;
+  }
+}
+function revealDetails(target) {
+  for (let detail = target.closest('details'); detail; detail = detail.parentElement.closest('details')) {
+    detail.open = true;
+  }
+}
+function showCase(project, target) {
+  const changing = project.hidden || !caseDialog.open;
+  primaryCases.forEach(item => { item.hidden = item !== project; });
+  $('case-title').textContent = project.dataset.caseTitle;
+  if (project.id === 'pdf') preparePdf();
+  if (project.id === 'meeting' && !meetingReady) {
+    meetingReady = true;
+    renderMeeting(0);
+    renderFeedback(0);
+  }
+  revealDetails(target);
+  if (!caseDialog.open) {
+    caseTrigger = document.querySelector('[data-case-open][href="#' + project.id + '"]');
+    caseDialog.showModal();
+    $('case-close').focus({ preventScroll: true });
+    updateModelActivity();
+  }
+  if (changing) caseDialog.scrollTop = 0;
+  if (target !== project) requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }));
+}
+function followHash() {
+  const target = hashTarget(location.hash);
+  const project = target?.closest('[data-case-title]');
+  if (project) {
+    showCase(project, target);
+    return;
+  }
+  if (caseDialog.open) caseDialog.close();
+  if (target && !target.closest('dialog')) {
+    const needsReveal = target.closest('details:not([open])') || legacyAnchors[location.hash.slice(1)];
+    revealDetails(target);
+    if (needsReveal) requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }));
+  }
+}
+function followCaseClick(event) {
+  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  const link = event.target.closest('a[href^="#"]');
+  if (!link) return;
+  const target = hashTarget(link.hash);
+  const project = target?.closest('[data-case-title]');
+  if (!project) return;
+  event.preventDefault();
+  if (!caseDialog.open) history.pushState({ portfolioCase: true }, '', link.hash);
+  else history.replaceState(history.state, '', link.hash);
+  showCase(project, target);
+  if (target !== project && target.hasAttribute('tabindex')) target.focus({ preventScroll: true });
+}
+$('case-close').addEventListener('click', () => caseDialog.close());
+caseDialog.addEventListener('close', () => {
+  if (caseDialog.open) return;
+  caseTrigger?.focus({ preventScroll: true });
+  if (hashTarget(location.hash)?.closest('[data-case-title]')) {
+    if (history.state?.portfolioCase) history.back();
+    else {
+      history.replaceState(null, '', '#work');
+      caseTrigger?.scrollIntoView({ block: 'nearest' });
+    }
+  }
+  updateModelActivity();
+});
+addEventListener('hashchange', followHash);
+document.addEventListener('click', followCaseClick);
+
+// Use one instance of the public ELS scene in the hero or the detailed exhibit.
+const heroModel = $('hero-model');
+const siteModel = $('site-tour-viewport');
+const heroOpen = $('hero-model-open');
+const siteOpen = $('site-model-open');
+const spinButton = $('hero-model-spin');
 const tourSection = $('site-tour-section');
 const tourCut = $('site-tour-cut');
 const tourStatus = $('site-tour-status');
+const tour3d = $('site-view-3d');
+const tourPlan = $('site-view-plan');
+const tourViewButtons = [...document.querySelectorAll('[data-tour-view]')];
 const tourDescriptions = {
   iso: '斜視可同時看到開挖分區、斜道和支護配置。',
   plan: '俯視可沿斜道查看各施工區怎樣接通。',
   front: '側視可比較各施工區標高。',
 };
-let tourEngine;
-let tourTimer;
-let tourTrigger;
+const smallScreen = matchMedia('(max-width: 759px), (pointer: coarse)');
+const modelFrame = document.createElement('iframe');
+modelFrame.id = 'site-tour-frame';
+modelFrame.title = '可操作的 ELS 地盤模型';
+modelFrame.tabIndex = -1;
+let modelHost;
+let modelEngine;
+let modelTimer;
 let tourView = 'iso';
+let inPlan = false;
 let sectionIsOpen = false;
+let spinRequested = true;
+let heroVisible = false;
+let siteVisible = false;
+let failedSite = false;
 
+function updateModelActivity() {
+  const spinning = spinRequested && !isReduced();
+  spinButton.hidden = modelHost !== heroModel || !modelEngine || isReduced();
+  spinButton.setAttribute('aria-pressed', String(!spinning));
+  spinButton.querySelector('span').textContent = spinning ? '暫停旋轉' : '播放旋轉';
+  spinButton.querySelector('use').setAttribute('href', spinning ? '#i-pause' : '#i-play');
+  if (!modelEngine) return;
+  const visible = modelHost === heroModel ? heroVisible : siteVisible && !inPlan;
+  modelEngine.setRotate(modelHost === heroModel && spinning);
+  modelEngine.setPaused(!visible || document.hidden || caseDialog.open || imageDialog.open);
+}
 function showTourState() {
-  tourViews.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.tourView === tourView)));
-  tourSection.setAttribute('aria-pressed', String(sectionIsOpen));
-  $('site-tour-cut-control').hidden = !sectionIsOpen;
-  tourStatus.textContent = sectionIsOpen
-    ? '剖面已開啟。左右移動剖切線可比較不同位置的開挖與支護。'
-    : tourDescriptions[tourView];
+  tour3d.setAttribute('aria-pressed', String(!inPlan));
+  tourPlan.setAttribute('aria-pressed', String(inPlan));
+  tourSection.setAttribute('aria-pressed', String(!inPlan && sectionIsOpen));
+  $('full-site-preview').hidden = inPlan;
+  $('plan-preview').hidden = !inPlan;
+  $('full-site-image').hidden = !inPlan;
+  $('site-tour-cut-control').hidden = inPlan || !sectionIsOpen;
+  tourViewButtons.forEach(button => {
+    button.setAttribute('aria-pressed', String(button.dataset.tourView === tourView));
+    button.disabled = inPlan;
+  });
+  if (inPlan) tourStatus.textContent = '同一地盤的 2D 圖則。可放大查看分區及施工路線。';
+  else if (failedSite) tourStatus.textContent = '3D 暫未載入。可重試、查看圖則或開啟編輯器。';
+  else if (modelHost === siteModel && !modelEngine) tourStatus.textContent = '正在載入 3D 模型…';
+  else if (modelHost !== siteModel) tourStatus.textContent = '開啟 3D 模型後可拖動，亦可切換角度或查看剖面。';
+  else if (sectionIsOpen) tourStatus.textContent = '移動剖切線，比較不同位置的開挖與支護。';
+  else tourStatus.textContent = tourDescriptions[tourView];
 }
-
-function closeTourWithEscape(event) {
-  if (event.key !== 'Escape' || !siteTour.open) return;
-  event.preventDefault();
-  closeSiteTour();
+function syncModel() {
+  const inHero = modelHost === heroModel;
+  modelEngine?.setRotate(false);
+  modelEngine?.setView(inHero ? 'iso' : tourView, true);
+  modelEngine?.setSection(!inHero && sectionIsOpen, Number(tourCut.value) / 100);
+  if (modelEngine) modelEngine.draw();
+  updateModelActivity();
 }
-
-function waitForTour(started) {
-  if (!siteTour.open) return;
-  const frame = tourFrame.contentDocument?.getElementById('view');
-  const renderer = frame?.contentWindow;
+function showModelReady() {
+  const inHero = modelHost === heroModel;
+  const trigger = inHero ? heroOpen : siteOpen;
+  const moveFocus = document.activeElement === trigger && (inHero || !inPlan);
+  if (inHero || !inPlan) modelHost.dataset.ready = '';
+  modelFrame.removeAttribute('aria-hidden');
+  modelFrame.tabIndex = 0;
+  heroOpen.hidden = inHero;
+  siteOpen.hidden = !inHero || inPlan;
+  if (inHero) $('hero-model-status').textContent = '3D 模型已載入，可拖動旋轉。';
+  showTourState();
+  syncModel();
+  if (moveFocus) {
+    const sceneDocument = modelFrame.contentDocument?.getElementById('view')?.contentDocument;
+    sceneDocument?.querySelector('canvas')?.focus({ preventScroll: true });
+  }
+}
+function waitForModel(started) {
+  const renderer = modelFrame.contentDocument?.getElementById('view')?.contentWindow;
   if (renderer?.__ready && renderer.__portfolioPreview) {
-    tourEngine = renderer.__portfolioPreview;
-    renderer.addEventListener('keydown', closeTourWithEscape);
-    tourFrame.contentWindow.addEventListener('keydown', closeTourWithEscape);
-    tourFrame.removeAttribute('aria-hidden');
-    $('site-tour-viewport').dataset.ready = 'true';
-    [...tourViews, tourSection, tourCut].forEach(control => { control.disabled = false; });
-    showTourState();
+    modelEngine = renderer.__portfolioPreview;
+    showModelReady();
     return;
   }
-  if (performance.now() - started > 20000) {
-    tourFrame.hidden = true;
-    tourFrame.src = 'about:blank';
-    tourStatus.textContent = '3D 模型暫未載入。可查看目前的模型圖，或另開完整編輯器。';
+  if (performance.now() - started < 25000) {
+    modelTimer = setTimeout(() => waitForModel(started), 140);
     return;
   }
-  tourTimer = setTimeout(() => waitForTour(started), 120);
+  failedSite = modelHost === siteModel;
+  modelFrame.remove();
+  modelHost = undefined;
+  heroOpen.querySelector('span').textContent = '重試 ELS 3D';
+  siteOpen.querySelector('span').textContent = '重試 3D 模型';
+  heroOpen.removeAttribute('aria-disabled');
+  siteOpen.removeAttribute('aria-disabled');
+  $('hero-model-status').textContent = '3D 模型暫未載入。';
+  showTourState();
 }
+function openModel(destination) {
+  if (modelHost === destination) return;
+  const inHero = destination === heroModel;
+  clearTimeout(modelTimer);
+  if (modelHost) delete modelHost.dataset.ready;
+  if (!inHero) failedSite = false;
+  heroOpen.hidden = false;
+  siteOpen.hidden = inPlan;
+  heroOpen.setAttribute('aria-disabled', String(inHero));
+  siteOpen.setAttribute('aria-disabled', String(!inHero));
+  heroOpen.querySelector('span').textContent = inHero ? '載入中…' : '載入 ELS 3D';
+  siteOpen.querySelector('span').textContent = inHero ? '操作模型' : '載入中…';
+  modelHost = destination;
+  modelFrame.hidden = !inHero && inPlan;
 
-document.querySelectorAll('[data-site-tour]').forEach(trigger => trigger.addEventListener('click', () => {
-  tourTrigger = trigger;
-  tourView = 'iso';
-  sectionIsOpen = false;
-  tourCut.value = '55';
+  if (modelFrame.isConnected && modelEngine && destination.moveBefore) {
+    destination.moveBefore(modelFrame, null);
+    showModelReady();
+  } else {
+    modelEngine = undefined;
+    modelFrame.setAttribute('aria-hidden', 'true');
+    modelFrame.tabIndex = -1;
+    modelFrame.src = 'tools/els.html?preview=1&scene=portfolio' + (smallScreen.matches ? '&quality=low' : '');
+    destination.append(modelFrame);
+    updateModelActivity();
+    showTourState();
+    waitForModel(performance.now());
+  }
+}
+function showTour3d() {
+  inPlan = false;
+  modelFrame.hidden = false;
+  openModel(siteModel);
+  siteOpen.hidden = Boolean(modelEngine);
+  if (modelEngine) siteModel.dataset.ready = '';
   showTourState();
-  tourStatus.textContent = '正在建立 3D 模型…';
-  tourFrame.hidden = false;
-  tourFrame.setAttribute('aria-hidden', 'true');
-  siteTour.showModal();
-  tourFrame.src = 'tools/els.html?preview=1';
-  waitForTour(performance.now());
-}));
-
-tourViews.forEach(button => button.addEventListener('click', () => {
+  syncModel();
+}
+heroOpen.addEventListener('click', () => openModel(heroModel));
+siteOpen.addEventListener('click', showTour3d);
+tour3d.addEventListener('click', showTour3d);
+tourPlan.addEventListener('click', () => {
+  inPlan = true;
+  if (modelHost === siteModel) {
+    modelFrame.hidden = true;
+    delete siteModel.dataset.ready;
+  }
+  siteOpen.hidden = true;
+  showTourState();
+  updateModelActivity();
+});
+tourViewButtons.forEach(button => button.addEventListener('click', () => {
   tourView = button.dataset.tourView;
-  tourEngine?.setView(tourView, isReduced());
-  showTourState();
+  if (modelHost !== siteModel || !modelEngine) showTour3d();
+  else {
+    modelEngine.setView(tourView, isReduced());
+    showTourState();
+  }
 }));
 tourSection.addEventListener('click', () => {
   sectionIsOpen = !sectionIsOpen;
-  tourEngine?.setSection(sectionIsOpen, Number(tourCut.value) / 100);
-  showTourState();
+  showTour3d();
 });
-tourCut.addEventListener('input', () => tourEngine?.setSection(sectionIsOpen, Number(tourCut.value) / 100));
-function closeSiteTour() {
-  clearTimeout(tourTimer);
-  tourEngine = undefined;
-  tourFrame.hidden = true;
-  tourFrame.src = 'about:blank';
-  delete $('site-tour-viewport').dataset.ready;
-  [...tourViews, tourSection, tourCut].forEach(control => { control.disabled = true; });
-  siteTour.close();
-  tourTrigger?.focus({ preventScroll: true });
+tourCut.addEventListener('input', () => modelEngine?.setSection(sectionIsOpen, Number(tourCut.value) / 100));
+spinButton.addEventListener('click', () => {
+  spinRequested = !spinRequested;
+  updateModelActivity();
+});
+const modelObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.target === heroModel) heroVisible = entry.isIntersecting;
+    else siteVisible = entry.isIntersecting;
+  });
+  updateModelActivity();
+});
+modelObserver.observe(heroModel);
+modelObserver.observe(siteModel);
+document.addEventListener('visibilitychange', updateModelActivity);
+reduceMotion.addEventListener('change', updateModelActivity);
+
+function paintHeroStars() {
+  const canvas = $('hero-stars');
+  const artwork = new Image();
+  artwork.onload = () => canvas.getContext('2d').drawImage(artwork, 0, 0, canvas.width, canvas.height);
+  artwork.fetchPriority = 'low';
+  artwork.src = 'assets/els-orbit.webp';
 }
-$('site-tour-close').addEventListener('click', closeSiteTour);
-siteTour.addEventListener('cancel', event => {
-  event.preventDefault();
-  closeSiteTour();
+function scheduleHeroModel() {
+  if (smallScreen.matches || isReduced() || navigator.connection?.saveData) return;
+  const start = () => {
+    if (!modelHost && heroVisible && !document.hidden && !document.querySelector('dialog[open]')) openModel(heroModel);
+  };
+  if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 1600 });
+  else setTimeout(start, 800);
+}
+addEventListener('load', () => {
+  setTimeout(paintHeroStars, 700);
+  setTimeout(scheduleHeroModel, 1100);
+}, { once: true });
+
+// Final values remain part of the HTML for quick reading and reduced motion.
+if (!isReduced()) {
+  const entrances = new IntersectionObserver(entries => entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('entered');
+    entrances.unobserve(entry.target);
+  }), { threshold: .1 });
+  document.querySelectorAll('.reveal, .hero-glow').forEach(element => entrances.observe(element));
+  document.querySelectorAll('[data-count]').forEach(figure => {
+    const label = document.createElement('span');
+    label.className = 'metric-static';
+    label.textContent = figure.textContent;
+    const wheel = document.createElement('span');
+    wheel.className = 'metric-wheel';
+    for (const portion of [0, .32, .62, .85, 1]) {
+      const number = document.createElement('span');
+      number.textContent = Math.round(Number(figure.dataset.count) * portion);
+      wheel.append(number);
+    }
+    figure.replaceChildren(label, wheel);
+    entrances.observe(figure);
+  });
+}
+const precisePointer = matchMedia('(hover: hover) and (pointer: fine)');
+document.querySelectorAll('.archive-card').forEach(card => {
+  card.addEventListener('pointermove', event => {
+    if (isReduced() || !precisePointer.matches || card.open) return;
+    const bounds = card.getBoundingClientRect();
+    const x = (event.clientX - bounds.left) / bounds.width - .5;
+    const y = (event.clientY - bounds.top) / bounds.height - .5;
+    card.style.setProperty('--tilt-x', (-y * 5) + 'deg');
+    card.style.setProperty('--tilt-y', (x * 5) + 'deg');
+    card.style.setProperty('--light-x', (50 + x * 100) + '%');
+    card.style.setProperty('--light-y', (50 + y * 100) + '%');
+  });
 });
+
+followHash();
