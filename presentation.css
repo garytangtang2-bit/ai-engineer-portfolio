@@ -56,7 +56,7 @@ dialog[open] { animation: sheet-in 280ms var(--ease) both; }
 .case-grid { display: grid; gap: 1rem; align-items: start; }
 .case-grid > * { min-width: 0; }
 
-.engineering-panel, .artifact, .product-window, .extra-demo, .technical, .product-route {
+.engineering-panel, .artifact, .product-window, .extra-demo, .product-route {
   border: 1px solid var(--line);
   border-radius: 16px;
   background: #151d2b;
@@ -85,7 +85,6 @@ dialog[open] { animation: sheet-in 280ms var(--ease) both; }
   font-size: .94rem;
   font-weight: 650;
 }
-.artifact-label { color: var(--gold); font-size: .75rem; font-weight: 600; }
 .artifact-body, .artifact-downloads, .demo-actions { padding: .8rem; }
 .artifact-footnote, .evidence-note {
   color: var(--muted);
@@ -112,7 +111,7 @@ dialog[open] { animation: sheet-in 280ms var(--ease) both; }
 #quick-minutes:lang(en) { color: var(--ink); }
 .review-result[data-confirmed="true"] { border-color: #80b1d1; background: #17283a; }
 
-.technical > summary, .extra-demo > summary, .demo-detail > summary {
+.extra-demo > summary, .demo-detail > summary {
   padding: .65rem .85rem;
   min-height: 44px;
   color: var(--ice);

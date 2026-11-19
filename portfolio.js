@@ -362,6 +362,7 @@ videoCase.addEventListener('toggle', () => {
 
 const caseDialog = $('case-dialog');
 const imageDialog = $('image-dialog');
+const demoStyle = $('demo-style');
 const primaryCases = [...caseDialog.querySelectorAll('[data-case-title]')];
 let meetingReady = false;
 let caseTrigger;
@@ -376,7 +377,15 @@ function closeOnBackdrop(dialog) {
   });
 }
 
+function loadDemoStyle() {
+  demoStyle.media = 'all';
+}
+document.addEventListener('toggle', event => {
+  if (event.target instanceof HTMLDetailsElement && event.target.open) loadDemoStyle();
+}, true);
+
 document.querySelectorAll('[data-zoom]').forEach(button => button.addEventListener('click', () => {
+  loadDemoStyle();
   imageTrigger = button;
   $('image-dialog-title').textContent = button.dataset.title;
   $('dialog-image').src = button.dataset.zoom;
@@ -422,6 +431,7 @@ function revealDetails(target) {
   }
 }
 function showCase(project, target) {
+  loadDemoStyle();
   const changing = project.hidden || !caseDialog.open;
   primaryCases.forEach(item => { item.hidden = item !== project; });
   $('case-title').textContent = project.dataset.caseTitle;
