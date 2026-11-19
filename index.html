@@ -12,9 +12,10 @@
   <meta property="og:image:alt" content="完整虛構地盤，展示開挖分區、支護及斜道">
   <link rel="icon" href="assets/gary-tang.webp" type="image/webp">
   <link rel="preload" href="fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=2">
-  <link rel="stylesheet" href="presentation.css?v=2">
-  <script src="portfolio.js?v=2" defer></script>
+  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="presentation.css?v=3" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="presentation.css?v=3"></noscript>
+  <script src="portfolio.js?v=3" defer></script>
 </head>
 <body>
 <svg class="symbol-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
@@ -151,7 +152,7 @@
           <span class="artifact-label">全新虛構示例 · 20 個分區</span>
         </div>
         <div id="site-tour-viewport" class="model-viewport exhibit-viewport">
-          <img id="full-site-preview" src="assets/els-tour-preview.webp" width="1280" height="800" loading="lazy" alt="全新虛構地盤，包括開挖分區、支護、基礎及施工斜道">
+          <img id="full-site-preview" src="assets/els-tour-preview.webp" srcset="assets/els-tour-preview-small.webp 720w, assets/els-tour-preview.webp 1280w" sizes="calc(100vw - 2rem)" width="1280" height="800" loading="lazy" alt="全新虛構地盤，包括開挖分區、支護、基礎及施工斜道">
           <img id="plan-preview" src="assets/els-full-plan.webp" width="1600" height="1000" loading="lazy" alt="同一虛構地盤的 2D 施工圖則" hidden>
           <button type="button" id="full-site-image" class="button model-button plan-zoom" data-zoom="assets/els-full-plan.webp" data-title="2D 圖則 · 全新虛構示例" hidden>放大圖則<svg aria-hidden="true" class="icon"><use href="#i-up-right"/></svg></button>
           <button type="button" id="site-model-open" class="button model-button"><svg aria-hidden="true" class="icon"><use href="#i-mark"/></svg><span>操作模型</span></button>

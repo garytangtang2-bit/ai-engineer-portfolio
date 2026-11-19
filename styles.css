@@ -10,6 +10,13 @@
   font-weight: 400 900;
   font-display: swap;
 }
+@font-face {
+  font-family: "Noto Sans TC";
+  src: url("fonts/noto-sans-tc-home.woff2") format("woff2");
+  font-weight: 400 900;
+  font-display: swap;
+  unicode-range: U+2026, U+3001, U+3002, U+4E00, U+4E0A, U+4E0B, U+4E2D, U+4E3B, U+4EE5, U+4F01, U+4F4D, U+4F5C, U+4F8B, U+4FEF, U+500B, U+505C, U+5074, U+5165, U+5167, U+5168, U+5206, U+5247, U+524D, U+5256, U+52A9, U+52D5, U+5340, U+5354, U+539F, U+53D6, U+53EF, U+53F0, U+540C, U+54C1, U+5609, U+5716, U+5718, U+578B, U+5B57, U+5BB9, U+5C0D, U+5C0F, U+5C65, U+5DE5, U+5E73, U+5F0F, U+5F71, U+5F85, U+5F8C, U+5F9E, U+5FA9, U+6062, U+6210, U+6253, U+6295, U+62D6, U+64AD, U+64CD, U+653E, U+6578, U+6587, U+659C, U+65B0, U+65B9, U+65BD, U+65CB, U+6642, U+66AB, U+6703, U+672C, U+6838, U+683C, U+6848, U+696D, U+69CB, U+6A19, U+6A21, U+6B63, U+6B77, U+6BD4, U+6E1B, U+722D, U+7368, U+7522, U+7528, U+7591, U+767C, U+7684, U+76EE, U+7701, U+793A, U+7ACB, U+7AEF, U+7B54, U+7B97, U+7CB5, U+7D00, U+7D04, U+7D61, U+7D93, U+7DAD, U+7DDA, U+7F6E, U+806F, U+80FD, U+81EA, U+81F3, U+8207, U+82F1, U+865B, U+8868, U+88DC, U+8996, U+8A08, U+8A66, U+8A9E, U+8B70, U+8B8A, U+8B93, U+8DDD, U+8DF3, U+8F03, U+8F09, U+8F49, U+9084, U+9127, U+91CD, U+9304, U+9418, U+958B, U+968A, U+96E2, U+96F6, U+9762, U+9805, U+FF0F;
+}
 :root {
   color-scheme: dark;
   --bg: #0b0d14;
@@ -306,9 +313,16 @@ img { max-width: 100%; height: auto; display: block; }
 .model-viewport > img { transition: opacity 260ms var(--ease); }
 .hero-model {
   aspect-ratio: 1.68;
-  mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent),
-    linear-gradient(0deg, transparent, #000 16%, #000 84%, transparent);
-  mask-composite: intersect;
+}
+.hero-model::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, var(--bg), transparent 14%, transparent 86%, var(--bg)),
+    linear-gradient(0deg, var(--bg), transparent 16%, transparent 84%, var(--bg));
 }
 .hero-model > img { object-fit: cover; }
 .hero-model-actions {
@@ -330,6 +344,10 @@ img { max-width: 100%; height: auto; display: block; }
 .model-jump { min-width: 44px; padding-inline: .5rem; }
 
 .page-section { margin-top: var(--space); }
+#els, #other-work, #stack, #approach, #experience, #contact {
+  content-visibility: auto;
+  contain-intrinsic-block-size: auto 420px;
+}
 .page-section h2 {
   font-size: clamp(1.68rem, 4vw, 3.02rem);
   letter-spacing: -.045em;
