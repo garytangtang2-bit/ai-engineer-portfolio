@@ -39,7 +39,15 @@
 html { scroll-padding-top: 1.25rem; }
 body {
   margin: 0;
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image:
+    url("assets/atmosphere-grain.png"),
+    radial-gradient(ellipse at 87% 12%, #6445274d, transparent 45%),
+    radial-gradient(ellipse at 70% 44%, #244d7566, transparent 63%),
+    radial-gradient(ellipse at 3% 4%, #22395797, transparent 55%),
+    linear-gradient(155deg, #0d1521, var(--bg) 48%, #101823);
+  background-size: auto, 100% 55rem, 100% 61rem, 100% 49rem, 100% 100%;
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat;
   color: var(--ink);
   font: 400 1rem/1.65 var(--text);
 }
@@ -260,8 +268,8 @@ img { max-width: 100%; height: auto; display: block; }
   z-index: -1;
   inset: -10% -11% -14%;
   background:
-    radial-gradient(ellipse at 26% 62%, #569ace38, transparent 43%),
-    radial-gradient(ellipse at 76% 38%, #aa815129, transparent 40%);
+    radial-gradient(ellipse at 26% 62%, #569ace40, transparent 56%),
+    radial-gradient(ellipse at 76% 38%, #aa815133, transparent 54%);
   mask-image: radial-gradient(ellipse 64% 68% at 50% 51%, #000 53%, transparent);
 }
 .hero-glow canvas {
@@ -274,12 +282,11 @@ img { max-width: 100%; height: auto; display: block; }
   position: absolute;
   inset: 31% 5% 24%;
   border: 1px solid transparent;
-  border-block-end-color: #a9dfff61;
+  border-block-end-color: #a9dfff40;
   border-radius: 50%;
   transform: rotate(-16deg);
-  box-shadow: 0 8px 28px -18px #67caff;
 }
-.hero-glow span + span { inset: 27% 9% 29%; transform: rotate(155deg); border-block-end-color: #f5cd936b; box-shadow: 0 10px 40px -24px #ffd28b; }
+.hero-glow span + span { inset: 27% 9% 29%; transform: rotate(155deg); border-block-end-color: #f5cd9347; }
 .hero-glow::after {
   content: "";
   position: absolute;
@@ -313,17 +320,14 @@ img { max-width: 100%; height: auto; display: block; }
 .hero-model {
   aspect-ratio: 1.68;
 }
-.hero-model::after {
-  content: "";
-  position: absolute;
-  z-index: 2;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, var(--bg), transparent 14%, transparent 86%, var(--bg)),
-    linear-gradient(0deg, var(--bg), transparent 16%, transparent 84%, var(--bg));
+.hero-model > img {
+  object-fit: cover;
+  mask-image:
+    linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent),
+    linear-gradient(0deg, transparent, #000 15%, #000 86%, transparent);
+  mask-composite: intersect;
 }
-.hero-model > img { object-fit: cover; }
+.hero-model > iframe { border-radius: var(--radius); }
 .hero-model-actions {
   display: flex;
   position: absolute;
