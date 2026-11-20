@@ -52,7 +52,7 @@ function checkSheet(sheet, page) {
 }
 
 export async function verifyWorkbook(onPage) {
-  const response = await fetch("evidence/20000-cells-converted.xlsx");
+  const response = await fetch(new URL("evidence/20000-cells-converted.xlsx", import.meta.url));
   if (!response.ok) throw new Error("Workbook unavailable");
   const files = unzipSync(new Uint8Array(await response.arrayBuffer()), {
     filter: entry => /^xl\/(worksheets\/[^/]+\.xml|workbook\.xml|_rels\/workbook\.xml\.rels)$/.test(entry.name),

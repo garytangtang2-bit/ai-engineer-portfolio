@@ -1,38 +1,18 @@
 # Gary Tang · AI Engineering Portfolio
 
-中文 AI Engineer 求職作品集。首頁先展示交付成果，三個精選案例在同頁開啟互動示範。其他工具集中在六個入口。
+靜態中文求職作品集。首頁展示工作成果與可按類別篩選的作品目錄。每件作品都有可分享的個案網址、技術選擇及交付說明。
 
-[開啟作品集](https://garytangtang2-bit.github.io/ai-engineer-portfolio/) · [履歷 PDF](assets/Gary-Tang-CV.pdf)
+[公開網站](https://garytangtang2-bit.github.io/ai-engineer-portfolio/) · [履歷 PDF](assets/Gary-Tang-CV.pdf)
 
-## 本地檢視
+## 維護與預覽
 
-在此目錄執行 `python -m http.server 7817 --bind 127.0.0.1`，再開啟 `http://127.0.0.1:7817/`。網站無建置步驟，亦毋須 API key。
+修改 `content/projects.json` 後執行 `python -B tools/build_portfolio.py`。原生 HTML 會寫入首頁和 `projects/<id>/index.html`，GitHub Pages 直接提供這些檔案。本機可用 `python -B -m http.server 7817 --bind 127.0.0.1` 預覽。
 
-修改 `styles.css` 後執行 `node tools/inline-styles.mjs`，將樣式同步到首頁，讓手機首次載入時少等一次網絡請求。
+互動個案的 HTML 位於 `content/widgets/`，操作程式位於 `widgets/`。會議可核實原句並下載英文紀錄，PDF 可核對公開 Excel，ToGoalAi 可切換正式站畫面及教材處理路線。虛構地盤模型在操作時載入 Three.js。其他獨立示範涵蓋文件判讀、用量對帳、影片製作及批次上傳預檢。舊作品錨點透過 `legacy-routes.js` 對應新頁面。
 
-## 展示方式
+將自我介紹成片放入 `assets/introduction.mp4`，可選字幕放入 `assets/introduction.zh-Hant.vtt`，然後重新產生靜態頁面。播放器會出現在個人介紹與 AutoCut 個案頁，由訪客啟動。
 
-- **會議紀錄**：用虛構資料重現原流程。採用附時間碼的同事回覆後，可即場核對及下載更新的英文紀錄。
-- **PDF → Excel**：點選數值會標出合成原 PDF 的對應位置。完整測試由原 Python 程式處理 20 頁及 20,000 格，涵蓋文字層及指定選區。可下載兩個檔案及查看逐格核對紀錄。
-- **ToGoalAi**：以獨立交付為主，介紹介面、前後端、API、RAG 與部署。可切換正式站畫面，並操作五種教材的匯入分流。
-- **投標地盤模型**：同一 Three.js 引擎支援快速 3D 導覽和完整編輯器。全新虛構地盤涵蓋 20 個分區、8 段板樁、43 組樁帽、斜道、排水區及 2D 圖則。導覽可旋轉、切換視角和移動剖切線，展示投標方案的施工與支護關係。
-- **複雜 PDF 判讀 Skill**：介紹如何讓 AI 按版面、細字、跨頁及覆核規則理解複雜文件，配合工具交付 Excel。互動是流程導覽，版面採合成示意；可下載原程式的合成 Excel 輸出。
-- **上傳／影片 Skills**：以原配對程式的合成結果比較兩輪批次預檢，並用可拖動的合成時間軸展示字幕及動畫標記。
-- **其他工具**：涵蓋 Excel 公式預檢、PDF 批註與合併、CAD、模型檢查、講座摘要、程式動畫及內容同步。
-
-公司成效、採用量及投標用途來自本人工作紀錄及陳述，屬個案結果。地盤模型為全新虛構配置；PDF 與 Excel 測試採合成資料。個人聯絡方式只在 PDF 履歷。
-
-## 介面
-
-原生 HTML／CSS／JavaScript。示範視窗可按 Esc 關閉，保留舊作品錨點。首頁以合成的會議節錄進入答疑示範。會議個案呈現製作工時、兩次會議之間的人工交接及技術分工。投標展示先顯示 WebP，操作時才載入 Three.js，支援 2D、3D 及剖切，並尊重 `prefers-reduced-motion`。
-
-## 技術與回饋機制
-
-主打作品卡列出交付和個案成效。試玩視窗顯示操作示例和工程取捨，包括 Python 調用 FFmpeg、faster-whisper 本機轉錄、PyMuPDF／OpenCV 表格與字形，以及 Word、Excel 輸出。影片卡介紹 Remotion 的時間軸及上傳預檢。
-
-雙模式回饋示例展示「用戶確認 → 記憶更新 → 下次沿用」：語音術語進入經確認的熱詞／校正流程，PDF 字形更新同組讀值並保存字典。示例只操作合成的頁面狀態，不寫入真實知識庫或呼叫模型。實際機制以有來源的知識庫、詞庫及規則累積經驗；候選資料先確認再套用。
-
-訪客可在「逐格核對」讀取公開 Excel 實檔。瀏覽器解開 XLSX，按照工作簿關係讀取每張表，核對合成資料的格位、數字型別和預期值，並指出第一處差異。
+個案工時及採用情況來自本人工作紀錄。網站的合成例子、重新設計的地盤模型及正式站截圖均按來源標示。
 
 ### n8n 用量對帳
 
@@ -43,8 +23,3 @@
 已在 n8n 2.48.6 由上游工作流執行同一份匯出檔。內置合成測試有兩個配對納入比較，合計由 1,800 降至 400 Token，一個配對留待覆核。[開啟執行輸出](evidence/token-usage-result.json)
 
 第三方授權見 `fonts/*-OFL.txt`、`tools/vendor/three/LICENSE` 及 `tools/vendor/fflate/LICENSE`。技術標誌取自 [Simple Icons](https://github.com/simple-icons/simple-icons)。
-
-
-## 更新 AutoCut 自我介紹
-
-成片獲准公開後，把 MP4 及可選的繁體中文字幕 VTT 放入 `assets/`。在 `index.html` 的 `#intro-media` 填入 `data-video-src` 及 `data-caption-src` 的相對路徑，例如 `assets/introduction.mp4` 和 `assets/introduction.zh-Hant.vtt`。影片留空時展示照片和文字自介。填入成片後會顯示原生播放器，由訪客啟動。

@@ -1,0 +1,30 @@
+<div class="product-window">
+  <div class="browser-bar"><span class="window-dots" aria-hidden="true">● ● ●</span><span>正式站畫面 · togoalai.com</span><a href="https://www.togoalai.com/zh-TW" target="_blank" rel="noopener">開啟正式站 ↗</a></div>
+  <div class="segmented product-views" role="group" aria-label="切換 ToGoalAi 公開畫面">
+    <button type="button" data-product-screen="setup" aria-pressed="false">設定考試</button>
+    <button type="button" data-product-screen="question" aria-pressed="false">作答介面</button>
+    <button type="button" data-product-screen="result" aria-pressed="true">結果與弱點</button>
+    <button type="button" data-product-screen="home" aria-pressed="false">正式站首頁</button>
+  </div>
+  <div id="togoal-picture" class="product-picture" role="region" tabindex="0" aria-label="ToGoalAi 畫面預覽，放大後可橫向捲動">
+    <img src="../../assets/togoalai-demo-result.webp" alt="ToGoalAi 公開示範的模擬試分數與弱點建議" width="896" height="504" loading="lazy">
+  </div>
+  <button class="button small product-zoom-button" id="togoal-zoom" type="button" aria-pressed="false" aria-controls="togoal-picture">放大畫面 ＋</button>
+  <p id="product-screen-note" class="artifact-footnote product-screen-note" role="status">總分、分項成績及弱項建議在同一畫面，讓使用者知道下一步應複習甚麼。</p>
+</div>
+<div class="product-route" id="togoal-inputs" tabindex="-1">
+      <h4>教材處理路徑</h4>
+      <div class="product-route-choices" role="group" aria-label="選擇教材來源">
+        <button type="button" data-product-route="pdf" aria-pressed="true">PDF</button>
+        <button type="button" data-product-route="office" aria-pressed="false">Word／PPT</button>
+        <button type="button" data-product-route="web" aria-pressed="false">網頁</button>
+        <button type="button" data-product-route="youtube" aria-pressed="false">YouTube</button>
+        <button type="button" data-product-route="audio" aria-pressed="false">音訊／圖片</button>
+      </div>
+      <dl id="product-route-steps" class="product-route-steps" aria-live="polite">
+        <div><dt>輸入</dt><dd>文字 PDF 或掃描件</dd></div>
+        <div><dt>匯入處理</dt><dd>unpdf 先取文字層。缺少有效文字時，交 Gemini 直接讀 PDF。</dd></div>
+        <div><dt>共用資料</dt><dd>Supabase 儲存教材與筆記段落，供問答、出題及複習讀取。</dd></div>
+      </dl>
+    </div>
+<section id="togoal-architecture" class="engineering-panel" aria-label="技術與取捨"><h3>技術與取捨</h3><dl class="engineering-list"><div><dt>前端與 UI</dt><dd>由零建立 Next.js 教材工作區。簡報流程分步收集需求，用戶可修改大綱及投影片，再以 PptxGenJS 匯出。</dd></div><div><dt>後端與 API</dt><dd>設計教材匯入、出題及問答 API。Supabase 管理登入和教材資料，整合 Google 登入及 Stripe 訂閱。</dd></div><div><dt>RAG 與成本</dt><dd>問答從選定教材取段落，讓回答附上來源。先估算上下文長度，超出模型預算才額外呼叫壓縮模型。合適的繁中問答會重用有效的教材快取。</dd></div><div><dt>部署與交付</dt><dd>獨立完成架構、程式和介面，以 GitHub 管理版本並部署到 Vercel。正式站支援問答、模擬試、口試及可編輯簡報。</dd></div></dl></section>

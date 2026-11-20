@@ -1,0 +1,41 @@
+<div id="site-tour" class="model-exhibit">
+        <div class="model-toolbar">
+          <div class="segmented" role="group" aria-label="地盤畫面">
+            <button type="button" id="site-view-3d" aria-pressed="true">3D 模型</button>
+            <button type="button" id="site-view-plan" aria-pressed="false">2D 圖則</button>
+            <button type="button" id="site-tour-section" aria-pressed="false"><svg aria-hidden="true" class="icon"><use href="#i-section"></use></svg>剖面</button>
+          </div>
+          <span class="artifact-label">全新虛構示例 · 20 個分區</span>
+        </div>
+        <div id="site-tour-viewport" class="model-viewport exhibit-viewport">
+          <img id="full-site-preview" src="../../assets/els-tour-preview.webp" srcset="../../assets/els-tour-preview-small.webp 720w, ../../assets/els-tour-preview.webp 1280w" sizes="calc(100vw - 2rem)" width="1280" height="800" loading="lazy" alt="全新虛構地盤，包括開挖分區、支護、基礎及施工斜道">
+          <img id="plan-preview" src="../../assets/els-full-plan.webp" width="1600" height="1000" loading="lazy" alt="同一虛構地盤的 2D 施工圖則" hidden>
+          <button type="button" id="full-site-image" class="button model-button plan-zoom" data-zoom="../../assets/els-full-plan.webp" data-title="2D 圖則 · 全新虛構示例" hidden>放大圖則<svg aria-hidden="true" class="icon"><use href="#i-up-right"></use></svg></button>
+          <button type="button" id="site-model-open" class="button model-button"><svg aria-hidden="true" class="icon"><use href="#i-mark"></use></svg><span>操作模型</span></button>
+        </div>
+        <div class="model-toolbar model-bottom">
+          <div id="site-tour-help" class="model-guidance">
+            <div class="segmented model-views" role="group" aria-label="地盤視角">
+              <button type="button" data-tour-view="iso" aria-pressed="true">斜視</button>
+              <button type="button" data-tour-view="plan" aria-pressed="false">俯視</button>
+              <button type="button" data-tour-view="front" aria-pressed="false">側視</button>
+            </div>
+            <label id="site-tour-cut-control" for="site-tour-cut" hidden>剖面位置
+              <input type="range" id="site-tour-cut" min="0" max="100" value="55">
+            </label>
+            <p id="site-tour-status" role="status">拖動模型，或切換視角查看開挖分區及支護。</p>
+          </div>
+          <a id="els-editor-link" class="button" href="../../tools/els.html" target="_blank" rel="noopener">開啟完整編輯器<svg aria-hidden="true" class="icon"><use href="#i-up-right"></use></svg></a>
+        </div>
+      </div>
+<details id="els-architecture" class="technical exhibit-details">
+        <summary>技術與取捨</summary>
+        <dl class="engineering-list">
+          <div><dt>一份資料，兩種圖</dt><dd>分區與標高共同驅動 Three.js 模型及 2D 圖則，調整設定後同步更新。</dd></div>
+          <div><dt>方案可檢視</dt><dd>旋轉、切換視角及移動剖切線，讓團隊比較開挖標高和支護位置。</dd></div>
+        </dl>
+      </details>
+<dialog id="image-dialog" class="image-dialog" aria-labelledby="image-dialog-title">
+    <header class="dialog-bar"><h2 id="image-dialog-title"></h2><button class="button" type="button" id="close-dialog" aria-label="關閉圖片"><svg aria-hidden="true" class="icon"><use href="#i-close"></use></svg>關閉</button></header>
+    <img id="dialog-image" alt="">
+  </dialog>

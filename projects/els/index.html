@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-Hant-HK"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3D 投標方案模型｜Gary Tang AI Engineer</title><meta name="description" content="投標團隊可用同一個模型查看平面、立體及剖面，向評審講解施工方案，協助公司爭取工程項目。"><meta name="theme-color" content="#0b1118"><link rel="canonical" href="https://garytangtang2-bit.github.io/ai-engineer-portfolio/projects/els/">
+<link rel="stylesheet" href="../../styles.css"><link rel="stylesheet" href="../../presentation.css"><link rel="stylesheet" href="../../gallery.css"><script type="module" src="../../gallery.js"></script><script type="module" src="../../widgets/els.mjs"></script></head>
+<body class="gallery-body"><a class="jump-main" href="#main">跳至主要內容</a>
+<header class="mast"><div class="frame mast-bar"><a class="signature" href="../../"><span aria-hidden="true" class="sig-mark">gt</span><span>Gary Tang</span></a>
+<nav aria-label="網站導覽"><a href="../../#work">作品</a><a href="../../#about">關於</a><a class="cv-link" href="../../assets/Gary-Tang-CV.pdf">履歷 PDF <span aria-hidden="true">↗</span></a></nav></div></header>
+<main id="main" class="case-body frame"><div class="case-crumb"><a href="../../#work" data-back>← 全部作品</a><span>／ 空間與模型</span></div>
+<section class="case-heading"><div><p class="eyeline">空間與模型 · 互動個案</p><h1>3D 投標方案模型</h1><p>投標團隊可用同一個模型查看平面、立體及剖面，向評審講解施工方案，協助公司爭取工程項目。</p><div class="case-actions"><a class="main-btn" href="#demo">前往互動示範 ↓</a></div></div>
+<div class="exhibit" data-reactive><div class="case-art art-model" aria-hidden="true"><div class="art-paper"><div class="art-window model"><img src="../../assets/els-tour-preview.webp" loading="lazy" decoding="async" alt=""></div></div><span class="art-cap">完整虛構地盤 · 互動模型</span></div><div class="case-outcome"><span>交付成果</span><strong>同一配置 → 2D／3D／剖面</strong></div></div></section>
+<div class="reading-shell"><section id="method" class="method"><p class="eyeline">ENGINEERING NOTES</p><h2>我怎樣做</h2><p class="case-context">公開地盤是重新設計的虛構配置，包含 20 個分區、8 段板樁和 43 組樁帽。</p>
+<ol class="build-steps"><li><h3>建立配置</h3><p>將場地分區、標高和支護物件寫成結構化資料。</p></li><li><h3>比較方案</h3><p>同一份資料驅動平面與立體視圖，可旋轉並移動剖切線。</p></li><li><h3>投標展示</h3><p>在瀏覽器打開方案，配合圖則向團隊解釋相鄰區域的施工關係。</p></li></ol><ul class="tech-pills" aria-label="技術與工具"><li>Three.js</li><li>JavaScript</li><li>Python</li></ul></section>
+<svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><symbol id="i-mark" viewBox="0 0 24 24"><path d="M4 8.8 12 4l8 4.8v6.4L12 20l-8-4.8Z"></path><path d="m4 8.8 8 4.8 8-4.8M12 13.6V20m-4-8.9 8-4.8"></path></symbol><symbol id="i-up-right" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"></path></symbol><symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></symbol><symbol id="i-section" viewBox="0 0 24 24"><path d="M12 4v16M7 6l-4 3v6l4 3m10-12 4 3v6l-4 3"></path></symbol></svg><section class="case-demo" id="demo"><p class="eyeline">INTERACTIVE</p><h2>親手試用</h2><div class="demo-content"><div id="site-tour" class="model-exhibit">
+        <div class="model-toolbar">
+          <div class="segmented" role="group" aria-label="地盤畫面">
+            <button type="button" id="site-view-3d" aria-pressed="true">3D 模型</button>
+            <button type="button" id="site-view-plan" aria-pressed="false">2D 圖則</button>
+            <button type="button" id="site-tour-section" aria-pressed="false"><svg aria-hidden="true" class="icon"><use href="#i-section"></use></svg>剖面</button>
+          </div>
+          <span class="artifact-label">全新虛構示例 · 20 個分區</span>
+        </div>
+        <div id="site-tour-viewport" class="model-viewport exhibit-viewport">
+          <img id="full-site-preview" src="../../assets/els-tour-preview.webp" srcset="../../assets/els-tour-preview-small.webp 720w, ../../assets/els-tour-preview.webp 1280w" sizes="calc(100vw - 2rem)" width="1280" height="800" loading="lazy" alt="全新虛構地盤，包括開挖分區、支護、基礎及施工斜道">
+          <img id="plan-preview" src="../../assets/els-full-plan.webp" width="1600" height="1000" loading="lazy" alt="同一虛構地盤的 2D 施工圖則" hidden>
+          <button type="button" id="full-site-image" class="button model-button plan-zoom" data-zoom="../../assets/els-full-plan.webp" data-title="2D 圖則 · 全新虛構示例" hidden>放大圖則<svg aria-hidden="true" class="icon"><use href="#i-up-right"></use></svg></button>
+          <button type="button" id="site-model-open" class="button model-button"><svg aria-hidden="true" class="icon"><use href="#i-mark"></use></svg><span>操作模型</span></button>
+        </div>
+        <div class="model-toolbar model-bottom">
+          <div id="site-tour-help" class="model-guidance">
+            <div class="segmented model-views" role="group" aria-label="地盤視角">
+              <button type="button" data-tour-view="iso" aria-pressed="true">斜視</button>
+              <button type="button" data-tour-view="plan" aria-pressed="false">俯視</button>
+              <button type="button" data-tour-view="front" aria-pressed="false">側視</button>
+            </div>
+            <label id="site-tour-cut-control" for="site-tour-cut" hidden>剖面位置
+              <input type="range" id="site-tour-cut" min="0" max="100" value="55">
+            </label>
+            <p id="site-tour-status" role="status">拖動模型，或切換視角查看開挖分區及支護。</p>
+          </div>
+          <a id="els-editor-link" class="button" href="../../tools/els.html" target="_blank" rel="noopener">開啟完整編輯器<svg aria-hidden="true" class="icon"><use href="#i-up-right"></use></svg></a>
+        </div>
+      </div>
+<details id="els-architecture" class="technical exhibit-details">
+        <summary>技術與取捨</summary>
+        <dl class="engineering-list">
+          <div><dt>一份資料，兩種圖</dt><dd>分區與標高共同驅動 Three.js 模型及 2D 圖則，調整設定後同步更新。</dd></div>
+          <div><dt>方案可檢視</dt><dd>旋轉、切換視角及移動剖切線，讓團隊比較開挖標高和支護位置。</dd></div>
+        </dl>
+      </details>
+<dialog id="image-dialog" class="image-dialog" aria-labelledby="image-dialog-title">
+    <header class="dialog-bar"><h2 id="image-dialog-title"></h2><button class="button" type="button" id="close-dialog" aria-label="關閉圖片"><svg aria-hidden="true" class="icon"><use href="#i-close"></use></svg>關閉</button></header>
+    <img id="dialog-image" alt="">
+  </dialog></div></section><nav class="next-case" aria-label="瀏覽其他作品"><a href="../../#work" data-back>← 全部作品</a><a href="../tokens/">下一件 · n8n 用量對帳 →</a></nav></div></main>
+<footer class="folio-footer frame" id="contact"><div><h2>聯絡 Gary</h2><p>履歷內附電郵及電話，歡迎聯絡我面談。</p></div><a class="main-btn" href="../../assets/Gary-Tang-CV.pdf">開啟履歷及聯絡資料 <span aria-hidden="true">↗</span></a></footer>
+</body></html>

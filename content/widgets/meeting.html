@@ -1,0 +1,62 @@
+<section id="meeting-demo" class="artifact meeting-artifact" tabindex="-1" aria-label="會議紀錄示範">
+    <div class="artifact-header"><strong>試答一項會議疑點</strong><span class="artifact-label">虛構示例</span></div>
+    <div class="direct-review">
+      <div class="review-source">
+        <dl class="review-input"><div><dt>錄音原句 · 19:06</dt><dd>「下星期……四？再確認。」</dd></div><div><dt>同事回覆</dt><dd>「係 10 月 22 日星期四。」</dd></div></dl>
+        <button type="button" class="button primary" id="confirm-review">採用同事回覆</button>
+      </div>
+      <div class="review-result" id="meeting-output-trace">
+        <div role="status" aria-atomic="true"><strong>英文會議紀錄</strong><p id="quick-minutes">草稿 · 日期待確認</p><small id="minutes-source" hidden>已記錄同事確認 · 來源 19:06</small></div>
+        <button type="button" class="button small" id="minutes-download" hidden>下載紀錄 ↓</button>
+      </div>
+    </div>
+    <details id="meeting-flow" class="demo-detail"><summary>查看完整流程</summary><div class="workflow-tabs" role="tablist" aria-label="會議紀錄流程步驟"><button role="tab" id="meeting-tab-0" aria-controls="meeting-panel" aria-selected="true" data-step="0"><span>01</span>輸入</button><button role="tab" id="meeting-tab-1" aria-controls="meeting-panel" aria-selected="false" tabindex="-1" data-step="1"><span>02</span>轉錄</button><button role="tab" id="meeting-tab-2" aria-controls="meeting-panel" aria-selected="false" tabindex="-1" data-step="2"><span>03</span>事實表</button><button role="tab" id="meeting-tab-3" aria-controls="meeting-panel" aria-selected="false" tabindex="-1" data-step="3"><span>04</span>答疑</button><button role="tab" id="meeting-tab-4" aria-controls="meeting-panel" aria-selected="false" tabindex="-1" data-step="4"><span>05</span>交付</button></div><div class="workflow-progress" aria-hidden="true"></div><div id="meeting-panel" class="workflow-panel" role="tabpanel" aria-labelledby="meeting-tab-0" tabindex="0"></div><div class="workflow-footer"><span id="meeting-position">01 / 05</span><span id="meeting-state" role="status"></span><button class="button small" id="meeting-next">下一步 →</button></div></details>
+  </section>
+<details id="feedback-demo" class="extra-demo"><summary>試試讓人工確認供下次沿用</summary><section id="feedback-lab" class="feedback-lab" aria-label="答覆如何回流">
+
+  <div class="feedback-tabs" role="tablist" aria-label="回饋機制案例"><button role="tab" id="feedback-tab-0" data-feedback="0" aria-controls="feedback-panel" aria-selected="true">語音：熱詞與校正</button><button role="tab" id="feedback-tab-1" data-feedback="1" aria-controls="feedback-panel" aria-selected="false" tabindex="-1">PDF：字形與別名</button></div>
+  <div id="feedback-panel" role="tabpanel" aria-labelledby="feedback-tab-0"></div>
+  <p class="artifact-footnote">合成流程示意。按鈕只切換本頁狀態，不執行模型或修改實際知識庫。實際系統由程式保存記憶，再經確認套用。</p>
+</section></details>
+<section id="meeting-cycle" class="wrap page-section cycle-section" aria-labelledby="cycle-title">
+      <div class="story-heading"><span class="section-kicker">會議紀錄個案</span>
+        <h2 id="cycle-title">從散會到下次開會</h2>
+        <p>散會後，同事要重聽整段錄音、整理英文紀錄，還要接手準備下次議程。我把兩次會議之間的交接畫出來，逐步釐清哪些資料可以沿用、哪些決定一定要有人確認。</p>
+      </div>
+      <div class="time-study">
+        <div class="time-copy"><h3>工時省在哪裏？</h3><p>以設計部一場 90 分鐘的粵語會議為例。以前同事聽完整場，再花約 3 小時寫稿，之後交主管覆核。</p></div>
+        <div class="time-bars" aria-label="完成會議紀錄所需時間比較">
+          <div class="time-row"><div><span>原有流程</span><strong>至少 5 小時</strong></div><div class="time-track"><i></i></div></div>
+          <div class="time-row current"><div><span>重組後</span><strong>約 90 分鐘</strong></div><div class="time-track"><i></i></div></div>
+          <p>約 70 分鐘是等本機轉錄，同事集中約 10 分鐘回答疑點。以上時間只計製作會議紀錄。</p>
+        </div>
+      </div>
+      <h3 class="cycle-subhead">一個會議週期，四次交接</h3>
+      <ol class="cycle-steps">
+        <li><span class="cycle-stage">散會後</span><h4>由錄影建立草稿</h4><p>程式整理音訊和舊議程。AI 從今次錄音抽出決定，逐項附上時間碼和原句，寫成英文初稿。</p><small>交付 · 有來源的草稿</small></li>
+        <li><span class="cycle-stage">核稿時</span><h4>只重聽有疑點的片段</h4><p>例如「準備提交」和「已提交」會影響跟進。系統列出待確認項目，同事聽回相關片段，答案連來源記錄。</p><small>交付 · 已核對的紀錄</small></li>
+        <li><span class="cycle-stage">兩次會議之間</span><h4>並行準備議程和分享</h4><p>負責同事更新提交進度，另一邊由工程師準備分享材料。按各自的交件時間收集，齊備後才合併。</p><small>交接 · 進度表及分享文件</small></li>
+        <li><span class="cycle-stage">下次開會前</span><h4>組成可派發的會議包</h4><p>議程和分享資料整理成 PDF，同事核對內容及會議連結後派發。下次散會，沿用議程框架再核對新決定。</p><small>交付 · 下次會議資料</small></li>
+      </ol>
+      <figure class="handoff-map" aria-labelledby="handoff-title">
+        <figcaption id="handoff-title">會前的兩條交件路線</figcaption>
+        <div class="handoff-branches">
+          <details><summary><span>進度資料</span><strong>提交清單 → 議程 PDF</strong></summary>
+            <p>負責同事先更新提交清單。收到最新進度後，整理者把資料併入 Excel 議程，核對未完成的項目，再準備會議用 PDF。</p></details>
+          <details><summary><span>分享資料</span><strong>工程師簡報 → 分享 PDF</strong></summary>
+            <p>工程師提供簡報或 PDF。簡報需轉檔，然後按當次分享內容合併、核對頁次，另存一份分享文件。</p></details>
+        </div>
+        <div class="handoff-merge"><strong>會議資料包</strong><span>議程 PDF ＋ 分享 PDF ＋ 會議連結</span></div>
+      </figure>
+      <p class="map-note">我把日常操作包成 Python／Tkinter 桌面工具。同事可以在視窗內執行流程、預覽並複製電郵草稿，再自行核對及發出。</p>
+    </section>
+<section id="meeting-decisions" class="wrap page-section decision-section" aria-labelledby="decision-title">
+      <div class="story-heading"><span class="section-kicker">工程取捨</span><h2 id="decision-title">一句說話，如何落筆</h2>
+      <p>舊議程提供欄位，今次錄音提供證據。即使只差「準備」兩個字，也會改變跟進工作。</p></div>
+      <dl class="decision-list">
+        <div><dt>程式固定格式</dt><dd>Python 按議程建立骨架，用 FFmpeg 整理錄音，再交 faster-whisper 本機轉錄。重複的欄位和匯出格式可逐次重用，減少模型處理量。</dd></div>
+        <div><dt>模型整理語意</dt><dd>先抽出每項決定、時間碼、原句和把握程度，再寫英文點列。沒有本次來源的舊進度留在正文以外。</dd></div>
+        <div><dt>人處理疑點</dt><dd>遇到日期不清或轉錄結果不一致，程式把相關片段整理成問題包。確認過的答案有來源記錄，術語校正可供下次辨識沿用。</dd></div>
+      </dl>
+      <a class="button primary" href="#meeting-demo" data-case-open aria-haspopup="dialog">核對一項日期，查看英文交付稿 <span aria-hidden="true">↗</span></a>
+    </section>

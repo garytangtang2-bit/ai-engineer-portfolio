@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-Hant-HK"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AutoCut 影片製作｜Gary Tang AI Engineer</title><meta name="description" content="把劇本、錄音對位、字幕、動畫、人聲處理及音效串成一套可重跑的短片製作流程。"><meta name="theme-color" content="#0b1118"><link rel="canonical" href="https://garytangtang2-bit.github.io/ai-engineer-portfolio/projects/autocut/">
+<link rel="stylesheet" href="../../styles.css"><link rel="stylesheet" href="../../presentation.css"><link rel="stylesheet" href="../../gallery.css"><script type="module" src="../../gallery.js"></script><script type="module" src="../../widgets/autocut.mjs"></script></head>
+<body class="gallery-body"><a class="jump-main" href="#main">跳至主要內容</a>
+<header class="mast"><div class="frame mast-bar"><a class="signature" href="../../"><span aria-hidden="true" class="sig-mark">gt</span><span>Gary Tang</span></a>
+<nav aria-label="網站導覽"><a href="../../#work">作品</a><a href="../../#about">關於</a><a class="cv-link" href="../../assets/Gary-Tang-CV.pdf">履歷 PDF <span aria-hidden="true">↗</span></a></nav></div></header>
+<main id="main" class="case-body frame"><div class="case-crumb"><a href="../../#work" data-back>← 全部作品</a><span>／ 影音與發佈</span></div>
+<section class="case-heading"><div><p class="eyeline">影音與發佈 · 互動個案</p><h1>AutoCut 影片製作</h1><p>把劇本、錄音對位、字幕、動畫、人聲處理及音效串成一套可重跑的短片製作流程。</p><div class="case-actions"><a class="main-btn" href="#demo">前往互動示範 ↓</a></div></div>
+<div class="exhibit" data-reactive><div class="case-art art-timeline" aria-hidden="true"><div class="art-paper"><svg class="art-diagram" viewBox="0 0 450 150" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true"><defs><linearGradient id="cover-autocut-ink" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="450" y2="0"><stop stop-color="#8bcce9"/><stop offset=".55" stop-color="#c0e4eb"/><stop offset="1" stop-color="#f3c78d"/></linearGradient></defs><g stroke="url(#cover-autocut-ink)" fill="none"><text x="18" y="48" font-family="monospace" font-size="11" fill="#dcebf2" stroke="none">VIDEO</text><rect x="90" y="34" width="40" height="19" rx="3" fill="#476b80" stroke="none"/><rect x="136" y="34" width="103" height="19" rx="3" fill="#aba587" stroke="none"/><rect x="245" y="34" width="72" height="19" rx="3" fill="#66798d" stroke="none"/><text x="18" y="79" font-family="monospace" font-size="11" fill="#dcebf2" stroke="none">AUDIO</text><rect x="90" y="65" width="72" height="19" rx="3" fill="#aba587" stroke="none"/><rect x="168" y="65" width="65" height="19" rx="3" fill="#66798d" stroke="none"/><rect x="239" y="65" width="148" height="19" rx="3" fill="#476b80" stroke="none"/><text x="18" y="110" font-family="monospace" font-size="11" fill="#dcebf2" stroke="none">CUES</text><rect x="90" y="96" width="28" height="19" rx="3" fill="#66798d" stroke="none"/><rect x="124" y="96" width="130" height="19" rx="3" fill="#476b80" stroke="none"/><rect x="260" y="96" width="96" height="19" rx="3" fill="#aba587" stroke="none"/><path d="M236 20v104" stroke="#fff1c8"/><path d="m231 19 5 7 5-7z" fill="#fff1c8"/><text x="22" y="139" font-family="monospace" font-size="11" fill="#dcebf2" stroke="none">00:00</text><text x="378" y="139" font-family="monospace" font-size="11" fill="#dcebf2" stroke="none">TIME</text></g></svg></div><span class="art-cap">合成剪輯時間軸</span></div><div class="case-outcome"><span>交付成果</span><strong>劇本 → 可發佈成片</strong></div></div></section>
+<div class="reading-shell"><section id="method" class="method"><p class="eyeline">ENGINEERING NOTES</p><h2>我怎樣做</h2><p class="case-context">可拖動下方合成時間軸，觀察字幕區間同動畫觸發點。我計劃用這套 Skills 製作求職自介短片。</p>
+<ol class="build-steps"><li><h3>對齊說話</h3><p>以逐字時間碼對稿，根據人聲活動決定剪接位置。</p></li><li><h3>組合聲畫</h3><p>共用時間軸驅動字幕和動畫。FFmpeg 處理音訊、調整人聲及合成輸出。</p></li><li><h3>覆核發佈</h3><p>檢查成片規格後進入發佈流程，單一工序有改動時可分段重跑。</p></li></ol><ul class="tech-pills" aria-label="技術與工具"><li>Python</li><li>FFmpeg</li><li>Whisper</li><li>Remotion</li></ul></section>
+<svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><symbol id="i-mark" viewBox="0 0 24 24"><path d="M4 8.8 12 4l8 4.8v6.4L12 20l-8-4.8Z"></path><path d="m4 8.8 8 4.8 8-4.8M12 13.6V20m-4-8.9 8-4.8"></path></symbol><symbol id="i-up-right" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"></path></symbol><symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></symbol><symbol id="i-section" viewBox="0 0 24 24"><path d="M12 4v16M7 6l-4 3v6l4 3m10-12 4 3v6l-4 3"></path></symbol></svg><section class="case-demo" id="demo"><p class="eyeline">INTERACTIVE</p><h2>親手試用</h2><div class="demo-content"><div class="artifact reel-lab" id="reel-lab">
+  <div class="artifact-header"><span>沿時間軸看字幕與動畫對位</span><span class="artifact-label">合成時間軸</span></div>
+  <div class="reel-layout">
+    <div class="reel-visual" id="reel-visual" data-scene="align">
+      <span class="reel-scene-label" id="reel-scene-label">對齊錄音</span>
+      <div class="reel-graphic" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <p class="reel-caption" id="reel-caption">先把錄音對齊劇本</p>
+    </div>
+    <div class="reel-controls">
+      <div class="reel-transport"><button type="button" class="button small primary" id="reel-play">播放 ▶</button><span id="reel-time">0.00 / 8.00 s</span></div>
+      <label class="sr-only" for="reel-position">時間軸位置</label>
+      <input type="range" id="reel-position" min="0" max="8" value="0" step="0.01" aria-describedby="reel-tip">
+      <div class="reel-segments" role="group" aria-label="跳到片段"><button type="button" data-reel-jump="0" aria-pressed="true">對位</button><button type="button" data-reel-jump="2.6" aria-pressed="false">字幕與動畫</button><button type="button" data-reel-jump="5.4" aria-pressed="false">交付質檢</button></div>
+      <dl class="reel-cues"><div><dt>字幕區間</dt><dd id="reel-caption-time">0.00–1.35 s</dd></div><div><dt>動畫觸發</dt><dd id="reel-cue">0.74 s · 等待</dd></div></dl>
+      <p id="reel-tip">拖動時間軸或選片段。留意字幕何時換行，以及畫面何時按標記觸發。</p>
+    </div>
+  </div>
+  <p class="artifact-footnote">本頁以合成畫面示範 <code>timeline.json</code> 的段落、字幕區間與字詞時間碼。正式剪輯以 Remotion 渲染。</p>
+</div></div></section><aside class="film-note"><strong>自我介紹短片 · 籌備中</strong><p>我會用這套 AutoCut Skills 製作自己的求職短片。現階段可操作上面的合成時間軸。</p></aside><nav class="next-case" aria-label="瀏覽其他作品"><a href="../../#work" data-back>← 全部作品</a><a href="../pile-review/">下一件 · 樁位審查工作台 →</a></nav></div></main>
+<footer class="folio-footer frame" id="contact"><div><h2>聯絡 Gary</h2><p>履歷內附電郵及電話，歡迎聯絡我面談。</p></div><a class="main-btn" href="../../assets/Gary-Tang-CV.pdf">開啟履歷及聯絡資料 <span aria-hidden="true">↗</span></a></footer>
+</body></html>
