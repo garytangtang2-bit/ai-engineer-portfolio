@@ -34,9 +34,11 @@
 
 ### n8n 用量對帳
 
-將 [工作流 JSON](evidence/token-usage-workflow.json) 以 **Import from File** 匯入 n8n。按 **Execute Workflow** 試跑內建合成資料，或在「用量紀錄」替換輸入。亦可由另一個工作流傳入一個含 `runs` 陣列的項目，或逐項傳入用量紀錄。
+將 [工作流 JSON](evidence/token-usage-workflow.json) 以 **Import from File** 匯入 n8n。在編輯器從「手動測試」開始執行，即可試跑內建合成資料，或在「用量紀錄」替換輸入。如要給其他工作流調用，先在自己的 n8n 發佈此工作流，再由上游的 Execute Sub-workflow 傳入一個含 `runs` 陣列的項目，或逐項傳入用量紀錄。
 
 每個 `caseId` 需要一筆 `before` 和一筆 `after`。先按版本加總每次模型呼叫（包括重試）的輸入和輸出 Token，再用相同標準填寫 `accepted`。兩個版本都通過才納入用量合計。未配對及待覆核個案另列，重複紀錄會提示錯誤。網站可在瀏覽器本機執行同一套邏輯。
+
+已在 n8n 2.48.6 由上游工作流執行同一份匯出檔。內置合成測試有兩個配對納入比較，合計由 1,800 降至 400 Token，一個配對留待覆核。[開啟執行輸出](evidence/token-usage-result.json)
 
 第三方授權見 `fonts/*-OFL.txt`、`tools/vendor/three/LICENSE` 及 `tools/vendor/fflate/LICENSE`。技術標誌取自 [Simple Icons](https://github.com/simple-icons/simple-icons)。
 

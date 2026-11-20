@@ -1,0 +1,34 @@
+{
+  "workflow": "AI 工作流用量對帳",
+  "engine": "n8n 2.48.6",
+  "input": "內置合成資料，由上游工作流傳入",
+  "status": "success",
+  "report": {
+    "accepted": 2,
+    "pending": 1,
+    "before": 1800,
+    "after": 400,
+    "savedTokens": 1400,
+    "reductionPercent": 77.8,
+    "pairs": [
+      {
+        "caseId": "表格格式",
+        "before": 1000,
+        "after": 0,
+        "status": "accepted"
+      },
+      {
+        "caseId": "會議答疑",
+        "before": 800,
+        "after": 400,
+        "status": "accepted"
+      },
+      {
+        "caseId": "日期出處",
+        "before": 700,
+        "after": 200,
+        "status": "review"
+      }
+    ]
+  }
+}
