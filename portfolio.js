@@ -409,7 +409,13 @@ const legacyAnchors = {
   'els-inline-close': 'site-tour',
   'els-inline-open': 'site-model-open',
   'els-load-state': 'site-tour-status',
-  'els-rotate': 'hero-model-open',
+  'els-rotate': 'site-model-open',
+  'hero-stars': 'site-tour',
+  'hero-model': 'site-tour-viewport',
+  'hero-model-preview': 'full-site-preview',
+  'hero-model-open': 'site-model-open',
+  'hero-model-spin': 'site-view-3d',
+  'hero-model-status': 'site-tour-status',
   jobs: 'other-work',
   'jobs-architecture': 'other-work',
   recovery: 'other-work',
@@ -430,7 +436,7 @@ function revealDetails(target) {
     detail.open = true;
   }
 }
-function showCase(project, target) {
+function showCase(project, target, trigger) {
   loadDemoStyle();
   const changing = project.hidden || !caseDialog.open;
   primaryCases.forEach(item => { item.hidden = item !== project; });
@@ -443,7 +449,7 @@ function showCase(project, target) {
   }
   revealDetails(target);
   if (!caseDialog.open) {
-    caseTrigger = document.querySelector('[data-case-open][href="#' + project.id + '"]');
+    caseTrigger = trigger ?? document.querySelector('[data-case-open][href="#' + project.id + '"]');
     caseDialog.showModal();
     $('case-close').focus({ preventScroll: true });
     updateModelActivity();
@@ -475,7 +481,7 @@ function followCaseClick(event) {
   event.preventDefault();
   if (!caseDialog.open) history.pushState({ portfolioCase: true }, '', link.hash);
   else history.replaceState(history.state, '', link.hash);
-  showCase(project, target);
+  showCase(project, target, link);
   if (target !== project && target.hasAttribute('tabindex')) target.focus({ preventScroll: true });
 }
 $('case-close').addEventListener('click', () => caseDialog.close());
@@ -494,12 +500,9 @@ caseDialog.addEventListener('close', () => {
 addEventListener('hashchange', followHash);
 document.addEventListener('click', followCaseClick);
 
-// Use one instance of the public ELS scene in the hero or the detailed exhibit.
-const heroModel = $('hero-model');
+// The full bid model is loaded only when the visitor opens the exhibit.
 const siteModel = $('site-tour-viewport');
-const heroOpen = $('hero-model-open');
 const siteOpen = $('site-model-open');
-const spinButton = $('hero-model-spin');
 const tourSection = $('site-tour-section');
 const tourCut = $('site-tour-cut');
 const tourStatus = $('site-tour-status');
@@ -516,27 +519,18 @@ const modelFrame = document.createElement('iframe');
 modelFrame.id = 'site-tour-frame';
 modelFrame.title = '可操作的 ELS 地盤模型';
 modelFrame.tabIndex = -1;
-let modelHost;
+let modelLoading = false;
 let modelEngine;
-let modelTimer;
+
 let tourView = 'iso';
 let inPlan = false;
 let sectionIsOpen = false;
-let spinRequested = true;
-let heroVisible = false;
+
 let siteVisible = false;
 let failedSite = false;
 
 function updateModelActivity() {
-  const spinning = spinRequested && !isReduced();
-  spinButton.hidden = modelHost !== heroModel || !modelEngine || isReduced();
-  spinButton.setAttribute('aria-pressed', String(!spinning));
-  spinButton.querySelector('span').textContent = spinning ? '暫停旋轉' : '播放旋轉';
-  spinButton.querySelector('use').setAttribute('href', spinning ? '#i-pause' : '#i-play');
-  if (!modelEngine) return;
-  const visible = modelHost === heroModel ? heroVisible : siteVisible && !inPlan;
-  modelEngine.setRotate(modelHost === heroModel && spinning);
-  modelEngine.setPaused(!visible || document.hidden || caseDialog.open || imageDialog.open);
+  modelEngine?.setPaused(!siteVisible || inPlan || document.hidden || caseDialog.open || imageDialog.open);
 }
 function showTourState() {
   tour3d.setAttribute('aria-pressed', String(!inPlan));
@@ -552,111 +546,78 @@ function showTourState() {
   });
   if (inPlan) tourStatus.textContent = '同一地盤的 2D 圖則。可放大查看分區及施工路線。';
   else if (failedSite) tourStatus.textContent = '3D 暫未載入。可重試、查看圖則或開啟編輯器。';
-  else if (modelHost === siteModel && !modelEngine) tourStatus.textContent = '正在載入 3D 模型…';
-  else if (modelHost !== siteModel) tourStatus.textContent = '開啟 3D 模型後可拖動，亦可切換角度或查看剖面。';
+  else if (modelLoading) tourStatus.textContent = '正在載入 3D 模型…';
+  else if (!modelEngine) tourStatus.textContent = '開啟 3D 模型後可拖動，亦可切換角度或查看剖面。';
   else if (sectionIsOpen) tourStatus.textContent = '移動剖切線，比較不同位置的開挖與支護。';
   else tourStatus.textContent = tourDescriptions[tourView];
 }
 function syncModel() {
-  const inHero = modelHost === heroModel;
-  modelEngine?.setRotate(false);
-  modelEngine?.setView(inHero ? 'iso' : tourView, true);
-  modelEngine?.setSection(!inHero && sectionIsOpen, Number(tourCut.value) / 100);
-  if (modelEngine) modelEngine.draw();
+  if (!modelEngine) return;
+  modelEngine.setRotate(false);
+  modelEngine.setView(tourView, true);
+  modelEngine.setSection(sectionIsOpen, Number(tourCut.value) / 100);
+  modelEngine.draw();
   updateModelActivity();
-}
-function showModelReady() {
-  const inHero = modelHost === heroModel;
-  const trigger = inHero ? heroOpen : siteOpen;
-  const moveFocus = document.activeElement === trigger && (inHero || !inPlan);
-  if (inHero || !inPlan) modelHost.dataset.ready = '';
-  modelFrame.removeAttribute('aria-hidden');
-  modelFrame.tabIndex = 0;
-  heroOpen.hidden = inHero;
-  siteOpen.hidden = !inHero || inPlan;
-  if (inHero) $('hero-model-status').textContent = '3D 模型已載入，可拖動旋轉。';
-  showTourState();
-  syncModel();
-  if (moveFocus) {
-    const sceneDocument = modelFrame.contentDocument?.getElementById('view')?.contentDocument;
-    sceneDocument?.querySelector('canvas')?.focus({ preventScroll: true });
-  }
 }
 function waitForModel(started) {
   const renderer = modelFrame.contentDocument?.getElementById('view')?.contentWindow;
   if (renderer?.__ready && renderer.__portfolioPreview) {
     modelEngine = renderer.__portfolioPreview;
-    showModelReady();
+    modelLoading = false;
+    const moveFocus = document.activeElement === siteOpen && !inPlan;
+    siteOpen.hidden = true;
+    siteOpen.removeAttribute('aria-disabled');
+    if (!inPlan) siteModel.dataset.ready = '';
+    modelFrame.tabIndex = 0;
+    modelFrame.removeAttribute('aria-hidden');
+    syncModel();
+    showTourState();
+    if (moveFocus) renderer.document.querySelector('canvas')?.focus({ preventScroll: true });
     return;
   }
   if (performance.now() - started < 25000) {
-    modelTimer = setTimeout(() => waitForModel(started), 140);
+    setTimeout(() => waitForModel(started), 140);
     return;
   }
-  failedSite = modelHost === siteModel;
+  failedSite = true;
+  modelLoading = false;
   modelFrame.remove();
-  modelHost = undefined;
-  heroOpen.querySelector('span').textContent = '重試 ELS 3D';
-  siteOpen.querySelector('span').textContent = '重試 3D 模型';
-  heroOpen.removeAttribute('aria-disabled');
   siteOpen.removeAttribute('aria-disabled');
-  $('hero-model-status').textContent = '3D 模型暫未載入。';
+  siteOpen.querySelector('span').textContent = '重試 3D 模型';
   showTourState();
-}
-function openModel(destination) {
-  if (modelHost === destination) return;
-  const inHero = destination === heroModel;
-  clearTimeout(modelTimer);
-  if (modelHost) delete modelHost.dataset.ready;
-  if (!inHero) failedSite = false;
-  heroOpen.hidden = false;
-  siteOpen.hidden = inPlan;
-  heroOpen.setAttribute('aria-disabled', String(inHero));
-  siteOpen.setAttribute('aria-disabled', String(!inHero));
-  heroOpen.querySelector('span').textContent = inHero ? '載入中…' : '載入 ELS 3D';
-  siteOpen.querySelector('span').textContent = inHero ? '操作模型' : '載入中…';
-  modelHost = destination;
-  modelFrame.hidden = !inHero && inPlan;
-
-  if (modelFrame.isConnected && modelEngine && destination.moveBefore) {
-    destination.moveBefore(modelFrame, null);
-    showModelReady();
-  } else {
-    modelEngine = undefined;
-    modelFrame.setAttribute('aria-hidden', 'true');
-    modelFrame.tabIndex = -1;
-    modelFrame.src = 'tools/els.html?preview=1&scene=portfolio' + (smallScreen.matches ? '&quality=low' : '');
-    destination.append(modelFrame);
-    updateModelActivity();
-    showTourState();
-    waitForModel(performance.now());
-  }
 }
 function showTour3d() {
   inPlan = false;
   modelFrame.hidden = false;
-  openModel(siteModel);
   siteOpen.hidden = Boolean(modelEngine);
-  if (modelEngine) siteModel.dataset.ready = '';
+  if (modelEngine) {
+    siteModel.dataset.ready = '';
+    syncModel();
+  } else if (!modelLoading) {
+    failedSite = false;
+    modelLoading = true;
+    siteOpen.setAttribute('aria-disabled', 'true');
+    siteOpen.querySelector('span').textContent = '載入中…';
+    modelFrame.setAttribute('aria-hidden', 'true');
+    modelFrame.src = 'tools/els.html?preview=1&scene=portfolio' + (smallScreen.matches ? '&quality=low' : '');
+    siteModel.append(modelFrame);
+    waitForModel(performance.now());
+  }
   showTourState();
-  syncModel();
 }
-heroOpen.addEventListener('click', () => openModel(heroModel));
 siteOpen.addEventListener('click', showTour3d);
 tour3d.addEventListener('click', showTour3d);
 tourPlan.addEventListener('click', () => {
   inPlan = true;
-  if (modelHost === siteModel) {
-    modelFrame.hidden = true;
-    delete siteModel.dataset.ready;
-  }
+  modelFrame.hidden = true;
+  delete siteModel.dataset.ready;
   siteOpen.hidden = true;
   showTourState();
   updateModelActivity();
 });
 tourViewButtons.forEach(button => button.addEventListener('click', () => {
   tourView = button.dataset.tourView;
-  if (modelHost !== siteModel || !modelEngine) showTour3d();
+  if (!modelEngine || inPlan) showTour3d();
   else {
     modelEngine.setView(tourView, isReduced());
     showTourState();
@@ -667,41 +628,37 @@ tourSection.addEventListener('click', () => {
   showTour3d();
 });
 tourCut.addEventListener('input', () => modelEngine?.setSection(sectionIsOpen, Number(tourCut.value) / 100));
-spinButton.addEventListener('click', () => {
-  spinRequested = !spinRequested;
+new IntersectionObserver(([entry]) => {
+  siteVisible = entry.isIntersecting;
   updateModelActivity();
-});
-const modelObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.target === heroModel) heroVisible = entry.isIntersecting;
-    else siteVisible = entry.isIntersecting;
-  });
-  updateModelActivity();
-});
-modelObserver.observe(heroModel);
-modelObserver.observe(siteModel);
+}).observe(siteModel);
 document.addEventListener('visibilitychange', updateModelActivity);
-reduceMotion.addEventListener('change', updateModelActivity);
 
-function paintHeroStars() {
-  const canvas = $('hero-stars');
-  const artwork = new Image();
-  artwork.onload = () => canvas.getContext('2d').drawImage(artwork, 0, 0, canvas.width, canvas.height);
-  artwork.fetchPriority = 'low';
-  artwork.src = 'assets/els-orbit.webp';
+// A real file opts the introduction into playback. The portrait is the default.
+const introMedia = $('intro-media');
+if (introMedia.dataset.videoSrc) {
+  const video = document.createElement('video');
+  video.controls = true;
+  video.playsInline = true;
+  video.preload = 'none';
+  video.poster = introMedia.querySelector('img').src;
+  video.src = introMedia.dataset.videoSrc;
+  video.setAttribute('aria-label', 'Gary Tang 的 AutoCut 自我介紹');
+  if (introMedia.dataset.captionSrc) {
+    const track = document.createElement('track');
+    Object.assign(track, { kind: 'captions', srclang: 'zh-Hant', label: '繁體中文', src: introMedia.dataset.captionSrc, default: true });
+    video.append(track);
+  }
+  video.addEventListener('error', () => {
+    video.remove();
+    introMedia.querySelector('img').hidden = false;
+    $('intro-film-label').textContent = '自介短片暫未能播放';
+  }, { once: true });
+  introMedia.querySelector('img').hidden = true;
+  introMedia.append(video);
+  $('intro-film-label').textContent = '以 AutoCut 製作的自介短片';
+  $('intro-film-label').nextElementSibling.textContent = '由腳本、對稿、字幕到剪接，這段自介使用我的 AutoCut Skills 製作。';
 }
-function scheduleHeroModel() {
-  if (smallScreen.matches || isReduced() || navigator.connection?.saveData) return;
-  const start = () => {
-    if (!modelHost && heroVisible && !document.hidden && !document.querySelector('dialog[open]')) openModel(heroModel);
-  };
-  if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 1600 });
-  else setTimeout(start, 800);
-}
-addEventListener('load', () => {
-  setTimeout(paintHeroStars, 700);
-  setTimeout(scheduleHeroModel, 1100);
-}, { once: true });
 
 // Final values remain part of the HTML for quick reading and reduced motion.
 if (!isReduced()) {
@@ -710,7 +667,7 @@ if (!isReduced()) {
     entry.target.classList.add('entered');
     entrances.unobserve(entry.target);
   }), { threshold: .1 });
-  document.querySelectorAll('.reveal, .hero-glow').forEach(element => entrances.observe(element));
+  document.querySelectorAll('.reveal').forEach(element => entrances.observe(element));
   document.querySelectorAll('[data-count]').forEach(figure => {
     const label = document.createElement('span');
     label.className = 'metric-static';

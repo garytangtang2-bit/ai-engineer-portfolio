@@ -8,15 +8,15 @@
   <meta name="theme-color" content="#0b0d14">
   <meta property="og:title" content="鄧嘉維 Gary Tang · AI Engineer 求職作品集">
   <meta property="og:description" content="用 AI 省工時、減成本。可操作的公司自動化案例、獨立上線的 ToGoalAi 及 3D 投標模型。">
-  <meta property="og:image" content="https://garytangtang2-bit.github.io/ai-engineer-portfolio/assets/els-tour-preview.webp">
-  <meta property="og:image:alt" content="完整虛構地盤，展示開挖分區、支護及斜道">
+  <meta property="og:image" content="https://garytangtang2-bit.github.io/ai-engineer-portfolio/assets/meeting-cover.webp">
+  <meta property="og:image:alt" content="由錄音原句核對日期，再寫入英文會議紀錄的合成示例">
   <link rel="icon" href="assets/gary-tang.webp" type="image/webp">
   <link rel="preload" href="fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/noto-sans-tc-home.woff2?v=2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="styles.css?v=8">
   <link rel="stylesheet" id="demo-style" href="presentation.css?v=4" media="print">
   <noscript><link rel="stylesheet" href="presentation.css?v=4"></noscript>
-  <script src="portfolio.js?v=4" defer></script>
+  <script src="portfolio.js?v=5" defer></script>
 </head>
 <body>
 <svg class="symbol-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
@@ -47,6 +47,7 @@
       <a class="signature" href="#top" aria-label="鄧嘉維作品集首頁"><svg aria-hidden="true" class="icon"><use href="#i-mark"/></svg></a>
       <nav id="navigation" aria-label="主要導覽">
         <a class="nav-button" href="#work">作品</a>
+        <a class="nav-button" href="#meeting-cycle">工作流</a>
         <a class="nav-button" href="#experience">經歷</a>
         <a class="nav-button" href="#contact">聯絡</a>
       </nav>
@@ -60,10 +61,10 @@
           <h1 id="hero-name">鄧嘉維</h1>
           <p class="hero-role" lang="en">AI Engineer</p>
         </div>
-        <p class="hero-statement">用AI省時減成本</p>
+        <p class="hero-statement">我用程式與 AI 重組工作流程</p>
         <ul class="hero-results" aria-label="個案成果">
           <li aria-label="會議紀錄個案約省百分之七十">
-            <span class="metric-name" aria-hidden="true">會議紀錄</span>
+            <span class="metric-name" aria-hidden="true">紀錄省時</span>
             <strong class="metric-value" aria-hidden="true"><small>約</small><span data-count="70">70</span><small>%</small></strong>
           </li>
           <li aria-label="PDF 還原 Excel 個案由十六小時縮至三十分鐘">
@@ -84,17 +85,14 @@
         <button class="button contact-pending" type="button" disabled title="[待補：LinkedIn 個人檔案連結]"><svg aria-hidden="true" class="icon"><use href="#i-linkedin"/></svg>LinkedIn<span>待補</span></button>
       </div>
       </div>
-      <figure class="hero-visual" aria-label="可互動的 ELS 模型，完整虛構地盤">
-        <div class="hero-glow" aria-hidden="true"><canvas id="hero-stars" width="1080" height="660"></canvas><span></span><span></span></div>
-        <div id="hero-model" class="model-viewport hero-model">
-          <img id="hero-model-preview" src="assets/els-tour-preview.webp" srcset="assets/els-tour-preview-small.webp 720w, assets/els-tour-preview.webp 1280w" sizes="(max-width: 759px) calc(100vw - 2rem), (max-width: 1320px) 47vw, 640px" width="1280" height="800" fetchpriority="high" alt="以 ELS 引擎建成的完整虛構地盤，展示開挖分區、斜道與支護">
+      <figure class="minutes-preview" aria-label="由錄音到英文會議紀錄，合成節錄">
+        <div class="record-strip" aria-hidden="true"><span>19:06</span><span class="waveform"></span><span>ASR</span></div>
+        <div class="minutes-paper">
+          <div class="paper-meta"><span>DESIGN DEPARTMENT</span><span>合成節錄</span></div>
+          <p class="paper-title" lang="en">Meeting<br><em>minutes.</em></p>
+          <div class="paper-excerpt"><span>19:06</span><q>下星期……四？再確認。</q></div>
+          <a class="paper-action" href="#meeting-demo" data-case-open aria-haspopup="dialog">試答這項疑點 <span aria-hidden="true">↗</span></a>
         </div>
-        <div class="hero-model-actions">
-          <button type="button" id="hero-model-open" class="button model-button"><svg aria-hidden="true" class="icon"><use href="#i-mark"/></svg><span>載入 ELS 3D</span></button>
-          <button type="button" id="hero-model-spin" class="button model-button" aria-pressed="false" hidden><svg aria-hidden="true" class="icon"><use href="#i-pause"/></svg><span>暫停旋轉</span></button>
-          <a href="#els" class="button model-button model-jump" aria-label="查看完整投標模型"><svg aria-hidden="true" class="icon"><use href="#i-up-right"/></svg></a>
-        </div>
-        <span id="hero-model-status" class="sr-only" role="status"></span>
       </figure>
     </section>
 
@@ -141,45 +139,48 @@
       </div>
     </section>
 
-    <section id="els" class="wrap page-section reveal" aria-labelledby="site-tour-title">
-      <div class="section-heading"><h2 id="site-tour-title">3D 協助爭取項目</h2><p>讓投標團隊用同一個模型比較施工方案。</p></div>
-      <div id="site-tour" class="model-exhibit">
-        <div class="model-toolbar">
-          <div class="segmented" role="group" aria-label="地盤畫面">
-            <button type="button" id="site-view-3d" aria-pressed="true">3D 模型</button>
-            <button type="button" id="site-view-plan" aria-pressed="false">2D 圖則</button>
-            <button type="button" id="site-tour-section" aria-pressed="false"><svg aria-hidden="true" class="icon"><use href="#i-section"/></svg>剖面</button>
-          </div>
-          <span class="artifact-label">全新虛構示例 · 20 個分區</span>
-        </div>
-        <div id="site-tour-viewport" class="model-viewport exhibit-viewport">
-          <img id="full-site-preview" src="assets/els-tour-preview.webp" srcset="assets/els-tour-preview-small.webp 720w, assets/els-tour-preview.webp 1280w" sizes="calc(100vw - 2rem)" width="1280" height="800" loading="lazy" alt="全新虛構地盤，包括開挖分區、支護、基礎及施工斜道">
-          <img id="plan-preview" src="assets/els-full-plan.webp" width="1600" height="1000" loading="lazy" alt="同一虛構地盤的 2D 施工圖則" hidden>
-          <button type="button" id="full-site-image" class="button model-button plan-zoom" data-zoom="assets/els-full-plan.webp" data-title="2D 圖則 · 全新虛構示例" hidden>放大圖則<svg aria-hidden="true" class="icon"><use href="#i-up-right"/></svg></button>
-          <button type="button" id="site-model-open" class="button model-button"><svg aria-hidden="true" class="icon"><use href="#i-mark"/></svg><span>操作模型</span></button>
-        </div>
-        <div class="model-toolbar model-bottom">
-          <div id="site-tour-help" class="model-guidance">
-            <div class="segmented model-views" role="group" aria-label="地盤視角">
-              <button type="button" data-tour-view="iso" aria-pressed="true">斜視</button>
-              <button type="button" data-tour-view="plan" aria-pressed="false">俯視</button>
-              <button type="button" data-tour-view="front" aria-pressed="false">側視</button>
-            </div>
-            <label id="site-tour-cut-control" for="site-tour-cut" hidden>剖面位置
-              <input type="range" id="site-tour-cut" min="0" max="100" value="55">
-            </label>
-            <p id="site-tour-status" role="status">拖動模型，或切換視角查看開挖分區及支護。</p>
-          </div>
-          <a id="els-editor-link" class="button" href="tools/els.html" target="_blank" rel="noopener">開啟完整編輯器<svg aria-hidden="true" class="icon"><use href="#i-up-right"/></svg></a>
+    <section id="meeting-cycle" class="wrap page-section cycle-section" aria-labelledby="cycle-title">
+      <div class="story-heading"><span class="section-kicker">會議紀錄個案</span>
+        <h2 id="cycle-title">從散會到下次開會</h2>
+        <p>散會後，同事要重聽整段錄音、整理英文紀錄，還要接手準備下次議程。我把兩次會議之間的交接畫出來，逐步釐清哪些資料可以沿用、哪些決定一定要有人確認。</p>
+      </div>
+      <div class="time-study">
+        <div class="time-copy"><h3>工時省在哪裏？</h3><p>以設計部一場 90 分鐘的粵語會議為例。以前同事聽完整場，再花約 3 小時寫稿，之後交主管覆核。</p></div>
+        <div class="time-bars" aria-label="完成會議紀錄所需時間比較">
+          <div class="time-row"><div><span>原有流程</span><strong>至少 5 小時</strong></div><div class="time-track"><i></i></div></div>
+          <div class="time-row current"><div><span>重組後</span><strong>約 90 分鐘</strong></div><div class="time-track"><i></i></div></div>
+          <p>約 70 分鐘是等本機轉錄，同事集中約 10 分鐘回答疑點。以上時間只計製作會議紀錄。</p>
         </div>
       </div>
-      <details id="els-architecture" class="technical exhibit-details">
-        <summary>技術與取捨</summary>
-        <dl class="engineering-list">
-          <div><dt>一份資料，兩種圖</dt><dd>分區與標高共同驅動 Three.js 模型及 2D 圖則，調整設定後同步更新。</dd></div>
-          <div><dt>方案可檢視</dt><dd>旋轉、切換視角及移動剖切線，讓團隊比較開挖標高和支護位置。</dd></div>
-        </dl>
-      </details>
+      <h3 class="cycle-subhead">一個會議週期，四次交接</h3>
+      <ol class="cycle-steps">
+        <li><span class="cycle-stage">散會後</span><h4>由錄影建立草稿</h4><p>程式整理音訊和舊議程。AI 從今次錄音抽出決定，逐項附上時間碼和原句，寫成英文初稿。</p><small>交付 · 有來源的草稿</small></li>
+        <li><span class="cycle-stage">核稿時</span><h4>只重聽有疑點的片段</h4><p>例如「準備提交」和「已提交」會影響跟進。系統列出待確認項目，同事聽回相關片段，答案連來源記錄。</p><small>交付 · 已核對的紀錄</small></li>
+        <li><span class="cycle-stage">兩次會議之間</span><h4>並行準備議程和分享</h4><p>負責同事更新提交進度，另一邊由工程師準備分享材料。按各自的交件時間收集，齊備後才合併。</p><small>交接 · 進度表及分享文件</small></li>
+        <li><span class="cycle-stage">下次開會前</span><h4>組成可派發的會議包</h4><p>議程和分享資料整理成 PDF，同事核對內容及會議連結後派發。下次散會，沿用議程框架再核對新決定。</p><small>交付 · 下次會議資料</small></li>
+      </ol>
+      <figure class="handoff-map" aria-labelledby="handoff-title">
+        <figcaption id="handoff-title">會前的兩條交件路線</figcaption>
+        <div class="handoff-branches">
+          <details><summary><span>進度資料</span><strong>提交清單 → 議程 PDF</strong></summary>
+            <p>負責同事先更新提交清單。收到最新進度後，整理者把資料併入 Excel 議程，核對未完成的項目，再準備會議用 PDF。</p></details>
+          <details><summary><span>分享資料</span><strong>工程師簡報 → 分享 PDF</strong></summary>
+            <p>工程師提供簡報或 PDF。簡報需轉檔，然後按當次分享內容合併、核對頁次，另存一份分享文件。</p></details>
+        </div>
+        <div class="handoff-merge"><strong>會議資料包</strong><span>議程 PDF ＋ 分享 PDF ＋ 會議連結</span></div>
+      </figure>
+      <p class="map-note">按實際工作分工重畫。紀錄製作已在設計部使用，會前材料由相關同事提供及核對。</p>
+    </section>
+
+    <section id="meeting-decisions" class="wrap page-section decision-section" aria-labelledby="decision-title">
+      <div class="story-heading"><span class="section-kicker">工程取捨</span><h2 id="decision-title">一句說話，如何落筆</h2>
+      <p>同一次會議，舊議程可以提供欄位，只有今次的錄音和經核對的答覆才可以支持新決定。我把這個分別寫入流程。</p></div>
+      <dl class="decision-list">
+        <div><dt>程式固定格式</dt><dd>Python 按議程建立骨架，用 FFmpeg 整理錄音，再交 faster-whisper 本機轉錄。重複的欄位和匯出格式可逐次重用，減少模型處理量。</dd></div>
+        <div><dt>模型整理語意</dt><dd>先抽出每項決定、時間碼、原句和把握程度，再寫英文點列。沒有本次來源的舊進度留在正文以外。</dd></div>
+        <div><dt>人處理疑點</dt><dd>遇到日期不清或轉錄結果不一致，程式把相關片段整理成問題包。確認過的答案有來源記錄，術語校正可供下次辨識沿用。</dd></div>
+      </dl>
+      <a class="button primary" href="#meeting-demo" data-case-open aria-haspopup="dialog">核對一項日期，查看英文交付稿 <span aria-hidden="true">↗</span></a>
     </section>
 
     <section id="other-work" class="wrap page-section" aria-labelledby="other-work-title">
@@ -312,6 +313,47 @@
       </div>
     </section>
 
+    <section id="els" class="wrap page-section reveal" aria-labelledby="site-tour-title">
+      <div class="section-heading"><h2 id="site-tour-title">投標方案展示</h2><p>讓投標團隊用同一個模型比較施工方案。</p></div>
+      <div id="site-tour" class="model-exhibit">
+        <div class="model-toolbar">
+          <div class="segmented" role="group" aria-label="地盤畫面">
+            <button type="button" id="site-view-3d" aria-pressed="true">3D 模型</button>
+            <button type="button" id="site-view-plan" aria-pressed="false">2D 圖則</button>
+            <button type="button" id="site-tour-section" aria-pressed="false"><svg aria-hidden="true" class="icon"><use href="#i-section"/></svg>剖面</button>
+          </div>
+          <span class="artifact-label">全新虛構示例 · 20 個分區</span>
+        </div>
+        <div id="site-tour-viewport" class="model-viewport exhibit-viewport">
+          <img id="full-site-preview" src="assets/els-tour-preview.webp" srcset="assets/els-tour-preview-small.webp 720w, assets/els-tour-preview.webp 1280w" sizes="calc(100vw - 2rem)" width="1280" height="800" loading="lazy" alt="全新虛構地盤，包括開挖分區、支護、基礎及施工斜道">
+          <img id="plan-preview" src="assets/els-full-plan.webp" width="1600" height="1000" loading="lazy" alt="同一虛構地盤的 2D 施工圖則" hidden>
+          <button type="button" id="full-site-image" class="button model-button plan-zoom" data-zoom="assets/els-full-plan.webp" data-title="2D 圖則 · 全新虛構示例" hidden>放大圖則<svg aria-hidden="true" class="icon"><use href="#i-up-right"/></svg></button>
+          <button type="button" id="site-model-open" class="button model-button"><svg aria-hidden="true" class="icon"><use href="#i-mark"/></svg><span>操作模型</span></button>
+        </div>
+        <div class="model-toolbar model-bottom">
+          <div id="site-tour-help" class="model-guidance">
+            <div class="segmented model-views" role="group" aria-label="地盤視角">
+              <button type="button" data-tour-view="iso" aria-pressed="true">斜視</button>
+              <button type="button" data-tour-view="plan" aria-pressed="false">俯視</button>
+              <button type="button" data-tour-view="front" aria-pressed="false">側視</button>
+            </div>
+            <label id="site-tour-cut-control" for="site-tour-cut" hidden>剖面位置
+              <input type="range" id="site-tour-cut" min="0" max="100" value="55">
+            </label>
+            <p id="site-tour-status" role="status">拖動模型，或切換視角查看開挖分區及支護。</p>
+          </div>
+          <a id="els-editor-link" class="button" href="tools/els.html" target="_blank" rel="noopener">開啟完整編輯器<svg aria-hidden="true" class="icon"><use href="#i-up-right"/></svg></a>
+        </div>
+      </div>
+      <details id="els-architecture" class="technical exhibit-details">
+        <summary>技術與取捨</summary>
+        <dl class="engineering-list">
+          <div><dt>一份資料，兩種圖</dt><dd>分區與標高共同驅動 Three.js 模型及 2D 圖則，調整設定後同步更新。</dd></div>
+          <div><dt>方案可檢視</dt><dd>旋轉、切換視角及移動剖切線，讓團隊比較開挖標高和支護位置。</dd></div>
+        </dl>
+      </details>
+    </section>
+
     <section id="stack" class="wrap page-section reveal" aria-labelledby="stack-title">
       <h2 id="stack-title">技術棧</h2>
       <dl class="technology-groups">
@@ -339,6 +381,17 @@
         <li><span>大學期間至今</span><div><h3>自主產品與自動化</h3><p>獨立開發 ToGoalAi、影片上傳及製作流程。</p></div></li>
         <li><time datetime="2026-06">2026.06 畢業</time><div><h3>國立政治大學</h3><p>公共行政學系</p><p>經 HKCAAVQ 評估為等同香港榮譽學士學位。</p><p>Claude 101 · AI Fluency · 粵語、普通話、英語</p></div></li>
       </ol>
+    </section>
+
+    <section id="introduction" class="wrap page-section intro-section" aria-labelledby="intro-title">
+      <div class="intro-portrait" id="intro-media" data-video-src="" data-caption-src="">
+        <img src="assets/gary-tang.webp" alt="鄧嘉維 Gary Tang" loading="lazy" width="570" height="426">
+      </div>
+      <div><span class="section-kicker">Gary Tang</span><h2 id="intro-title">自我介紹</h2>
+        <p>我習慣先跟同事走一次現有流程，找出他們在哪裏重做、在哪裏等人回覆。做會議紀錄時，我想解決的是「同事還要聽多少次錄音，才敢把這句話寫進紀錄」。</p>
+        <p>在 ToGoalAi，我由介面、資料庫到上線都自己處理。我想把同一種交付能力帶到下一個 AI Engineer 崗位。</p>
+        <div class="intro-production"><strong id="intro-film-label">自介短片規劃中</strong><p>我計劃用自己開發的 AutoCut Skills 製作這段自介，由腳本、真人錄影對稿，到字幕、聲音處理和 Remotion 剪接。</p><a href="#video">查看影片製作示範 ↗</a></div>
+      </div>
     </section>
 
     <section id="contact" class="wrap page-section contact-section reveal" aria-labelledby="contact-title">

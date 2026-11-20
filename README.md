@@ -22,7 +22,7 @@
 
 ## 介面
 
-原生 HTML／CSS／JavaScript。示範視窗可按 Esc 關閉，保留舊作品錨點。首屏及展示區共用一個 Three.js 場景，電腦版先顯示 WebP 預覽，手機按鈕啟動低像素密度的模型。投標展示支援 2D、3D 及剖切，旋轉可暫停，並尊重 `prefers-reduced-motion`。
+原生 HTML／CSS／JavaScript。示範視窗可按 Esc 關閉，保留舊作品錨點。首頁以合成的會議節錄進入答疑示範。會議個案呈現製作工時、兩次會議之間的人工交接及技術分工。投標展示先顯示 WebP，操作時才載入 Three.js，支援 2D、3D 及剖切，並尊重 `prefers-reduced-motion`。
 
 ## 技術與回饋機制
 
@@ -31,3 +31,8 @@
 雙模式回饋示例展示「用戶確認 → 記憶更新 → 下次沿用」：語音術語進入經確認的熱詞／校正流程，PDF 字形更新同組讀值並保存字典。示例只操作合成的頁面狀態，不寫入真實知識庫或呼叫模型。實際機制以有來源的知識庫、詞庫及規則累積經驗；候選資料先確認再套用。
 
 第三方授權位於 `fonts/*-OFL.txt` 及 `tools/vendor/three/LICENSE`。技術標誌取自 [Simple Icons](https://github.com/simple-icons/simple-icons)。
+
+
+## 更新 AutoCut 自我介紹
+
+成片獲准公開後，把 MP4 及可選的繁體中文字幕 VTT 放入 `assets/`。在 `index.html` 的 `#intro-media` 填入 `data-video-src` 及 `data-caption-src` 的相對路徑，例如 `assets/introduction.mp4` 和 `assets/introduction.zh-Hant.vtt`。影片留空時展示照片和文字自介。填入成片後會顯示原生播放器，由訪客啟動。
