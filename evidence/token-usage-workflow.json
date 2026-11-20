@@ -1,0 +1,130 @@
+{
+  "id": "GaryTokenUsageAudit",
+  "name": "AI 工作流用量對帳",
+  "nodes": [
+    {
+      "id": "b54d1e4c-fa1a-4547-9558-2ddae6b1d6a2",
+      "name": "手動測試",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {},
+      "notes": "按 Execute Workflow，使用下一步的合成資料。"
+    },
+    {
+      "id": "751d5816-28a7-4b49-9a4c-4564093b035f",
+      "name": "用量紀錄",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"runs\": [\n    {\n      \"caseId\": \"表格格式\",\n      \"version\": \"before\",\n      \"inputTokens\": 880,\n      \"outputTokens\": 120,\n      \"accepted\": true\n    },\n    {\n      \"caseId\": \"表格格式\",\n      \"version\": \"after\",\n      \"inputTokens\": 0,\n      \"outputTokens\": 0,\n      \"accepted\": true\n    },\n    {\n      \"caseId\": \"會議答疑\",\n      \"version\": \"before\",\n      \"inputTokens\": 700,\n      \"outputTokens\": 100,\n      \"accepted\": true\n    },\n    {\n      \"caseId\": \"會議答疑\",\n      \"version\": \"after\",\n      \"inputTokens\": 320,\n      \"outputTokens\": 80,\n      \"accepted\": true\n    },\n    {\n      \"caseId\": \"日期出處\",\n      \"version\": \"before\",\n      \"inputTokens\": 600,\n      \"outputTokens\": 100,\n      \"accepted\": true\n    },\n    {\n      \"caseId\": \"日期出處\",\n      \"version\": \"after\",\n      \"inputTokens\": 150,\n      \"outputTokens\": 50,\n      \"accepted\": false\n    }\n  ]\n}",
+        "options": {}
+      },
+      "notes": "可貼入自己的匿名紀錄。每個案例每個版本一筆，先加總重試及多步呼叫。accepted 由同一驗收標準決定。"
+    },
+    {
+      "id": "b39a37a8-ef74-4ccc-abdb-28e6944c21c1",
+      "name": "接收上游紀錄",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        200
+      ],
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "notes": "上游傳入一個含 runs 陣列的 item，或每筆用量一個 item。"
+    },
+    {
+      "id": "e1939f4d-df5a-4984-b5bd-05f7bfbd18e7",
+      "name": "配對及檢查",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        500,
+        75
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "function compareRuns(runs) {\n  if (!Array.isArray(runs) || !runs.length) throw new Error('請提供至少一筆 runs 紀錄。');\n  const cases = new Map();\n  for (const run of runs) {\n    if (!run || typeof run.caseId !== 'string' || !run.caseId.trim()) throw new Error('每筆紀錄需要 caseId。');\n    const id = run.caseId.trim();\n    if (!['before', 'after'].includes(run.version)) throw new Error(id + ' 的 version 必須是 before 或 after。');\n    for (const key of ['inputTokens', 'outputTokens']) {\n      if (!Number.isSafeInteger(run[key]) || run[key] < 0) throw new Error(id + ' 的 ' + key + ' 必須是非負整數。');\n    }\n    if (![true, false, null].includes(run.accepted)) throw new Error(id + ' 的 accepted 必須是 true、false 或 null。');\n    const pair = cases.get(id) || { caseId: id };\n    if (pair[run.version]) throw new Error(id + ' 有重複版本。請先加總同一輪的所有呼叫。');\n    pair[run.version] = run;\n    cases.set(id, pair);\n  }\n  return Array.from(cases.values(), pair => {\n    const total = run => {\n      if (!run) return null;\n      const value = run.inputTokens + run.outputTokens;\n      if (!Number.isSafeInteger(value)) throw new Error('Token 總數超出可精確比較範圍。');\n      return value;\n    };\n    const before = total(pair.before);\n    const after = total(pair.after);\n    let status = 'accepted';\n    if (!pair.before || !pair.after) status = 'unpaired';\n    else if (pair.before.accepted !== true || pair.after.accepted !== true) status = 'review';\n    return { caseId: pair.caseId, before, after, status };\n  });\n}\n\n\nconst records = $input.all().flatMap(item => item.json.runs ?? [item.json]);\nreturn compareRuns(records).map(pair => ({ json: pair }));"
+      },
+      "notes": "檢查識別碼、版本、非負整數及驗收狀態。重複紀錄會報錯。"
+    },
+    {
+      "id": "b76a0e13-dde9-4ae5-8f08-aa2c2840d777",
+      "name": "輸出用量報告",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        750,
+        75
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "function summarizePairs(pairs) {\n  let before = 0;\n  let after = 0;\n  let accepted = 0;\n  for (const pair of pairs) {\n    if (pair.status !== 'accepted') continue;\n    before += pair.before;\n    after += pair.after;\n    accepted++;\n  }\n  if (!Number.isSafeInteger(before) || !Number.isSafeInteger(after)) throw new Error('批次總數超出可精確比較範圍。');\n  return { accepted, pending: pairs.length - accepted, before, after, savedTokens: before - after,\n    reductionPercent: before ? Math.round((1 - after / before) * 1000) / 10 : null, pairs };\n}\n\nreturn [{ json: summarizePairs($input.all().map(item => item.json)) }];"
+      },
+      "notes": "只有前後均通過驗收的配對納入總數。報告另列未配對或待覆核項目。"
+    }
+  ],
+  "connections": {
+    "手動測試": {
+      "main": [
+        [
+          {
+            "node": "用量紀錄",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "用量紀錄": {
+      "main": [
+        [
+          {
+            "node": "配對及檢查",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "接收上游紀錄": {
+      "main": [
+        [
+          {
+            "node": "配對及檢查",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "配對及檢查": {
+      "main": [
+        [
+          {
+            "node": "輸出用量報告",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8c728a1a-c4a7-4859-ad10-5f3f3b5790bb",
+  "pinData": {}
+}

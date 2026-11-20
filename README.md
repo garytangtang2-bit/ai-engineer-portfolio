@@ -30,7 +30,15 @@
 
 雙模式回饋示例展示「用戶確認 → 記憶更新 → 下次沿用」：語音術語進入經確認的熱詞／校正流程，PDF 字形更新同組讀值並保存字典。示例只操作合成的頁面狀態，不寫入真實知識庫或呼叫模型。實際機制以有來源的知識庫、詞庫及規則累積經驗；候選資料先確認再套用。
 
-第三方授權位於 `fonts/*-OFL.txt` 及 `tools/vendor/three/LICENSE`。技術標誌取自 [Simple Icons](https://github.com/simple-icons/simple-icons)。
+訪客可在「逐格核對」讀取公開 Excel 實檔。瀏覽器解開 XLSX，按照工作簿關係讀取每張表，核對合成資料的格位、數字型別和預期值，並指出第一處差異。
+
+### n8n 用量對帳
+
+將 [工作流 JSON](evidence/token-usage-workflow.json) 以 **Import from File** 匯入 n8n。按 **Execute Workflow** 試跑內建合成資料，或在「用量紀錄」替換輸入。亦可由另一個工作流傳入一個含 `runs` 陣列的項目，或逐項傳入用量紀錄。
+
+每個 `caseId` 需要一筆 `before` 和一筆 `after`。先按版本加總每次模型呼叫（包括重試）的輸入和輸出 Token，再用相同標準填寫 `accepted`。兩個版本都通過才納入用量合計。未配對及待覆核個案另列，重複紀錄會提示錯誤。網站可在瀏覽器本機執行同一套邏輯。
+
+第三方授權見 `fonts/*-OFL.txt`、`tools/vendor/three/LICENSE` 及 `tools/vendor/fflate/LICENSE`。技術標誌取自 [Simple Icons](https://github.com/simple-icons/simple-icons)。
 
 
 ## 更新 AutoCut 自我介紹

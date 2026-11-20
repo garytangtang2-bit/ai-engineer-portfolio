@@ -698,3 +698,121 @@ document.querySelectorAll('.archive-card').forEach(card => {
 });
 
 followHash();
+
+// Read the published workbook only when a visitor requests the check.
+const auditButton = $('audit-run');
+const auditStatus = $('audit-status');
+const auditPages = Array.from({ length: 20 }, (_, index) => {
+  const mark = document.createElement('span');
+  mark.textContent = String(index + 1).padStart(2, '0');
+  return mark;
+});
+$('audit-sheets').replaceChildren(...auditPages);
+auditButton.addEventListener('click', async () => {
+  if (auditButton.getAttribute('aria-disabled') === 'true') return;
+  auditButton.setAttribute('aria-disabled', 'true');
+  auditButton.textContent = '核對中…';
+  auditStatus.textContent = '正在讀取公開 Excel 及核對數值。';
+  auditPages.forEach(mark => delete mark.dataset.result);
+  try {
+    const { verifyWorkbook } = await import('./verify-workbook.mjs');
+    const result = await verifyWorkbook((index, passed) => {
+      auditPages[index].dataset.result = passed ? 'pass' : 'fail';
+    });
+    const passed = result.matches === result.total && !result.extra;
+    auditStatus.textContent = passed
+      ? '20 頁已核對。20,000 格的格位、數值及數字型別全部吻合。'
+      : '已核對。相符 ' + result.matches.toLocaleString('en-US') + ' 格，多出 ' + result.extra + ' 格。' +
+        (result.firstIssue ? '首個差異位於' + result.firstIssue + '。' : '');
+  } catch {
+    auditStatus.textContent = '未能完成核對。可重試，或開啟原轉換測試紀錄。';
+  } finally {
+    auditButton.removeAttribute('aria-disabled');
+    auditButton.textContent = '重新核對';
+  }
+});
+
+const usageInput = $('usage-json');
+const usageMessage = $('usage-message');
+let usageExamples;
+function fetchUsageSample() {
+  usageExamples ??= fetch('evidence/token-usage-workflow.json').then(async response => {
+    if (!response.ok) throw new Error('未能讀取工作流範例。');
+    const workflow = await response.json();
+    const source = workflow.nodes.find(node => node.type === 'n8n-nodes-base.set');
+    return source.parameters.jsonOutput;
+  }).catch(error => { usageExamples = undefined; throw error; });
+  return usageExamples;
+}
+let inputEdited = false;
+function clearUsageReport(message) {
+  $('usage-rows').replaceChildren();
+  $('usage-chart').hidden = true;
+  $('usage-summary').textContent = '執行後可查看配對結果。';
+  usageMessage.textContent = message;
+}
+usageInput.addEventListener('input', () => {
+  inputEdited = true;
+  clearUsageReport('輸入已更新，可重新對帳。');
+});
+async function populateSample(reset = false) {
+  const source = await fetchUsageSample();
+  if (reset || !inputEdited) { usageInput.value = source; inputEdited = false; }
+}
+usageInput.closest('details').addEventListener('toggle', event => {
+  if (event.target.open && !usageInput.value && !inputEdited) populateSample().catch(() => { usageMessage.textContent = '未能讀取範例，可自行貼入紀錄。'; });
+});
+$('usage-reset').addEventListener('click', async () => {
+  try { await populateSample(true); clearUsageReport('已還原合成例子，可重新對帳。'); }
+  catch { usageMessage.textContent = '範例暫未能載入。'; }
+});
+$('usage-run').addEventListener('click', async () => {
+  const button = $('usage-run');
+  if (button.getAttribute('aria-disabled') === 'true') return;
+  button.setAttribute('aria-disabled', 'true');
+  const rows = $('usage-rows');
+  rows.replaceChildren();
+  const chart = $('usage-chart');
+  chart.hidden = true;
+  const summary = $('usage-summary');
+  try {
+    if (!usageInput.value && !inputEdited) await populateSample();
+    const { compareRuns, summarizePairs } = await import('./token-audit.mjs');
+    const payload = JSON.parse(usageInput.value);
+    const report = summarizePairs(compareRuns(Array.isArray(payload) ? payload : payload?.runs));
+    const fmt = value => value === null ? '缺資料' : value.toLocaleString('en-US');
+    if (report.accepted) {
+      const change = report.savedTokens === 0 ? '用量相同' :
+        (report.savedTokens > 0 ? '減少 ' : '增加 ') + fmt(Math.abs(report.savedTokens)) + ' Token';
+      const percent = report.savedTokens && report.reductionPercent !== null
+        ? '（' + fmt(Math.abs(report.reductionPercent)) + '%）' : '';
+      summary.textContent = '通過驗收的個案共用 ' + fmt(report.before) + ' → ' + fmt(report.after) +
+        ' Token，' + change + percent + '。';
+      const scale = Math.max(1, report.before, report.after);
+      [report.before, report.after].forEach((amount, index) => {
+        const bar = chart.children[index];
+        bar.querySelector('b').style.width = (amount / scale * 100) + '%';
+        bar.querySelector('output').textContent = fmt(amount);
+      });
+      chart.hidden = false;
+    } else {
+      summary.textContent = '本批沒有前後均通過驗收的配對。';
+    }
+    for (const pair of report.pairs) {
+      const row = document.createElement('li');
+      const title = document.createElement('strong');
+      title.textContent = pair.caseId;
+      const status = document.createElement('small');
+      const labels = {accepted: '納入比較', unpaired: '欠缺配對', review: '待覆核'};
+      status.textContent = fmt(pair.before) + ' → ' + fmt(pair.after) + ' · ' + labels[pair.status];
+      row.append(title, status);
+      rows.append(row);
+    }
+    usageMessage.textContent = (inputEdited ? '輸入資料' : '合成測試') + '已完成對帳。納入 ' + report.accepted + ' 項，另列 ' + report.pending + ' 項。';
+  } catch (error) {
+    summary.textContent = '修正輸入後可再執行。';
+    usageMessage.textContent = error instanceof SyntaxError ? 'JSON 格式有誤，請檢查括號和逗號。' : error.message;
+  } finally {
+    button.removeAttribute('aria-disabled');
+  }
+});
