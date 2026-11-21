@@ -1,16 +1,18 @@
 <div class="product-window">
-  <div class="browser-bar"><span class="window-dots" aria-hidden="true">● ● ●</span><span>正式站畫面 · togoalai.com</span><a href="https://www.togoalai.com/zh-TW" target="_blank" rel="noopener">開啟正式站 ↗</a></div>
+  <div class="product-viewfinder">
+  <div class="browser-bar"><span class="product-domain"><i aria-hidden="true"></i> ToGoalAi <small>／ 產品畫面</small></span><a href="https://www.togoalai.com/zh-TW" target="_blank" rel="noopener">開啟正式站 ↗</a></div>
   <div class="segmented product-views" role="group" aria-label="切換 ToGoalAi 公開畫面">
+    <button type="button" data-product-screen="home" aria-pressed="true">正式站首頁</button>
     <button type="button" data-product-screen="setup" aria-pressed="false">設定考試</button>
     <button type="button" data-product-screen="question" aria-pressed="false">作答介面</button>
-    <button type="button" data-product-screen="result" aria-pressed="true">結果與弱點</button>
-    <button type="button" data-product-screen="home" aria-pressed="false">正式站首頁</button>
+    <button type="button" data-product-screen="result" aria-pressed="false">結果與弱點</button>
   </div>
   <div id="togoal-picture" class="product-picture" role="region" tabindex="0" aria-label="ToGoalAi 畫面預覽，放大後可橫向捲動">
-    <img src="../../assets/togoalai-demo-result.webp" alt="ToGoalAi 公開示範的模擬試分數與弱點建議" width="896" height="504" loading="lazy">
+    <img src="../../assets/togoalai-live.webp" alt="ToGoalAi 正式站首頁展示教材、練習及複習入口" width="1440" height="700" loading="lazy">
+  </div>
   </div>
   <button class="button small product-zoom-button" id="togoal-zoom" type="button" aria-pressed="false" aria-controls="togoal-picture">放大畫面 ＋</button>
-  <p id="product-screen-note" class="artifact-footnote product-screen-note" role="status">總分、分項成績及弱項建議在同一畫面，讓使用者知道下一步應複習甚麼。</p>
+  <p id="product-screen-note" class="artifact-footnote product-screen-note" role="status">正式站首頁。可切換至設定考試、作答及成績畫面。</p>
 </div>
 <div class="product-route" id="togoal-inputs" tabindex="-1">
       <h4>教材處理路徑</h4>

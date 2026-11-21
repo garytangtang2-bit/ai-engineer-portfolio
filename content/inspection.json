@@ -1,0 +1,38 @@
+{
+  "ledger": {
+    "title": "陳述核對清單", "scope": "合成逐字稿 · 原程式輸出", "metric": "2", "unit": "項遺漏", "help": "按時間碼查看草稿漏寫的內容。", "rows": [
+      ["02:00", "提交期限", "原句「示例項目要喺22號交PDF」。核對程式標出 PDF 及 22 號，方便回到草稿補寫。"],
+      ["03:30", "審批狀態", "原句「示例項目等緊設計師approve」。草稿缺少對應陳述，保留時間碼供覆核。"]
+    ]
+  },
+  "plaxis": {
+    "title": "模型檢查結果", "scope": "原 Python 函數 · 合成物件", "metric": "2", "unit": "個階段", "help": "查看階段次序及探測到的構件。", "rows": [
+      ["Phase_1", "Excavation", "前一階段為 Initial。"],
+      ["Phase_2", "Support installation", "前一階段為 Phase_1。"],
+      ["構件", "錨桿與板件", "探測到 Anchor_A 及 Support_wall。這次檢查使用合成物件，未連接 PLAXIS。"]
+    ]
+  },
+  "message-routing": {
+    "title": "訊息分流測試", "scope": "Node.js · 原測試輸出", "metric": "5/5", "unit": "項通過", "help": "展開查看每項測試驗證的行為。", "rows": [
+      ["PASS", "重複事件", "同一則留言重送，沒有重複私訊。"],
+      ["PASS", "自己發出的留言", "自己的留言及回覆串不會觸發分流。"],
+      ["PASS", "尚未追蹤", "再次傳送提示和按鈕，保留筆記連結。"],
+      ["PASS", "已經追蹤", "按下按鈕後傳送筆記連結。"],
+      ["PASS", "Webhook 驗證", "原測試驗證 Webhook 與簽章。"]
+    ]
+  },
+  "transcribe": {
+    "title": "粵語轉錄設定", "scope": "原 Skill 節錄", "metric": "large-v3", "unit": "Whisper 模型", "help": "展開查看執行設定及熱詞處理。", "rows": [
+      ["ASR", "本機辨識", "使用 faster-whisper large-v3，指定粵語 yue。GPU 使用 CUDA float16，CPU 使用 int8。"],
+      ["VAD", "靜音與解碼", "以 VAD 去除靜音，beam 設為 5，關閉 condition_on_previous_text。"],
+      ["HOTWORDS", "熱詞排序", "傳入 --hot hotwords.txt，可用逗號或換行分隔。腳本取最後 70 個詞，重要詞放在尾段。"]
+    ]
+  },
+  "scheduled-video": {
+    "title": "排程腳本選項", "scope": "Python · 原命令列說明", "metric": "--dry-run", "unit": "預演模式", "help": "展開查看選項及對執行的影響。", "rows": [
+      ["預演", "--dry-run", "只生成並儲存 caption，不開啟發佈介面。"],
+      ["沿用", "--skip-gemini", "讀取已有的 caption.txt，跳過模型呼叫。"],
+      ["除錯", "--keep-open", "腳本完成後保留 Chrome，方便檢查畫面。"]
+    ]
+  }
+}

@@ -14,7 +14,9 @@
 
 個案工時及採用情況來自本人工作紀錄。網站的合成例子、重新設計的地盤模型及正式站截圖均按來源標示。
 
-各作品在 `assets/work/` 保留完整圖片及手機縮圖，圖說與替代文字位於 `content/work-images.json`。作品頁可放大原圖。首頁光帶由 `particles.js` 在 Canvas 繪製，支援滑鼠與觸控；訪客啟用減少動態效果時，光帶維持靜止。
+各作品在 `assets/work/` 保留原有實物圖，圖說位於 `content/work-images.json`。新版介面的實際操作截圖及縮圖位於 `assets/interfaces/`，圖說、替代文字及來源位於 `content/interface-images.json`。個案頁可放大新版截圖，亦可開啟原圖。可展開的輸出及設定紀錄由 `content/inspection.json` 產生。
+
+首頁光帶由 `particles.js` 在 Canvas 繪製，支援滑鼠與觸控。訪客啟用減少動態效果時，光帶維持靜止。
 
 ### n8n 用量對帳
 

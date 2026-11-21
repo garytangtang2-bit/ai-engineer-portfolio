@@ -1,15 +1,17 @@
 <section id="meeting-demo" class="artifact meeting-artifact" tabindex="-1" aria-label="會議紀錄示範">
-    <div class="artifact-header"><strong>試答一項會議疑點</strong><span class="artifact-label">虛構示例</span></div>
-    <div class="direct-review">
-      <div class="review-source">
-        <dl class="review-input"><div><dt>錄音原句 · 19:06</dt><dd>「下星期……四？再確認。」</dd></div><div><dt>同事回覆</dt><dd>「係 10 月 22 日星期四。」</dd></div></dl>
-        <button type="button" class="button primary" id="confirm-review">採用同事回覆</button>
-      </div>
-      <div class="review-result" id="meeting-output-trace">
-        <div role="status" aria-atomic="true"><strong>英文會議紀錄</strong><p id="quick-minutes">草稿 · 日期待確認</p><small id="minutes-source" hidden>已記錄同事確認 · 來源 19:06</small></div>
-        <button type="button" class="button small" id="minutes-download" hidden>下載紀錄 ↓</button>
-      </div>
-    </div>
+  <div class="desk minutes-desk" id="minutes-desk">
+    <header class="desk-head"><div class="desk-brand"><span class="desk-mark mic-mark" aria-hidden="true">≋</span><strong>會議紀錄助手</strong></div><span class="desk-tag">虛構示例</span></header>
+    <div class="minutes-split"><div class="listen-pane">
+      <div class="desk-meta"><span class="status-dot"></span> 錄音原句</div>
+      <strong class="time-readout">19<span>:</span>06</strong>
+      <div class="meter-line" aria-hidden="true"><i style="--h:18%"></i><i style="--h:28%"></i><i style="--h:16%"></i><i style="--h:39%"></i><i style="--h:68%"></i><i style="--h:35%"></i><i style="--h:19%"></i><i style="--h:45%"></i><i style="--h:83%"></i><i style="--h:65%"></i><i style="--h:40%"></i><i style="--h:52%"></i><i style="--h:26%"></i><i style="--h:17%"></i><i style="--h:32%"></i><i style="--h:66%"></i><i style="--h:92%"></i><i style="--h:74%"></i><i style="--h:42%"></i><i style="--h:24%"></i><i style="--h:14%"></i><i style="--h:38%"></i><i style="--h:72%"></i><i style="--h:78%"></i><i style="--h:39%"></i><i style="--h:32%"></i><i style="--h:57%"></i><i style="--h:68%"></i><i style="--h:48%"></i><i style="--h:22%"></i><i style="--h:35%"></i><i style="--h:54%"></i><i style="--h:93%"></i><i style="--h:69%"></i><i style="--h:48%"></i><i style="--h:37%"></i><i style="--h:66%"></i><i style="--h:87%"></i><i style="--h:60%"></i><i style="--h:21%"></i><i style="--h:36%"></i><i style="--h:45%"></i><i style="--h:20%"></i><i style="--h:30%"></i><i style="--h:17%"></i><i style="--h:26%"></i><i style="--h:12%"></i><i style="--h:19%"></i></div>
+      <blockquote>「下星期……四？再確認。」</blockquote><div class="reply-line"><span>同事回覆</span><p>「係 10 月 22 日星期四。」</p></div>
+      <button type="button" class="desk-action" id="confirm-review">採用同事回覆</button>
+    </div><div class="minute-sheet" id="meeting-output-trace"><div class="sheet-rule"><span>英文會議紀錄</span><span lang="en">12 OCT 2026</span></div>
+      <h3 lang="en">Meeting<br><em>minutes.</em></h3><div class="minute-entry"><span>01</span><div><b lang="en">Next submission</b><p role="status" aria-atomic="true" id="quick-minutes">草稿 · 日期待確認</p></div></div>
+      <small id="minutes-source" hidden>已核實日期 · 來源 19:06</small><button type="button" class="desk-download" id="minutes-download" hidden>下載紀錄 ↓</button>
+    </div></div>
+  </div>
     <details id="meeting-flow" class="demo-detail"><summary>查看完整流程</summary><div class="workflow-tabs" role="tablist" aria-label="會議紀錄流程步驟"><button role="tab" id="meeting-tab-0" aria-controls="meeting-panel" aria-selected="true" data-step="0"><span>01</span>輸入</button><button role="tab" id="meeting-tab-1" aria-controls="meeting-panel" aria-selected="false" tabindex="-1" data-step="1"><span>02</span>轉錄</button><button role="tab" id="meeting-tab-2" aria-controls="meeting-panel" aria-selected="false" tabindex="-1" data-step="2"><span>03</span>事實表</button><button role="tab" id="meeting-tab-3" aria-controls="meeting-panel" aria-selected="false" tabindex="-1" data-step="3"><span>04</span>答疑</button><button role="tab" id="meeting-tab-4" aria-controls="meeting-panel" aria-selected="false" tabindex="-1" data-step="4"><span>05</span>交付</button></div><div class="workflow-progress" aria-hidden="true"></div><div id="meeting-panel" class="workflow-panel" role="tabpanel" aria-labelledby="meeting-tab-0" tabindex="0"></div><div class="workflow-footer"><span id="meeting-position">01 / 05</span><span id="meeting-state" role="status"></span><button class="button small" id="meeting-next">下一步 →</button></div></details>
   </section>
 <details id="feedback-demo" class="extra-demo"><summary>試試讓人工確認供下次沿用</summary><section id="feedback-lab" class="feedback-lab" aria-label="答覆如何回流">

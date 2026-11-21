@@ -117,6 +117,10 @@ body.gallery-body {
 .instrument-rail {margin-top:9px}
 .work-tile,.exhibit {border-color:#60758077;background:linear-gradient(145deg,#1a2833f6,#141f29fa 75%);box-shadow:0 8px 20px #0002,inset 0 1px #c4d6df14}
 .proof-card,.proof-case {margin:0}
+.proof-sources {display:flex;gap:14px;flex-wrap:wrap;margin-top:5px}
+.proof-sources .proof-source {display:inline-flex;align-items:center;min-height:38px;color:#b9e8ec;text-underline-offset:4px}
+.proof-card.interface-card .proof-mount {padding:5px;background:linear-gradient(135deg,#33504d,#1d2c35)}
+.signal-scope a img {height:auto;max-height:235px;object-fit:contain;background:#193633}
 @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
   .work-tile:hover::after {content:"";position:absolute;inset:0;padding:1px;border-radius:inherit;pointer-events:none;background:radial-gradient(180px at var(--mx,50%) var(--my,50%),#d8eaf4,transparent);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude}
 }

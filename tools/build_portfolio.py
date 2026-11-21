@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTENT = ROOT / 'content'
 SITE = 'https://garytangtang2-bit.github.io/ai-engineer-portfolio/'
 projects = json.loads((CONTENT / 'projects.json').read_text(encoding='utf-8'))
+inspection = json.loads((CONTENT / 'inspection.json').read_text(encoding='utf-8'))
 groups = list(dict.fromkeys(p['group'] for p in projects))
 pdf_name = 'assets/Gary-Tang-CV.pdf'
 
@@ -24,11 +25,14 @@ def intro_film(path):
 
 def page(title, description, path, body, widget=None, canonical=''):
     widget_css = ''.join(f'<link rel="stylesheet" href="{path}{sheet}.css">' for sheet in ('styles','presentation')) if widget else ''
+    desk_css = f'<link rel="stylesheet" href="{path}widgets/desks.css">' if widget in ('meeting','pdf','tokens','youtube','togoal') else ''
+    if canonical.strip('/').split('/')[-1] in inspection:
+        desk_css += f'<link rel="stylesheet" href="{path}widgets/inspection.css">'
     widget_js = f'<script type="module" src="{path}widgets/{widget}.mjs"></script>' if widget else ''
     return f'''<!doctype html>
 <html lang="zh-Hant-HK"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(title)}</title><meta name="description" content="{esc(description, quote=True)}"><meta name="theme-color" content="#0b1118"><link rel="canonical" href="{SITE}{canonical}">
-{widget_css}<link rel="stylesheet" href="{path}gallery.css"><script type="module" src="{path}gallery.js"></script>{widget_js}</head>
+{widget_css}<link rel="stylesheet" href="{path}gallery.css">{desk_css}<script type="module" src="{path}gallery.js"></script>{widget_js}</head>
 <body class="gallery-body"><a class="jump-main" href="#main">跳至主要內容</a>
 <header class="mast"><div class="frame mast-bar"><a class="signature" href="{path or './'}"><span aria-hidden="true" class="sig-mark">gt</span><span>Gary Tang</span></a>
 <nav aria-label="網站導覽"><a href="{path}#work">作品</a><a href="{path}#about">關於</a><a class="cv-link" href="{path}{pdf_name}">履歷 PDF <span aria-hidden="true">↗</span></a></nav></div></header>
@@ -62,7 +66,7 @@ def home():
 <a href="projects/togoal/"><span>ToGoalAi 學習平台</span><strong class="ship-stat">獨立開發上線</strong></a></div>
 <section class="frame feature-band" aria-labelledby="feature-title"><div class="feature-copy"><p class="eyeline">精選個案 ／ 工作流程</p><h2 id="feature-title">把重聽會議的時間，<br>留給需要判斷的事。</h2><p>以前同事要重聽整場，再寫英文紀錄。我將轉錄、答疑和匯出串成同一個流程。一場 90 分鐘的會議，人手覆核約 10 分鐘。</p><a href="projects/meeting/#demo">試做一次會議答疑 <span aria-hidden="true">↗</span></a></div>
 <div class="instrument" data-reactive><div class="instrument-top"><span class="tiny-led"></span><strong>會議紀錄助手</strong><span>合成節錄</span></div>
-<div class="signal-scope"><a href="projects/meeting/#evidence"><img src="assets/work/meeting-small.webp" alt="查看會議助手原視窗及英文草稿" loading="lazy" width="680" height="400"></a></div><div class="transcript" aria-live="polite" aria-atomic="true"><span class="transcript-kicker" id="snippet-label">原始錄音 · 19:06</span><p id="snippet-text">「下星期……四？再確認。」</p></div>
+<div class="signal-scope"><a href="projects/meeting/#demo"><img src="assets/interfaces/meeting-small.webp" alt="開啟答疑工作區，對照粵語原句與英文紀錄" loading="lazy" width="700" height="352"></a></div><div class="transcript" aria-live="polite" aria-atomic="true"><span class="transcript-kicker" id="snippet-label">原始錄音 · 19:06</span><p id="snippet-text">「下星期……四？再確認。」</p></div>
 <div class="instrument-rail" role="group" aria-label="會議紀錄示例步驟"><button type="button" aria-pressed="true" data-snippet="0">原句</button><button type="button" aria-pressed="false" data-snippet="1">答疑</button><button type="button" aria-pressed="false" data-snippet="2">交付</button></div></div></section>
 <section class="frame catalogue" id="work"><div class="section-line"><div><p class="eyeline">PROJECT INDEX</p><h2>作品目錄</h2></div><span class="index-count" aria-live="polite" id="result-count">{len(projects)} 件作品</span></div>
 <div class="index-controls" hidden><div class="index-filters" role="group" aria-label="按作品類別篩選">{filters}</div><label class="index-search"><span aria-hidden="true">⌕</span><input type="search" id="catalogue-search" aria-label="搜尋作品或技術" placeholder="搜尋作品或技術" maxlength="80"></label></div>
@@ -89,10 +93,16 @@ def case_page(p, idx):
         fragment = (CONTENT/'widgets'/f'{widget}.html').read_text(encoding='utf-8')
         fragment = f'{symbols}<section class="case-demo" id="demo"><p class="eyeline">INTERACTIVE</p><h2>親手試用</h2><div class="demo-content">{fragment}</div></section>'
     supplementary = ''
+    if p['id'] in inspection:
+        view = inspection[p['id']]
+        rows = ''.join(f'<details{" open" if i == 0 else ""}><summary><span>{esc(code)}</span>{esc(title)}</summary><p>{esc(detail)}</p></details>' for i,(code,title,detail) in enumerate(view['rows']))
+        fragment = f'''<section class="reader-section" id="demo"><h2>查看輸出</h2><div class="output-reader"><header class="reader-head"><h3>{esc(view['title'])}</h3><span>{esc(view['scope'])}</span></header><div class="reader-body"><div class="reader-stat"><strong>{esc(view['metric'])}</strong><b>{esc(view['unit'])}</b><p>{esc(view['help'])}</p></div><div class="reader-rows">{rows}</div></div></div></section>'''
     if p['id']=='autocut':
         supplementary = intro_film(path) or '<aside class="film-note"><strong>自我介紹短片 · 籌備中</strong><p>我會用這套 AutoCut Skills 製作自己的求職短片。現階段可操作上面的合成時間軸。</p></aside>'
     neighbour = projects[(idx+1)%len(projects)]
     first_jump = '<a class="main-btn" href="#demo">前往互動示範 ↓</a>' if widget else '<a class="main-btn" href="#method">查看實作流程 ↓</a>'
+    if p['id'] in inspection:
+        first_jump = '<a class="main-btn" href="#demo">打開輸出紀錄 ↓</a>'
     prev = f'<a href="{path}#work" data-back>← 全部作品</a>'
     body = f'''<main id="main" class="case-body frame"><div class="case-crumb">{prev}<span>／ {p["group"]}</span></div>
 <section class="case-heading"><div><p class="eyeline">{p['group']} · {'互動個案' if widget else '作品個案'}</p><h1>{esc(p["title"])}</h1><p>{esc(p["intro"])}</p><div class="case-actions">{first_jump}</div></div>

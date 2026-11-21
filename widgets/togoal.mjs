@@ -1,6 +1,6 @@
 const $ = id => document.getElementById(id);
 const productScreens = {
-  home: ['togoalai-live.webp', '正式站首頁', '公開首頁介紹筆記、練習及複習工具。切換上面三項可看公開模擬考試展示。', 1440, 700],
+  home: ['togoalai-live.webp', '正式站首頁', '正式站首頁。可切換至設定考試、作答及成績畫面。', 1440, 700],
   setup: ['togoalai-demo-setup.webp', '設定考試', '設定考試主題、涵蓋範圍及題量，再交給 AI 生成題目。', 896, 504],
   question: ['togoalai-demo-question.webp', '作答介面', '作答時可看進度、選項及示例回饋。', 896, 504],
   result: ['togoalai-demo-result.webp', '結果與弱點', '總分、分項成績及弱項建議在同一畫面，讓使用者知道下一步應複習甚麼。', 896, 504],
