@@ -14,6 +14,8 @@
 
 個案工時及採用情況來自本人工作紀錄。網站的合成例子、重新設計的地盤模型及正式站截圖均按來源標示。
 
+各作品在 `assets/work/` 保留完整圖片及手機縮圖，圖說與替代文字位於 `content/work-images.json`。作品頁可放大原圖。首頁光帶由 `particles.js` 在 Canvas 繪製，支援滑鼠與觸控；訪客啟用減少動態效果時，光帶維持靜止。
+
 ### n8n 用量對帳
 
 將 [工作流 JSON](evidence/token-usage-workflow.json) 以 **Import from File** 匯入 n8n。在編輯器從「手動測試」開始執行，即可試跑內建合成資料，或在「用量紀錄」替換輸入。如要給其他工作流調用，先在自己的 n8n 發佈此工作流，再由上游的 Execute Sub-workflow 傳入一個含 `runs` 陣列的項目，或逐項傳入用量紀錄。

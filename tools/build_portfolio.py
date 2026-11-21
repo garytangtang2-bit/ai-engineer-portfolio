@@ -3,7 +3,7 @@ import json
 from html import escape as esc
 from pathlib import Path
 
-from project_art import art, diagram
+from project_art import art
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT = ROOT / 'content'
@@ -44,7 +44,7 @@ def case_href(p):
 def tile(p):
     more = '互動示範' if p.get('widget') else '個案介紹'
     return f'''<a class="work-tile" data-group="{p['group']}" data-stack="{esc(' '.join(p['stack']),quote=True)}" data-reactive href="{case_href(p)}">
-{art(p,'','card-'+p['id'])}
+{art(p,'')}
 <div class="tile-info"><div class="tile-meta"><span>{p['group']}</span><span>{more}</span></div><h3>{esc(p['title'])}</h3><p>{esc(p['intro'])}</p>
 <div class="tile-result"><strong>{esc(p['result'])}</strong><span class="arrow-disc" aria-hidden="true">↗</span></div></div></a>'''
 
@@ -52,18 +52,18 @@ def tile(p):
 def home():
     filters = ''.join(f'<button type="button" data-filter="{g}" aria-pressed="{str(g=="全部").lower()}">{g}</button>' for g in ['全部', *groups])
     cards = '\n'.join(tile(p) for p in projects)
-    sound = diagram('minutes','hero')
-    body = f'''<main id="main" data-home><section id="home" class="frame landing">
+    body = f'''<main id="main" data-home><div class="hero-stage"><canvas class="particle-field" aria-hidden="true"></canvas><section id="home" class="frame landing">
 <div class="hero-type"><p class="eyeline"><span class="tone-dot"></span> AI ENGINEER <span class="role-city">／ 香港</span></p>
 <h1>鄧嘉維<span lang="en">Gary Tang</span></h1><p class="hero-statement">我用 AI，把數小時的工作縮到幾分鐘。</p>
 <div class="hero-actions"><a class="main-btn" href="#work">瀏覽全部作品 <span aria-hidden="true">↓</span></a><a class="soft-btn" href="{pdf_name}">履歷及聯絡 <span aria-hidden="true">↗</span></a></div></div>
-<div class="instrument" data-reactive><div class="instrument-top"><span class="tiny-led"></span><strong>會議紀錄</strong><span>合成節錄</span></div>
-<div class="signal-scope">{sound}</div><div class="transcript" aria-live="polite" aria-atomic="true"><span class="transcript-kicker" id="snippet-label">原始錄音 · 19:06</span><p id="snippet-text">「下星期……四？再確認。」</p></div>
-<div class="instrument-rail" role="group" aria-label="會議紀錄示例步驟"><button type="button" aria-pressed="true" data-snippet="0">原句</button><button type="button" aria-pressed="false" data-snippet="1">答疑</button><button type="button" aria-pressed="false" data-snippet="2">交付</button></div></div>
-</section>
+<p class="particle-hint" hidden aria-hidden="true"><i></i><span>移動滑鼠，撥開粒子</span><span>輕觸光帶，撥開粒子</span></p></section></div>
 <div class="frame metric-rail" aria-label="主要成果"><a href="projects/meeting/" aria-label="會議紀錄，省時約 70%"><span>會議紀錄省時約</span><strong><b data-counter style="font-weight:inherit">70</b><small>%</small></strong></a>
 <a href="projects/pdf/"><span>PDF 還原 Excel</span><strong>16<small> 小時</small><i>→</i>30<small> 分鐘</small></strong></a>
 <a href="projects/togoal/"><span>ToGoalAi 學習平台</span><strong class="ship-stat">獨立開發上線</strong></a></div>
+<section class="frame feature-band" aria-labelledby="feature-title"><div class="feature-copy"><p class="eyeline">精選個案 ／ 工作流程</p><h2 id="feature-title">把重聽會議的時間，<br>留給需要判斷的事。</h2><p>以前同事要重聽整場，再寫英文紀錄。我將轉錄、答疑和匯出串成同一個流程。一場 90 分鐘的會議，人手覆核約 10 分鐘。</p><a href="projects/meeting/#demo">試做一次會議答疑 <span aria-hidden="true">↗</span></a></div>
+<div class="instrument" data-reactive><div class="instrument-top"><span class="tiny-led"></span><strong>會議紀錄助手</strong><span>合成節錄</span></div>
+<div class="signal-scope"><a href="projects/meeting/#evidence"><img src="assets/work/meeting-small.webp" alt="查看會議助手原視窗及英文草稿" loading="lazy" width="680" height="400"></a></div><div class="transcript" aria-live="polite" aria-atomic="true"><span class="transcript-kicker" id="snippet-label">原始錄音 · 19:06</span><p id="snippet-text">「下星期……四？再確認。」</p></div>
+<div class="instrument-rail" role="group" aria-label="會議紀錄示例步驟"><button type="button" aria-pressed="true" data-snippet="0">原句</button><button type="button" aria-pressed="false" data-snippet="1">答疑</button><button type="button" aria-pressed="false" data-snippet="2">交付</button></div></div></section>
 <section class="frame catalogue" id="work"><div class="section-line"><div><p class="eyeline">PROJECT INDEX</p><h2>作品目錄</h2></div><span class="index-count" aria-live="polite" id="result-count">{len(projects)} 件作品</span></div>
 <div class="index-controls" hidden><div class="index-filters" role="group" aria-label="按作品類別篩選">{filters}</div><label class="index-search"><span aria-hidden="true">⌕</span><input type="search" id="catalogue-search" aria-label="搜尋作品或技術" placeholder="搜尋作品或技術" maxlength="80"></label></div>
 <div class="work-grid">{cards}</div><div class="no-matches" hidden><p>找不到符合這些條件的作品。</p><button type="button" id="clear-index">顯示全部作品</button></div><a class="index-return" href="#work" hidden>↑ 返回篩選</a></section>
@@ -96,7 +96,7 @@ def case_page(p, idx):
     prev = f'<a href="{path}#work" data-back>← 全部作品</a>'
     body = f'''<main id="main" class="case-body frame"><div class="case-crumb">{prev}<span>／ {p["group"]}</span></div>
 <section class="case-heading"><div><p class="eyeline">{p['group']} · {'互動個案' if widget else '作品個案'}</p><h1>{esc(p["title"])}</h1><p>{esc(p["intro"])}</p><div class="case-actions">{first_jump}</div></div>
-<div class="exhibit" data-reactive>{art(p,path,'cover-'+p['id'])}<div class="case-outcome"><span>交付成果</span><strong>{esc(p['result'])}</strong></div></div></section>
+<div class="exhibit">{art(p,path,detail=True)}<div class="case-outcome"><span>交付成果</span><strong>{esc(p['result'])}</strong></div></div></section>
 <div class="reading-shell"><section id="method" class="method"><p class="eyeline">ENGINEERING NOTES</p><h2>我怎樣做</h2><p class="case-context">{esc(p['detail'])}</p>
 <ol class="build-steps">{steps_html}</ol><ul class="tech-pills" aria-label="技術與工具">{chips}</ul></section>
 {fragment}{supplementary}<nav class="next-case" aria-label="瀏覽其他作品">{prev}<a href="../{neighbour['id']}/">下一件 · {esc(neighbour['title'])} →</a></nav></div></main>'''

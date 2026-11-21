@@ -113,7 +113,7 @@ function setupPointer() {
     if (pending) cancelAnimationFrame(pending);
     pending = 0;
     if (!active) return;
-    for (const prop of ['--mx','--my','--dx','--dy']) active.style.removeProperty(prop);
+    for (const prop of ['--mx','--my']) active.style.removeProperty(prop);
     active = null;
   }
   document.addEventListener('pointermove', event => {
@@ -130,16 +130,60 @@ function setupPointer() {
       const v = Math.min(1,Math.max(0,(y-box.top)/box.height));
       active.style.setProperty('--mx', u*100+'%');
       active.style.setProperty('--my', v*100+'%');
-      active.style.setProperty('--dx',(u-.5)*7+'px');
-      active.style.setProperty('--dy',(v-.5)*6+'px');
     });
   }, {passive:true});
   document.addEventListener('pointerout', e => { if (!e.relatedTarget) reset(); });
   motion.addEventListener('change',reset);
 }
 
-if (home) setupIndex();
+function setupProofViewer() {
+  const viewer = document.querySelector('.proof-viewer');
+  const link = document.querySelector('.proof-open');
+  if (!viewer || !link || !viewer.showModal) return;
+  const scale = viewer.querySelector('.proof-scale');
+  const image = viewer.querySelector('.proof-scroll img');
+  function showScaleOption() {
+    if (viewer.open && image.naturalWidth && !viewer.classList.contains('original-size')) {
+      scale.hidden = image.naturalWidth <= image.clientWidth && image.naturalHeight <= image.clientHeight;
+    }
+  }
+  link.addEventListener('click', event => {
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    event.preventDefault();
+    viewer.querySelector('img').src = link.href;
+    viewer.showModal();
+    showScaleOption();
+    document.documentElement.classList.add('viewing-proof');
+  });
+  function fit() {
+    scale.setAttribute('aria-pressed','false');
+    viewer.classList.remove('original-size');
+  }
+  image.addEventListener('load', showScaleOption);
+  window.addEventListener('resize', showScaleOption);
+  scale.addEventListener('click', () => {
+    scale.setAttribute('aria-pressed',String(viewer.classList.toggle('original-size')));
+  });
+  viewer.querySelector('.proof-close').addEventListener('click', () => viewer.close());
+  viewer.addEventListener('click', event => {
+    if (event.target !== viewer) return;
+    const {left, top, right, bottom} = viewer.getBoundingClientRect();
+    if (event.clientX < left || event.clientX > right || event.clientY < top || event.clientY > bottom) viewer.close();
+  });
+  viewer.addEventListener('close', () => {
+    fit();
+    document.documentElement.classList.remove('viewing-proof');
+    link.focus({preventScroll:true});
+  });
+}
+
+if (home) {
+  setupIndex();
+  const hero = document.querySelector('.hero-stage');
+  if (hero) import('./particles.js').then(({mountParticles}) => mountParticles(hero));
+}
 else {
+  setupProofViewer();
   try {
     const previous = document.referrer && new URL(document.referrer);
     const root = new URL('../../', location.href);
