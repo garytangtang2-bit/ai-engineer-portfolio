@@ -1,0 +1,21 @@
+// src/app/api/sources/[id]/chat/route.ts（節錄）
+// 1. 預設模型；用戶要求的模型超出其方案時，由伺服器改回預設模型
+const FREE_MODEL_ID = "gemini-2.5-flash-lite";
+// …
+// Resolve model + enforce role access server-side
+const resolvedModelId = requestedModelId ?? FREE_MODEL_ID;
+const modelConfig = getModelConfig(resolvedModelId);
+const effectiveModel = canUseModel(role, modelConfig) ? modelConfig : getModelConfig(FREE_MODEL_ID);
+// …
+
+// 2. 只為預設模型的繁中問答建快取；建快取時教材先壓到 3,000 token
+// ── Prompt Caching (ToGoalAi only — cheapest, highest cache ROI) ────────
+// Only use cache for default lang (zh-Hant); other langs get fresh responses to respect language choice
+const useCache = effectiveModel.id === FREE_MODEL_ID && (!lang || lang === "zh-Hant");
+// …
+if (useCache) {
+  if (!cacheValid) {
+    // Compress context to fit within cache token budget
+    const compressedContext = await compressToFit(rawContext, 3_000, `"${source.title}" study content`);
+    cacheName = await createGeminiCache(systemPrompt, compressedContext);
+    // …

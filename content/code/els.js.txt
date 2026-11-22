@@ -1,0 +1,23 @@
+// DEMO.els：一份專案設定同時驅動 3D 模型、2D 圖則、剖面和土方（示例地盤）
+const GRID = {"x":{"A":0,"B":14,"C":29,"D":46,"E":64,"F":82},"y":{"1":0,"2":18,"3":38,"4":60,"5":83,"6":106}};
+const LEVELS = {"existingGL":11.8,"modelBase":-3.5};
+const RAMP = {"poly":[[36,8],[42,8],[42,53],[36,53]],"from":{"p":[39,52],"level":10.6},"to":{"p":[39,9],"level":8.2}};
+const REGIONS = [
+  {"id":"WEST","name":"西翼施工平台","level":8.2,"src":"red","poly":[[6,8],[35,8],[35,52],[6,52]]},
+  {"id":"EAST","name":"東翼主開挖區","level":4.6,"src":"red","poly":[[44,8],[79,8],[79,52],[44,52]]},
+  // …
+];
+const SHEET_PILES = {"top":12.3,"profile":{"pitch":0.4,"depth":0.125},"lines":[
+  {"id":"SP1","note":"西翼支護","toe":2.1,"pts":[[5,7],[36,7],[36,53],[5,53]],"closed":true},
+  // …
+]};
+const SLOPE = {"defaultDeg":38};
+
+// tools/els.html：打開 .els 檔前先檢查必要設定
+function checkConfig(cfg) {
+  try {
+    const r = new Function(cfg + '\n;return { no: PROJECT.no, n: REGIONS.length, piles: SHEET_PILES.lines.length, ok: typeof SITE_OUTLINE !== "undefined" && typeof TERRAIN !== "undefined" };')();
+    if (!r.ok) return { err: '檔案缺少 SITE_OUTLINE 或 TERRAIN 設定' };
+    return r;
+  } catch (e) { return { err: '專案設定讀唔到：' + e.message }; }
+}

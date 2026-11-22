@@ -1,19 +1,38 @@
 <!doctype html>
 <html lang="zh-Hant-HK"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>粵語會議紀錄｜Gary Tang AI Engineer</title><meta name="description" content="由會議錄影整理英文紀錄。同事只需重聽有疑問的片段，確認日期和決定。"><meta name="theme-color" content="#0b1118"><link rel="canonical" href="https://garytangtang2-bit.github.io/ai-engineer-portfolio/projects/meeting/">
-<link rel="stylesheet" href="../../styles.css"><link rel="stylesheet" href="../../presentation.css"><link rel="stylesheet" href="../../gallery.css"><link rel="stylesheet" href="../../widgets/desks.css"><script type="module" src="../../gallery.js"></script><script type="module" src="../../widgets/meeting.mjs"></script></head>
+<title>粵語會議紀錄｜Gary Tang AI Engineer</title><meta name="description" content="由會議錄影整理英文紀錄。同事只需重聽有疑問的片段，確認日期和決定。"><meta name="theme-color" content="#05070c"><link rel="canonical" href="https://garytangtang2-bit.github.io/ai-engineer-portfolio/projects/meeting/">
+<link rel="stylesheet" href="../../styles.css"><link rel="stylesheet" href="../../presentation.css"><link rel="stylesheet" href="../../gallery.css"><link rel="stylesheet" href="../../widgets/desks.css"><link rel="stylesheet" href="../../widgets/inspection.css"><link rel="stylesheet" href="../../materials.css"><link rel="stylesheet" href="../../theme.css"><script type="module" src="../../gallery.js"></script><script type="module" src="../../widgets/meeting.mjs"></script></head>
 <body class="gallery-body"><a class="jump-main" href="#main">跳至主要內容</a>
 <header class="mast"><div class="frame mast-bar"><a class="signature" href="../../"><span aria-hidden="true" class="sig-mark">gt</span><span>Gary Tang</span></a>
 <nav aria-label="網站導覽"><a href="../../#work">作品</a><a href="../../#about">關於</a><a class="cv-link" href="../../assets/Gary-Tang-CV.pdf">履歷 PDF <span aria-hidden="true">↗</span></a></nav></div></header>
 <main id="main" class="case-body frame"><div class="case-crumb"><a href="../../#work" data-back>← 全部作品</a><span>／ 工作流程</span></div>
-<section class="case-heading"><div><p class="eyeline">工作流程 · 互動個案</p><h1>粵語會議紀錄</h1><p>由會議錄影整理英文紀錄。同事只需重聽有疑問的片段，確認日期和決定。</p><div class="case-actions"><a class="main-btn" href="#demo">前往互動示範 ↓</a></div></div>
-<div class="exhibit"><figure class="proof-case" id="evidence"><a class="proof-open" href="../../assets/interfaces/meeting.webp" aria-label="放大圖片：左方顯示 19:06 的粵語原句，右方顯示已核實的英文紀錄">
-<div class="proof-mount"><img src="../../assets/interfaces/meeting.webp" alt="左方顯示 19:06 的粵語原句，右方顯示已核實的英文紀錄"></div>
-<span class="proof-zoom" aria-hidden="true">⤢　放大圖片</span></a><figcaption><b>答疑工作區</b>作品集版答疑介面，示範以同事回覆確認日期並下載英文節錄。內容及聲波圖為合成示例。<div class="proof-sources"><a class="proof-source" href="../../assets/interfaces/meeting-desktop.webp">新版 Windows 介面 ↗</a><a class="proof-source" href="../../assets/work/meeting.webp">查看原版實物圖 ↗</a></div></figcaption></figure>
-<dialog class="proof-viewer" aria-label="作品實物圖"><div class="proof-toolbar"><button type="button" class="proof-scale" aria-pressed="false">原始尺寸</button><button type="button" class="proof-close" autofocus>關閉 ×</button></div><div class="proof-scroll" role="region" aria-label="圖片，可捲動" tabindex="0"><img alt="左方顯示 19:06 的粵語原句，右方顯示已核實的英文紀錄"></div><p>作品集版答疑介面，示範以同事回覆確認日期並下載英文節錄。內容及聲波圖為合成示例。</p></dialog><div class="case-outcome"><span>交付成果</span><strong>5+ 小時 → 約 90 分鐘</strong></div></div></section>
-<div class="reading-shell"><section id="method" class="method"><p class="eyeline">ENGINEERING NOTES</p><h2>我怎樣做</h2><p class="case-context">設計部採用。以一場 90 分鐘的會議計，約 70 分鐘用於本機轉錄，人手答疑約 10 分鐘。</p>
-<ol class="build-steps"><li><h3>整理錄音</h3><p>FFmpeg 處理音訊，本機 ASR 配合專案熱詞轉錄。</p></li><li><h3>核對決定</h3><p>模型先列原句及時間碼。日期或進度不清時，桌面工具整理成問題包。</p></li><li><h3>交付與修訂</h3><p>同事回答後匯出 Word 紀錄和 Excel 議程。已核實的術語可供下次使用。</p></li></ol><ul class="tech-pills" aria-label="技術與工具"><li>Python</li><li>FFmpeg</li><li>faster-whisper</li><li>Tkinter</li></ul></section>
-<svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><symbol id="i-mark" viewBox="0 0 24 24"><path d="M4 8.8 12 4l8 4.8v6.4L12 20l-8-4.8Z"></path><path d="m4 8.8 8 4.8 8-4.8M12 13.6V20m-4-8.9 8-4.8"></path></symbol><symbol id="i-up-right" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"></path></symbol><symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></symbol><symbol id="i-section" viewBox="0 0 24 24"><path d="M12 4v16M7 6l-4 3v6l4 3m10-12 4 3v6l-4 3"></path></symbol></svg><section class="case-demo" id="demo"><p class="eyeline">INTERACTIVE</p><h2>親手試用</h2><div class="demo-content"><section id="meeting-demo" class="artifact meeting-artifact" tabindex="-1" aria-label="會議紀錄示範">
+<section class="case-heading"><div><p class="eyeline">工作流程 · 互動個案</p><h1>粵語會議紀錄</h1><p>由會議錄影整理英文紀錄。同事只需重聽有疑問的片段，確認日期和決定。</p><div class="case-actions"><a class="main-btn" href="#demo">前往互動示範 ↓</a><a class="soft-btn" href="#modules">3 個組成模組 ↓</a></div></div>
+<div class="exhibit"><figure class="proof-case" id="evidence"><a class="proof-open" href="../../assets/work/meeting.webp" aria-label="放大圖片：會議紀錄助手：左邊是錄音 19:06 的原句，右邊英文紀錄寫明下次提交為 2026 年 10 月 22 日星期四，已核實日期，來源 19:06">
+<div class="proof-mount" style="--ar:1600/900;--ratio:1.7778"><img src="../../assets/work/meeting.webp" width="1600" height="900" alt="會議紀錄助手：左邊是錄音 19:06 的原句，右邊英文紀錄寫明下次提交為 2026 年 10 月 22 日星期四，已核實日期，來源 19:06"></div>
+<span class="proof-zoom" aria-hidden="true">放大圖片</span></a><figcaption><b>會議答疑示範畫面</b>本頁「會議紀錄助手」示範採用同事回覆後的實際畫面：左邊是錄音原句和同事回覆，右邊是已核實日期、附來源時間碼的英文紀錄。內容為虛構示例。</figcaption></figure>
+<dialog class="proof-viewer" aria-label="作品實物圖"><div class="proof-toolbar"><button type="button" class="proof-scale" aria-pressed="false">原始尺寸</button><button type="button" class="proof-close" autofocus>關閉 ×</button></div><div class="proof-scroll" role="region" aria-label="圖片，可捲動" tabindex="0"><img alt="會議紀錄助手：左邊是錄音 19:06 的原句，右邊英文紀錄寫明下次提交為 2026 年 10 月 22 日星期四，已核實日期，來源 19:06"></div><p>本頁「會議紀錄助手」示範採用同事回覆後的實際畫面：左邊是錄音原句和同事回覆，右邊是已核實日期、附來源時間碼的英文紀錄。內容為虛構示例。</p></dialog><div class="case-outcome"><span>交付成果</span><strong>人手 5 小時 → 約 10 分鐘</strong></div></div></section>
+<div class="reading-shell"><section id="method" class="method"><p class="eyeline">ENGINEERING NOTES</p><h2>我怎樣做</h2><p class="case-context">設計部採用。以往人手做一份紀錄約 5 小時：先看錄影約 1.5 小時，再花約 3.5 小時理解工程術語、重組句子和跟上次紀錄的格式。現在人手時間約 10 分鐘，只用來回答 AI 聽不清或不理解的地方；總歷時約 90 分鐘，大部分是本機轉錄。轉錄速度約與錄音等長（1 小時錄影約需 1 小時），受本機硬件限制；錄音屬保密資料，必須留在本機處理，這是刻意接受的取捨。</p>
+<ol class="build-steps"><li><h3>把錄音聽準</h3><p>先找出粵語轉錄錯在哪：同音字、英文工程術語、靜音段生出的句子和跨段帶錯。再逐項改解碼設定、詞表和校正表，做法見下方「本機粵語轉錄與調校」模組。</p></li><li><h3>AI 列出疑問、人手答疑</h3><p>AI 聽不清或不理解的地方整理成問題包，每題附約 26 秒原聲片段，最多 10 題。同事約 10 分鐘答完。</p></li><li><h3>AI 起草、獨立覆核</h3><p>AI 把確認的內容填入，寫成英文初稿；另一個覆核代理獨立檢查初稿的錯漏，之後匯出 Word 紀錄及 Excel 議程。答案中的聽錯字寫入校正表、新術語寫入詞表，下一場會議自動套用。</p></li></ol><ul class="tech-pills" aria-label="技術與工具"><li>Python</li><li>FFmpeg</li><li>faster-whisper</li><li>Tkinter</li></ul></section>
+<section class="eng-block" id="engineering" aria-labelledby="eng-title"><p class="eyeline">ENGINEERING REVIEW</p><h2 id="eng-title">工程細節</h2>
+<div class="eng-grid"><div class="eng-card"><h3>問題與限制</h3><ul class="eng-list"><li>粵語夾雜英文工程術語、人名和項目名稱，一般轉錄常聽錯。</li><li>錄音屬公司保密資料：只用本機語音引擎，不上傳。代價是轉錄約與錄音等長（1 小時錄影約需 1 小時），速度受本機硬件限制。</li><li>交付物是固定格式的英文正式紀錄，日期或決定寫錯一項就不能交。</li></ul></div><div class="eng-card eng-outcome"><h3>實際成果</h3><ul class="claim-list"><li><p>設計部採用。</p></li><li><p>人手時間由 5 小時縮至約 10 分鐘。以往：看錄影約 1.5 小時，加理解術語、重組句子和跟上次格式約 3.5 小時；現在只需回答 AI 的疑問。</p></li><li><p>總歷時由 5 小時縮至約 90 分鐘（約省 70%），大部分是本機轉錄；轉錄約與錄音等長，受本機硬件限制。</p></li></ul></div></div>
+<div class="eng-part"><div class="eng-part-head"><h3>架構：模型、程式與人手的分工</h3><div class="pipe-legend" aria-hidden="true"><span data-kind="model">模型</span><span data-kind="code">程式</span><span data-kind="human">人手</span></div></div><ol class="pipe"><li data-kind="code"><span class="pipe-tag">程式</span><strong>表格層</strong><p>議程、屆數、日期、出席者由程式從議程填寫，不交給模型。</p></li><li data-kind="model"><span class="pipe-tag">模型</span><strong>本機轉錄（ASR）</strong><p>faster-whisper 等最多 6 個本機引擎各自轉錄；按場詞表放在提示尾段。約與錄音等長，是整個流程最長的一步。</p></li><li data-kind="code"><span class="pipe-tag">程式</span><strong>融合與過濾</strong><p>每 30 秒一窗並列各引擎讀法；至少 2 個引擎聽到的術語才當聽到；重複迴圈輸出丟棄。</p></li><li data-kind="model"><span class="pipe-tag">模型</span><strong>AI 列出疑問</strong><p>先列時間碼、原句和把握等級 A／B／C；聽不清或不理解的地方整理成問題，最多 10 題，每題附約 26 秒原聲。</p></li><li data-kind="human"><span class="pipe-tag">人手</span><strong>人手答疑（約 10 分鐘）</strong><p>同事對照原聲回答問題，這是流程中唯一的人手時間。</p></li><li data-kind="model"><span class="pipe-tag">模型</span><strong>AI 起草</strong><p>把確認的內容填入，寫成英文紀錄初稿。</p></li><li data-kind="model"><span class="pipe-tag">模型</span><strong>獨立覆核代理</strong><p>另一個代理獨立檢查初稿的錯漏；另有十項程式規則對照議程和上次紀錄。</p></li><li data-kind="code"><span class="pipe-tag">程式</span><strong>回寫</strong><p>確認的聽錯字寫入校正表、新術語寫入詞表，下一場自動套用。</p></li></ol></div>
+
+<div class="eng-part cost-part" id="cost"><h3>模型與成本</h3><p class="cost-intro">每一步用甚麼、為甚麼，以及費用省在哪裏。表內只列做法；比較數字只寫已量度的。</p><div class="fail-wrap cost-wrap"><table class="fail-table cost-table"><thead><tr><th scope="col">步驟</th><th scope="col">用甚麼</th><th scope="col">為甚麼</th><th scope="col">省在哪裏</th></tr></thead><tbody><tr data-kind="code"><th scope="row">議程欄位</th><td data-label="用甚麼"><span class="cost-tag">程式</span>程式從議程填寫屆數、日期、出席者</td><td data-label="為甚麼">早期一場盲測中，模型寫的硬資料錯了 4 處</td><td data-label="省在哪裏">這些欄位不用模型呼叫</td></tr><tr data-kind="local"><th scope="row">轉錄</th><td data-label="用甚麼"><span class="cost-tag">本機模型</span>本機 Whisper（免費）</td><td data-label="為甚麼">App 雖有雲端 Gemini（付費）及混合選項，保密錄音只用本機</td><td data-label="省在哪裏">不付轉錄 API 費；代價是轉錄約與錄音等長</td></tr><tr data-kind="code"><th scope="row">選用雲端轉錄時</th><td data-label="用甚麼"><span class="cost-tag">程式</span>程式先檢查每段錄音</td><td data-label="為甚麼">近乎無聲的片段不送付費 API；已轉錄的結果先存檔</td><td data-label="省在哪裏">之後的步驟出錯重跑，同一段錄音不會再付一次費</td></tr><tr data-kind="cloud"><th scope="row">後備轉錄</th><td data-label="用甚麼"><span class="cost-tag">雲端模型</span>一般 Gemini Flash 模型，temperature 0、最少思考</td><td data-label="為甚麼">專用轉錄模型出錯才改用；結果過短（每分鐘少於 120 字）就重試，並濾走混入逐字稿的模型自言自語</td><td data-label="省在哪裏">後備模型設為最少思考，不開額外推理</td></tr><tr data-kind="agent"><th scope="row">覆核</th><td data-label="用甚麼"><span class="cost-tag">中階代理</span>每項檢查開一個全新代理（Sonnet、medium）</td><td data-label="為甚麼">意思重複、原因／過程各由一個新代理檢查，結果寫入 TSV；未完成，流程閘門不放行</td><td data-label="省在哪裏">不用最強的模型；每個代理只做一項檢查</td></tr><tr data-kind="human"><th scope="row">人手答疑</th><td data-label="用甚麼"><span class="cost-tag">人手</span>同事回答 AI 列出的疑問，最多 10 題</td><td data-label="為甚麼">只有聽不清或不理解的地方才問人</td><td data-label="省在哪裏">人手時間約 10 分鐘</td></tr></tbody></table></div></div>
+<div class="eng-part"><h3>關鍵決定與取捨</h3><ul class="decisions"><li><p class="dec-chose"><span>採用</span>多個引擎並用</p><p class="dec-over"><span>不採用</span>只挑一個「最好」的引擎</p><p class="dec-why">不同引擎錯在不同位置；並用後，只有一個引擎聽到的內容會標成單一來源，不會當成事實。</p></li><li><p class="dec-chose"><span>採用</span>固定欄位由程式填</p><p class="dec-over"><span>不採用</span>整份交給模型寫</p><p class="dec-why">早期一場盲測中，屆數、上次會議日期等硬資料錯了 4 處；現行流程改由程式從議程填寫。</p></li><li><p class="dec-chose"><span>採用</span>把疑點變成問題交人答</p><p class="dec-over"><span>不採用</span>用嚴格閘門刪走所有可疑要點</p><p class="dec-why">嚴格模式下一場盲測的確定錯誤降到 0，但日期召回由 42% 跌到 17%，被刪的 50 點約 30 點其實正確。</p></li><li><p class="dec-chose"><span>採用</span>程式處理錯字</p><p class="dec-over"><span>不採用</span>在提示加更多規則</p><p class="dec-why">加規則後三輪測試分數沒有改善，於是改為固定解碼設定、詞表和校正表。</p></li></ul></div>
+<div class="eng-part"><h3>評估</h3><ul class="eval-list"><li><strong>41 個</strong><p>用 11 場過往會議盲測並對照正式紀錄，找出 41 個真資訊錯誤：轉錄聽錯 10 個（24%）、理解／歸屬／時態錯 23 個（56%）、沒有用上已有資料 7 個（17%）、錄音沒有該內容 1 個。主要瓶頸不在轉錄。</p></li><li><strong>51 ／ 63</strong><p>其中一場：正式紀錄 63 項，51 項意思相同、8 項部分相同、2 項與錄音矛盾，覆蓋約 92%。</p></li><li><strong>52 → 44 → 42</strong><p>同一場會議重跑三輪，正式紀錄沒有的多寫點數逐輪下降。</p></li></ul><p class="eval-note">以上盲測用過往會議進行，並對照正式紀錄。</p></div>
+<div class="eng-part"><h3>失敗情況與防護</h3><div class="fail-wrap"><table class="fail-table"><thead><tr><th scope="col">可能出錯</th><th scope="col">防護</th></tr></thead><tbody><tr><th scope="row">工程術語聽成粵語近音</th><td>按場詞表 + 校正表；所有引擎一起聽錯的字，只能靠答疑找出。</td></tr><tr><th scope="row">靜音段生出不存在的句子、重複迴圈</th><td>開啟 VAD；出現重複迴圈的時間窗直接丟棄。</td></tr><tr><th scope="row">一處錯字帶到後面幾段</th><td>condition_on_previous_text=False，每段獨立解碼。</td></tr><tr><th scope="row">校正規則誤改其他字</th><td>英文校正只按整個詞匹配。</td></tr><tr><th scope="row">歸屬、時態理解錯（最大類）</th><td>事實表保留原句和時間碼，答疑時由人對照原聲。</td></tr></tbody></table></div></div>
+<figure class="code-panel"><figcaption><span class="code-lang">Python · faster-whisper</span><span>系統程式節錄：詞表排序、解碼設定、整詞校正</span></figcaption><pre tabindex="0" aria-label="系統程式節錄：詞表排序、解碼設定、整詞校正"><code><span class="c"># meeting_app.py：詞表放提示尾段（Whisper 只保留提示最後約 224 個 token）</span>
+W = [w for w in json.load(open(hp, encoding=&quot;utf-8&quot;))[&quot;W&quot;]
+     if w not in (&quot;MENT&quot;, &quot;NO&quot;, &quot;II&quot;, &quot;GS&quot;, &quot;SE&quot;, &quot;IM&quot;)]   <span class="c"># 先濾走雜碎詞</span>
+return &quot;以下係廣東話建築地基設計會議，夾雜英文術語：&quot; + &quot;, &quot;.join(reversed(W[:70])) + &quot;。&quot;
+
+<span class="c"># 固定解碼設定：靜音段先略過，每段不沿用上一段的文字（錯字不會一路帶落去）</span>
+segs, info = model.transcribe(src, language=LANGS[self.lang], vad_filter=True, beam_size=5,
+                              initial_prompt=vocab_prompt(), condition_on_previous_text=False)
+
+<span class="c"># 校正表：英文鍵只按整個詞替換（ERS 的規則不可改到 users）</span>
+if re.fullmatch(r&quot;[A-Za-z0-9 .&amp;-]+&quot;, key):
+    pat = &quot;(?&lt;![A-Za-z0-9])&quot; + pat + &quot;(?![A-Za-z0-9])&quot;</code></pre><p class="code-note">Gary 指定：詞表只取 70 項並把最重要的詞放最後，英文校正只按整個詞替換；並以測試錄音核對結果。</p></figure></section><svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><symbol id="i-mark" viewBox="0 0 24 24"><path d="M4 8.8 12 4l8 4.8v6.4L12 20l-8-4.8Z"></path><path d="m4 8.8 8 4.8 8-4.8M12 13.6V20m-4-8.9 8-4.8"></path></symbol><symbol id="i-up-right" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"></path></symbol><symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></symbol><symbol id="i-section" viewBox="0 0 24 24"><path d="M12 4v16M7 6l-4 3v6l4 3m10-12 4 3v6l-4 3"></path></symbol></svg><section class="case-demo" id="demo"><p class="eyeline">INTERACTIVE</p><h2>親手試用</h2><div class="demo-content"><section id="meeting-demo" class="artifact meeting-artifact" tabindex="-1" aria-label="會議紀錄示範">
   <div class="desk minutes-desk" id="minutes-desk">
     <header class="desk-head"><div class="desk-brand"><span class="desk-mark mic-mark" aria-hidden="true">≋</span><strong>會議紀錄助手</strong></div><span class="desk-tag">虛構示例</span></header>
     <div class="minutes-split"><div class="listen-pane">
@@ -33,7 +52,7 @@
 
   <div class="feedback-tabs" role="tablist" aria-label="回饋機制案例"><button role="tab" id="feedback-tab-0" data-feedback="0" aria-controls="feedback-panel" aria-selected="true">語音：熱詞與校正</button><button role="tab" id="feedback-tab-1" data-feedback="1" aria-controls="feedback-panel" aria-selected="false" tabindex="-1">PDF：字形與別名</button></div>
   <div id="feedback-panel" role="tabpanel" aria-labelledby="feedback-tab-0"></div>
-  <p class="artifact-footnote">合成流程示意。按鈕只切換本頁狀態，不執行模型或修改實際知識庫。實際系統由程式保存記憶，再經確認套用。</p>
+  <p class="artifact-footnote">示例流程示意。按鈕只切換本頁狀態，不執行模型或修改實際知識庫。實際系統由程式保存記憶，再經確認套用。</p>
 </section></details>
 <section id="meeting-cycle" class="wrap page-section cycle-section" aria-labelledby="cycle-title">
       <div class="story-heading"><span class="section-kicker">會議紀錄個案</span>
@@ -41,11 +60,11 @@
         <p>散會後，同事要重聽整段錄音、整理英文紀錄，還要接手準備下次議程。我把兩次會議之間的交接畫出來，逐步釐清哪些資料可以沿用、哪些決定一定要有人確認。</p>
       </div>
       <div class="time-study">
-        <div class="time-copy"><h3>工時省在哪裏？</h3><p>以設計部一場 90 分鐘的粵語會議為例。以前同事聽完整場，再花約 3 小時寫稿，之後交主管覆核。</p></div>
+        <div class="time-copy"><h3>工時省在哪裏？</h3><p>以往人手做一份紀錄約 5 小時：先看錄影約 1.5 小時，再花約 3.5 小時理解工程術語、重組句子和跟上次紀錄的格式。</p></div>
         <div class="time-bars" aria-label="完成會議紀錄所需時間比較">
-          <div class="time-row"><div><span>原有流程</span><strong>至少 5 小時</strong></div><div class="time-track"><i></i></div></div>
-          <div class="time-row current"><div><span>重組後</span><strong>約 90 分鐘</strong></div><div class="time-track"><i></i></div></div>
-          <p>約 70 分鐘是等本機轉錄，同事集中約 10 分鐘回答疑點。以上時間只計製作會議紀錄。</p>
+          <div class="time-row"><div><span>以往人手時間</span><strong>約 5 小時</strong></div><div class="time-track"><i></i></div></div>
+          <div class="time-row current"><div><span>現在人手時間</span><strong>約 10 分鐘</strong></div><div class="time-track"><i></i></div></div>
+          <p>總歷時約 90 分鐘，大部分是本機轉錄（約與錄音等長，受本機硬件限制）。同事只需約 10 分鐘回答 AI 聽不清或不理解的地方，之後 AI 起草、另一個覆核代理檢查錯漏。</p>
         </div>
       </div>
       <h3 class="cycle-subhead">一個會議週期，四次交接</h3>
@@ -76,6 +95,56 @@
         <div><dt>人處理疑點</dt><dd>遇到日期不清或轉錄結果不一致，程式把相關片段整理成問題包。確認過的答案有來源記錄，術語校正可供下次辨識沿用。</dd></div>
       </dl>
       <a class="button primary" href="#meeting-demo" data-case-open aria-haspopup="dialog">核對一項日期，查看英文交付稿 <span aria-hidden="true">↗</span></a>
-    </section></div></section><nav class="next-case" aria-label="瀏覽其他作品"><a href="../../#work" data-back>← 全部作品</a><a href="../togoal/">下一件 · ToGoalAi 學習平台 →</a></nav></div></main>
+    </section></div></section><section class="modules" id="modules" aria-labelledby="modules-title"><div class="modules-head"><p class="eyeline">MODULES</p><h2 id="modules-title">組成模組</h2><p>這是一個完整工具，由 3 個模組組成。上方是主流程；以下每個模組各有用途、實作步驟和輸出，可直接跳到相應段落。</p></div><ol class="module-index"><li><a class="is-core" href="#method"><small>模組 01 · 主流程</small><strong>粵語會議紀錄</strong><span>人手 5 小時 → 約 10 分鐘</span></a></li><li><a href="#transcribe"><small>模組 02</small><strong>本機粵語轉錄與調校</strong><span>聽錯原因 → 逐項修正</span></a></li><li><a href="#ledger"><small>模組 03</small><strong>會議陳述核對 Skill</strong><span>錄音陳述 → 遺漏清單</span></a></li></ol><article class="module-card" id="transcribe" aria-labelledby="transcribe-title"><div class="module-top no-proof"><div><p class="eyeline">模組 02 · 工作流程</p><h3 id="transcribe-title">本機粵語轉錄與調校</h3><p class="module-intro">把會議和影片錄音在本機轉成帶時間碼的粵語逐字稿。我逐項找出聽錯的原因，改解碼設定、詞表和校正表，令原本含糊的結果可以交付。</p><div class="module-result"><span>交付成果</span><strong>聽錯原因 → 逐項修正</strong></div><p class="module-intro">最初的逐字稿看似通順，但工程術語被聽成近音字，長時間靜音後會冒出不存在的句子，一處錯字還會延續到後面幾段。我試過在提示加更多規則，三輪測試分數沒有改善，所以改用程式處理：固定解碼設定、按場詞表、校正表和第二引擎比對，仍不確定的地方交人確認。限制也寫清楚：所有引擎一起聽錯的字，比對找不到，只能靠音近詞表和人手答疑。</p></div></div><ol class="build-steps"><li><h3>先把錯誤分類</h3><p>用同一段錄音反覆比較輸出，錯誤主要有四類：同音字、英文工程術語被聽成粵語近音、靜音或雜音段生出不存在的句子，以及上一段的錯字被帶到下一段。</p></li><li><h3>固定解碼設定</h3><p>指定 language=yue，避免粵語被當成普通話或英文；開啟 VAD 先略過靜音和雜音；beam size 5；停用 condition_on_previous_text，每段不再沿用上一段的文字和錯字。</p></li><li><h3>詞表放在提示末段</h3><p>每場會議由議程抽出當次術語，與常用詞表合併成 initial_prompt。Whisper 只保留提示尾段約 224 個 token，所以只取 70 項，並把最重要的詞排在最後；MENT、NO 等雜碎詞先過濾。</p></li><li><h3>第二引擎交叉核對</h3><p>用 SenseVoice 等本機引擎再聽一次。兩個引擎讀法一致的字才當有把握；不一致的位置連同時間碼、原句和各引擎讀法交人重聽，不自行猜測。</p></li><li><h3>確認後回寫</h3><p>已確認的聽錯字寫入校正表（例如 Shirpal → shear pile、Call 本 → corbel），新術語回寫詞表，並記下由哪一場學到。英文校正只按整個詞替換，避免 ERS 的規則誤改 users 這類字。</p></li></ol><ul class="tech-pills" aria-label="技術與工具"><li>Python</li><li>faster-whisper</li><li>SenseVoice</li><li>FFmpeg</li></ul><section class="asr-story" aria-labelledby="asr-story-title">
+  <p class="eyeline">ASR TUNING LOG</p>
+  <h2 id="asr-story-title">由「聽錯」到「可交付」：我改了甚麼</h2>
+  <p>每一項都由同一段錄音的前後比較開始：先看清錯在哪一類，再改對應的設定或程式，最後用下一場錄音確認有沒有改善。以下設定均來自會議工具和轉錄 Skill 的原始程式。</p>
+  <div class="tuning-head" aria-hidden="true"><span>原本的問題</span><span>我改了甚麼、為甚麼</span><span>改動後</span></div>
+  <div class="tuning-table">
+    <div class="tuning-row">
+      <div class="symptom"><small>問題</small><p>粵語夾雜英文時，模型有時當成普通話或英文處理，整段用錯字庫。</p></div>
+      <div class="change"><small>改動</small><p>固定 <code>language="yue"</code>，不讓模型逐段自行判斷語言。</p></div>
+      <div class="effect"><small>效果</small><p>整份逐字稿統一用粵語書寫，英文術語留給詞表處理。</p></div>
+    </div>
+    <div class="tuning-row">
+      <div class="symptom"><small>問題</small><p>長時間靜音或只有背景雜音的位置，會冒出會議中沒有人說過的句子。</p></div>
+      <div class="change"><small>改動</small><p>開啟 <code>vad_filter</code>，先找出有人說話的段落才辨識；<code>beam_size=5</code> 讓每段比較多個候選。</p></div>
+      <div class="effect"><small>效果</small><p>靜音段不再送去辨識，憑空生出的句子明顯減少，時間碼也對準真正說話的位置。</p></div>
+    </div>
+    <div class="tuning-row">
+      <div class="symptom"><small>問題</small><p>一段聽錯之後，錯字和句式被帶到之後幾段，甚至重複出現。</p></div>
+      <div class="change"><small>改動</small><p>停用 <code>condition_on_previous_text</code>，每段不再以上一段的輸出作提示。</p></div>
+      <div class="effect"><small>效果</small><p>一段的錯字不會再一路帶到後面幾段。</p></div>
+    </div>
+    <div class="tuning-row">
+      <div class="symptom"><small>問題</small><p>pile cap、predrill 等工程詞被拆成粵語近音字；詞表加長後，最重要的詞反而失效。</p></div>
+      <div class="change"><small>改動</small><p>由當次議程抽詞，連同常用詞表放入 <code>initial_prompt</code>。Whisper 只保留提示尾段約 224 個 token，所以只取 70 項，<strong>最重要的詞排最後</strong>，並過濾雜碎詞。</p></div>
+      <div class="effect"><small>效果</small><p>當次會議的術語不會被截走；每場只放相關詞，不把整個詞庫塞進提示。</p></div>
+    </div>
+    <div class="tuning-row">
+      <div class="symptom"><small>問題</small><p>同音字最難察覺，句子讀起來通順，但意思可能相反。</p></div>
+      <div class="change"><small>改動</small><p>用 SenseVoice 等第二個本機引擎再聽一次。兩個引擎一致才當有把握；不一致的位置列出時間碼、原句和各引擎讀法。</p></div>
+      <div class="effect"><small>效果</small><p>疑點變成一張有時間碼的清單，不再靠逐字重聽整場。</p></div>
+    </div>
+    <div class="tuning-row">
+      <div class="symptom"><small>問題</small><p>程式無法判斷的字，若由 AI 自行猜測，錯誤會直接寫進紀錄。</p></div>
+      <div class="change"><small>改動</small><p>疑點整理成問題包，最多 10 題，每題附約 26 秒原聲片段，由同事按時間碼回答。</p></div>
+      <div class="effect"><small>效果</small><p>人手只處理真正有疑問的地方；未確認的內容不入正文。</p></div>
+    </div>
+    <div class="tuning-row">
+      <div class="symptom"><small>問題</small><p>同一個字下一場又聽錯；簡單字串替換又會誤改其他英文字。</p></div>
+      <div class="change"><small>改動</small><p>確認後的聽錯字寫入校正表，新術語回寫詞表。英文校正只按整個詞比對，避免 ERS 的規則誤改 users。每個詞記下由哪一場學到，盲測時剔走。</p></div>
+      <div class="effect"><small>效果</small><p>修正會累積到下一場；測試成績不會因為「已見過答案」而虛高。</p></div>
+    </div>
+  </div>
+  <div class="asr-case">
+    <div class="before"><small>引擎寫出</small>Shirpal · Call 本</div>
+    <span class="arrow" aria-hidden="true">→</span>
+    <div class="after"><small>確認後寫入校正表</small>shear pile · corbel</div>
+    <p class="note">真實的聽錯例子：英文工程術語被聽成粵語近音字。另一類是同音字，例如「報銷咗個零」可能應是「報少咗個零」；沒有第二個來源，就不當作事實，交人重聽。</p>
+  </div>
+  <p>我也試過只在提示加更多規則，三輪測試的分數沒有改善，所以之後的改進都改用程式檢查。仍有一個限制：所有引擎一起聽錯的字，比對找不到，只能靠音近詞表和人手答疑。</p>
+</section>
+<section class="reader-section" id="transcribe-output"><h2>查看輸出</h2><div class="output-reader"><header class="reader-head"><h3>粵語轉錄設定</h3><span>原 Skill 節錄</span></header><div class="reader-body"><div class="reader-stat"><strong>large-v3</strong><b>Whisper 模型</b><p>展開查看執行設定及熱詞處理。</p></div><div class="reader-rows"><details open><summary><span>ASR</span>本機辨識</summary><p>使用 faster-whisper large-v3，指定粵語 yue。GPU 使用 CUDA float16，CPU 使用 int8。</p></details><details><summary><span>VAD</span>靜音與解碼</summary><p>以 VAD 去除靜音，beam 設為 5，關閉 condition_on_previous_text。</p></details><details><summary><span>HOTWORDS</span>熱詞排序</summary><p>傳入 --hot hotwords.txt，可用逗號或換行分隔。腳本取最後 70 個詞，重要詞放在尾段。</p></details></div></div></div></section><a class="module-back" href="#modules">↑ 返回模組總覽</a></article><article class="module-card" id="ledger" aria-labelledby="ledger-title"><div class="module-top no-proof"><div><p class="eyeline">模組 03 · 工作流程</p><h3 id="ledger-title">會議陳述核對 Skill</h3><p class="module-intro">逐條對照錄音與草稿，找出會議有提及、但紀錄沒有收錄的決定。</p><div class="module-result"><span>交付成果</span><strong>錄音陳述 → 遺漏清單</strong></div><p class="module-intro">這項 Skill（寫給 AI 代理的操作說明，配合 Python 腳本）補充會議紀錄流程的覆蓋檢查，讓撰稿者有依據地追查遺漏。評估方法見主流程的盲測數字。</p></div></div><ol class="build-steps"><li><h3>抽取陳述</h3><p>把錄音拆成可單獨核對的事項，保留原句和時間位置。</p></li><li><h3>對照正文</h3><p>逐項找出草稿相應段落，區分已涵蓋與尚欠交代的內容。</p></li><li><h3>回到來源</h3><p>把未對上的事項交還撰稿者，核對後才補寫。</p></li></ol><ul class="tech-pills" aria-label="技術與工具"><li>AI Skills</li><li>Python</li><li>ASR</li></ul><section class="reader-section" id="ledger-output"><h2>查看輸出</h2><div class="output-reader"><header class="reader-head"><h3>陳述核對清單</h3><span>示例逐字稿 · 原程式輸出</span></header><div class="reader-body"><div class="reader-stat"><strong>2</strong><b>項遺漏</b><p>按時間碼查看草稿漏寫的內容。</p></div><div class="reader-rows"><details open><summary><span>02:00</span>提交期限</summary><p>原句「示例項目要喺22號交PDF」。核對程式標出 PDF 及 22 號，方便回到草稿補寫。</p></details><details><summary><span>03:30</span>審批狀態</summary><p>原句「示例項目等緊設計師approve」。草稿缺少對應陳述，保留時間碼供覆核。</p></details></div></div></div></section><a class="module-back" href="#modules">↑ 返回模組總覽</a></article></section><section class="related-tools"><h2>相關工具</h2><a href="../briefing/"><strong>講座轉錄與管理摘要</strong><span>先以調校過的本機粵語 ASR 取得帶時間碼逐字稿，再對照投影片及錄音，把決策和風險整理成管理摘要。</span></a></section><nav class="next-case" aria-label="瀏覽其他作品"><a href="../../#work" data-back>← 全部作品</a><a href="../togoal/">下一件 · ToGoalAi 學習平台 →</a></nav></div></main>
 <footer class="folio-footer frame" id="contact"><div><h2>聯絡 Gary</h2><p>履歷內附電郵及電話，歡迎聯絡我面談。</p></div><a class="main-btn" href="../../assets/Gary-Tang-CV.pdf">開啟履歷及聯絡資料 <span aria-hidden="true">↗</span></a></footer>
 </body></html>

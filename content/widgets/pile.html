@@ -1,0 +1,18 @@
+<div class="rock-map" data-pile-map>
+  <header class="rock-head"><div><h3>3D 地面、岩面和樁位</h3><p>15 個示例鑽孔 · 13 個已確定岩面</p></div>
+    <div class="rock-orbit" role="group" aria-label="模型視角">
+      <button type="button" data-orbit="-.3">左轉</button>
+      <button type="button" data-orbit=".3">右轉</button>
+      <button type="button" data-orbit="0">重設</button>
+    </div>
+  </header>
+  <div class="rock-viewport"><canvas id="c3d" role="img" aria-label="可旋轉的岩面分布模型，顯示 15 個示例鑽孔及 6 支示例樁">下方選單提供各鑽孔的數據。</canvas></div>
+  <div class="rock-key"><span><i></i>地面</span><span><i></i>內插岩面</span><span><i></i>樁</span><span><i></i>已確定岩面點</span><span><i></i>未確定岩面（孔口）</span></div>
+  <div class="rock-controls">
+    <label>圖層<select id="show3"><option value="both">地面與岩面</option><option value="rock">只顯示岩面</option><option value="ground">只顯示地面</option></select></label>
+    <label>垂直比例 <b id="vexV">×3</b><input type="range" id="vex" min="1" max="8" step=".5" value="3"></label>
+    <label>選擇鑽孔<select id="demo-hole"></select></label>
+  </div>
+  <output class="rock-reading" id="demo-reading" for="demo-hole" aria-live="polite"></output>
+  <p class="rock-note">拖動模型或用按鈕旋轉。原工作台用最近四孔做反距離加權內插，最近鑽孔距離超過 45 米的範圍不畫曲面。示範使用全新造的座標、標高及樁位。</p>
+</div>

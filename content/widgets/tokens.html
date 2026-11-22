@@ -1,14 +1,14 @@
 <div class="desk cost-desk"><header class="desk-head"><div class="desk-brand"><span class="desk-mark" aria-hidden="true">∑</span><strong>用量對帳</strong></div><span class="desk-tag">n8n 工作流</span></header><div class="usage-layout">
         <div class="usage-play">
           <h3>比較前後<br>兩次執行。</h3>
-          <p>載入合成紀錄，或貼上匿名 JSON。只有前後均通過驗收的任務會納入比較。</p>
+          <p>載入示例紀錄，或貼上匿名 JSON。只有前後均通過驗收的任務會納入比較。</p>
           <details class="usage-input"><summary>查看或更換輸入資料</summary>
             <label for="usage-json">用量紀錄 JSON</label><textarea id="usage-json" rows="8" spellcheck="false"></textarea>
             <small>每個 caseId 的 before 和 after 各一筆。inputTokens 和 outputTokens 填總用量，accepted 填 true、false 或 null。</small>
-            <button id="usage-reset" type="button" class="button small">還原合成例子</button>
+            <button id="usage-reset" type="button" class="button small">還原示例例子</button>
           </details>
           <button type="button" class="button primary" id="usage-run">執行用量對帳</button>
-          <p id="usage-message" class="usage-message" role="status">使用合成測試資料，毋須 API key。</p>
+          <p id="usage-message" class="usage-message" role="status">使用示例測試資料，毋須 API key。</p>
         </div>
         <div class="usage-report"><div class="audit-caption"><strong>驗收後的用量</strong><span>Tokens</span></div>
           <div id="usage-summary">執行後可查看通過驗收的總用量，以及每項任務的處理結果。</div>

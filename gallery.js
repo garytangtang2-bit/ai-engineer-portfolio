@@ -6,6 +6,7 @@ function setupIndex() {
   const panel = document.querySelector('.index-filters');
   const buttons = [...panel.querySelectorAll('button')];
   const cards = [...document.querySelectorAll('.work-tile')];
+  const cardSections = [...document.querySelectorAll('[data-card-section]')];
   const counter = document.querySelector('#result-count');
   const field = document.querySelector('#catalogue-search');
   const noMatches = document.querySelector('.no-matches');
@@ -21,6 +22,7 @@ function setupIndex() {
       if (!card.hidden) count++;
     }
     for (const button of buttons) button.setAttribute('aria-pressed', String(group === button.dataset.filter));
+    for (const section of cardSections) section.hidden = !section.querySelector('.work-tile:not([hidden])');
     counter.textContent = count + ' 件作品';
     noMatches.hidden = count > 0;
   }
@@ -107,18 +109,19 @@ async function applyAnchor() {
   }
 }
 
+const TILT = '[data-reactive],.module-index a,.related-tools a,.reel-gallery figure,.angle-strip figure';
 function setupPointer() {
   let pending = 0, active, x, y;
   function reset() {
     if (pending) cancelAnimationFrame(pending);
     pending = 0;
     if (!active) return;
-    for (const prop of ['--mx','--my']) active.style.removeProperty(prop);
+    for (const prop of ['--mx','--my','--rx','--ry']) active.style.removeProperty(prop);
     active = null;
   }
   document.addEventListener('pointermove', event => {
     if (event.pointerType === 'touch' || !finePointer.matches || motion.matches) return;
-    const surface = event.target.closest?.('[data-reactive]');
+    const surface = event.target.closest?.(TILT);
     if (surface !== active) reset();
     if (!surface) return;
     active = surface; x = event.clientX; y = event.clientY;
@@ -130,6 +133,10 @@ function setupPointer() {
       const v = Math.min(1,Math.max(0,(y-box.top)/box.height));
       active.style.setProperty('--mx', u*100+'%');
       active.style.setProperty('--my', v*100+'%');
+      // Gentle tilt toward the cursor; larger surfaces tilt less.
+      const k = Math.min(1, 380 / Math.max(box.width, box.height)) * 5;
+      active.style.setProperty('--rx', ((.5-v)*k).toFixed(2)+'deg');
+      active.style.setProperty('--ry', ((u-.5)*k).toFixed(2)+'deg');
     });
   }, {passive:true});
   document.addEventListener('pointerout', e => { if (!e.relatedTarget) reset(); });
@@ -138,8 +145,11 @@ function setupPointer() {
 
 function setupProofViewer() {
   const viewer = document.querySelector('.proof-viewer');
-  const link = document.querySelector('.proof-open');
-  if (!viewer || !link || !viewer.showModal) return;
+  const links = [...document.querySelectorAll('.proof-open')];
+  if (!viewer || !links.length || !viewer.showModal) return;
+  let link = links[0];
+  const note = viewer.querySelector(':scope > p');
+  const defaultNote = note ? note.textContent : '';
   const scale = viewer.querySelector('.proof-scale');
   const image = viewer.querySelector('.proof-scroll img');
   function showScaleOption() {
@@ -147,10 +157,13 @@ function setupProofViewer() {
       scale.hidden = image.naturalWidth <= image.clientWidth && image.naturalHeight <= image.clientHeight;
     }
   }
-  link.addEventListener('click', event => {
+  for (const opener of links) opener.addEventListener('click', event => {
     if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
     event.preventDefault();
-    viewer.querySelector('img').src = link.href;
+    link = opener;
+    image.alt = opener.querySelector('img')?.alt || '';
+    if (note) note.textContent = opener.dataset.caption || defaultNote;
+    image.src = opener.href;
     viewer.showModal();
     showScaleOption();
     document.documentElement.classList.add('viewing-proof');
@@ -177,8 +190,130 @@ function setupProofViewer() {
   });
 }
 
+function setupReels() {
+  const reels = [...document.querySelectorAll('video[data-reel]')];
+  if (!reels.length) return;
+  const play = video => {
+    if (motion.matches) return;
+    const mount = video.closest('.proof-mount');
+    video.play().then(() => mount.classList.add('playing')).catch(() => {});
+  };
+  const stop = video => { video.pause(); video.closest('.proof-mount').classList.remove('playing'); };
+  // Case-hero reels play whenever they are in view (any pointer) and carry their own pause button.
+  const heroes = reels.filter(video => video.dataset.reel === 'view');
+  for (const video of heroes) {
+    const toggle = video.parentElement.querySelector('.reel-toggle');
+    video.paused_by_user = false;
+    if (toggle) toggle.addEventListener('click', () => {
+      video.paused_by_user = !video.paused_by_user;
+      toggle.setAttribute('aria-pressed', String(video.paused_by_user));
+      toggle.textContent = video.paused_by_user ? '播放片段' : '暫停片段';
+      video.paused_by_user ? stop(video) : play(video);
+    });
+  }
+  if ('IntersectionObserver' in window && heroes.length) {
+    const inView = new IntersectionObserver(entries => {
+      for (const entry of entries) entry.isIntersecting && !entry.target.paused_by_user ? play(entry.target) : stop(entry.target);
+    }, {threshold: .35});
+    heroes.forEach(video => inView.observe(video));
+  }
+  for (const video of reels.filter(v => v.dataset.reel !== 'view')) {
+    const tile = video.closest('.work-tile') || video.parentElement;
+    tile.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') play(video); });
+    tile.addEventListener('pointerleave', () => stop(video));
+    tile.addEventListener('focusin', () => play(video));
+    tile.addEventListener('focusout', () => stop(video));
+  }
+  if (!finePointer.matches && 'IntersectionObserver' in window) {
+    const seen = new IntersectionObserver(entries => {
+      for (const entry of entries) entry.isIntersecting ? play(entry.target) : stop(entry.target);
+    }, {threshold: .6});
+    reels.filter(v => v.dataset.reel !== 'view').forEach(video => seen.observe(video));
+  }
+  motion.addEventListener('change', () => { if (motion.matches) reels.forEach(stop); });
+}
+
+// Nav glass gets denser once the page scrolls under it.
+function setupMast() {
+  const mast = document.querySelector('.mast');
+  if (!mast) return;
+  let ticking = false;
+  const update = () => { ticking = false; mast.classList.toggle('is-scrolled', scrollY > 12); };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, {passive:true});
+  update();
+}
+
+// Staggered reveal for content that starts below the fold; anything already visible is left alone.
+const REVEAL = '.section-line,.work-tile,.compact-section>h3,.instrument,.feature-copy,.about-band,.method>h2,.build-steps li,.tech-pills,'
+  + '.case-demo,.reader-section,.modules-head,.module-index li,.module-card,.tuning-row,.asr-case,.reel-hero,.reel-gallery figure,'
+  + '.angle-strip figure,.related-tools a,.next-case,.render-section,.calibration,.folio-footer>*,'
+  + '.eng-block>h2,.eng-grid,.eng-part,.code-panel,.tier-title,.data-note';
+function setupReveal() {
+  if (motion.matches || !('IntersectionObserver' in window)) return;
+  const fold = innerHeight * .96;
+  const items = [...document.querySelectorAll(REVEAL)].filter(el => el.getBoundingClientRect().top > fold);
+  if (!items.length) return;
+  const seen = new IntersectionObserver(entries => {
+    let batch = 0;
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      const el = entry.target;
+      el.style.setProperty('--reveal-delay', Math.min(batch++, 6) * 70 + 'ms');
+      el.classList.add('is-in');
+      seen.unobserve(el);
+      el.addEventListener('transitionend', () => el.removeAttribute('data-reveal'), {once:true});
+    }
+  }, {rootMargin:'0px 0px -8% 0px', threshold:.08});
+  for (const el of items) { el.setAttribute('data-reveal',''); seen.observe(el); }
+  motion.addEventListener('change', () => items.forEach(el => { el.classList.add('is-in'); el.removeAttribute('data-reveal'); }));
+}
+
+// Count numbers up when they scroll into view. Only the first number in the element's own text is animated.
+function setupCounters() {
+  if (motion.matches || !('IntersectionObserver' in window)) return;
+  const targets = [...document.querySelectorAll('.case-outcome strong,.reader-stat strong,.metric-rail strong:not([data-counter]),.module-result strong')];
+  const jobs = [];
+  for (const el of targets) {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      if (el.textContent.includes('→')) break;
+      const match = node.nodeValue.match(/\d[\d,]*(?:\.\d+)?/);
+      if (!match) continue;
+      const raw = match[0], value = parseFloat(raw.replace(/,/g,''));
+      if (!(value >= 2)) break;
+      const decimals = (raw.split('.')[1] || '').length, commas = raw.includes(',');
+      const format = n => { const s = n.toFixed(decimals); return commas ? Number(s).toLocaleString('en-US',{minimumFractionDigits:decimals,maximumFractionDigits:decimals}) : s; };
+      jobs.push({el, node, before: node.nodeValue.slice(0, match.index), after: node.nodeValue.slice(match.index + raw.length), value, format, final: node.nodeValue});
+      break;
+    }
+  }
+  if (!jobs.length) return;
+  const run = job => {
+    const start = performance.now(), length = 900;
+    const step = now => {
+      const t = Math.min(1, (now - start) / length), eased = 1 - (1 - t) ** 4;
+      job.node.nodeValue = t < 1 ? job.before + job.format(job.value * eased) + job.after : job.final;
+      if (t < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+  const seen = new IntersectionObserver(entries => {
+    for (const entry of entries) if (entry.isIntersecting) {
+      seen.unobserve(entry.target);
+      jobs.filter(job => job.el === entry.target).forEach(run);
+    }
+  }, {threshold:.6});
+  for (const job of jobs) {
+    // Keep the width steady while counting, and keep the real value for assistive tech.
+    job.el.style.fontVariantNumeric = 'tabular-nums';
+    seen.observe(job.el);
+  }
+}
+
 if (home) {
   setupIndex();
+  setupReels();
   const hero = document.querySelector('.hero-stage');
   if (hero) import('./particles.js').then(({mountParticles}) => mountParticles(hero));
 }
@@ -195,5 +330,8 @@ else {
   } catch { /* Direct access has no referring page. */ }
 }
 setupPointer();
+setupMast();
+setupReveal();
+setupCounters();
 applyAnchor();
 window.addEventListener('hashchange',applyAnchor);

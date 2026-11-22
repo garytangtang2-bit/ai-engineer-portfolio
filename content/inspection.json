@@ -1,15 +1,15 @@
 {
   "ledger": {
-    "title": "陳述核對清單", "scope": "合成逐字稿 · 原程式輸出", "metric": "2", "unit": "項遺漏", "help": "按時間碼查看草稿漏寫的內容。", "rows": [
+    "title": "陳述核對清單", "scope": "示例逐字稿 · 原程式輸出", "metric": "2", "unit": "項遺漏", "help": "按時間碼查看草稿漏寫的內容。", "rows": [
       ["02:00", "提交期限", "原句「示例項目要喺22號交PDF」。核對程式標出 PDF 及 22 號，方便回到草稿補寫。"],
       ["03:30", "審批狀態", "原句「示例項目等緊設計師approve」。草稿缺少對應陳述，保留時間碼供覆核。"]
     ]
   },
   "plaxis": {
-    "title": "模型檢查結果", "scope": "原 Python 函數 · 合成物件", "metric": "2", "unit": "個階段", "help": "查看階段次序及探測到的構件。", "rows": [
+    "title": "模型檢查結果", "scope": "原 Python 函數 · 示例物件", "metric": "2", "unit": "個階段", "help": "查看階段次序及探測到的構件。", "rows": [
       ["Phase_1", "Excavation", "前一階段為 Initial。"],
       ["Phase_2", "Support installation", "前一階段為 Phase_1。"],
-      ["構件", "錨桿與板件", "探測到 Anchor_A 及 Support_wall。這次檢查使用合成物件，未連接 PLAXIS。"]
+      ["構件", "錨桿與板件", "探測到 Anchor_A 及 Support_wall。這次檢查使用示例物件，未連接 PLAXIS。"]
     ]
   },
   "message-routing": {

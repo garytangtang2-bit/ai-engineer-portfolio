@@ -1,16 +1,16 @@
 <section class="artifact pdf-artifact">
   <div class="desk sheet-desk" id="sheet-desk">
-    <header class="desk-head"><div class="desk-brand"><span class="desk-mark" aria-hidden="true">▦</span><strong>表格核對</strong></div><span class="desk-tag">合成報表 · 原程式輸出</span></header>
+    <header class="desk-head"><div class="desk-brand"><span class="desk-mark" aria-hidden="true">▦</span><strong>表格核對</strong></div><span class="desk-tag">示例報表 · 原程式輸出</span></header>
     <div class="sheet-overview"><div><span class="desk-meta">測試報表規模</span><h3>20,000 <small>格</small></h3></div><p>20 頁<br>每頁 50 行 × 20 欄</p></div>
     <div class="pdf-compare">
-      <figure><figcaption>原 PDF <small>第 1 頁節錄</small></figcaption><div class="source-crop"><img src="../../assets/pdf-first-nine.png" width="624" height="180" loading="lazy" alt="合成 PDF 首頁前三行及前三欄"><span id="source-marker" aria-hidden="true"></span></div></figure>
+      <figure><figcaption>原 PDF <small>第 1 頁節錄</small></figcaption><div class="source-crop"><img src="../../assets/pdf-first-nine.png" width="624" height="180" loading="lazy" alt="示例 PDF 首頁前三行及前三欄"><span id="source-marker" aria-hidden="true"></span></div></figure>
       <div class="excel-quick"><h4>Excel 輸出 <small>點選數值核對</small></h4><div id="quick-cells" role="group" aria-label="選取 A1 至 C3"></div></div>
     </div><div class="sheet-actions"><p class="cell-match" id="cell-match" role="status">載入數值…</p><a class="desk-action" href="../../evidence/20000-cells-converted.xlsx" download>下載 Excel ↓</a><a class="desk-link" href="../../evidence/20000-cells-source.pdf" target="_blank" rel="noopener">原 PDF ↗</a></div>
   </div>
     <details class="demo-detail" id="pdf-full-view"><summary>查看全部 20 頁及覆核測試</summary>
-      <p class="artifact-footnote">合成表共 20,000 格，文字層與指定選區測試全部吻合。</p>
-      <div class="table-toolbar"><div class="segmented" role="group" aria-label="查看轉換結果"><button class="selected" id="show-excel" aria-pressed="true">Excel 輸出</button><button id="show-source" aria-pressed="false">原 PDF</button></div><button id="table-zoom" class="table-zoom" aria-pressed="false" aria-controls="excel-view">放大數值 ＋</button><label>頁數 <select id="pdf-page" aria-label="PDF 頁數"></select></label></div><div id="excel-view" class="sheet-scroll" tabindex="0" role="region" aria-label="實際 Excel 數值預覽，可左右捲動"><table id="actual-table"></table></div><div id="source-view" class="pdf-source" hidden><img id="pdf-source-img" loading="lazy" src="../../assets/pdf-page-1.webp" alt="原始合成 PDF 第一頁，50 列乘 20 欄數值表格" width="1100" height="820"><p id="pdf-source-caption">原 PDF 第 1 頁。切換頁數可對照相同頁的 Excel 輸出。</p></div><div id="cell-detail" class="cell-detail"><span id="cell-location">第 1 頁・A1</span><strong id="cell-value">0.01</strong><p id="cell-info" class="cell-info" role="status">點選儲存格查看位置及實際數值，橫向捲動可看全部 20 欄。</p></div>
-      <div class="review-example"><p class="eyebrow">遇到疑點，怎樣處理？</p><h4>欄名疑點覆核</h4><p>合成例子：影像辨識讀出 <code>Mx-x</code>，但這類欄名的 x／y 容易混淆。原程式保留讀值，交人回看原圖。</p><button id="review-rule-run" class="button small" aria-expanded="false" aria-controls="review-rule-output" disabled>載入原規則結果…</button><div id="review-rule-output" hidden><ol><li><strong>觸發：</strong>影像讀值符合容易混淆的欄名規則。</li><li><strong>Python：</strong><code>needs_review</code> 標記待人覆核，不猜成另一個欄名。</li><li><strong>修正：</strong>人回看來源及欄位關係，確認後才修改或保留。</li></ol><p id="review-rule-status" role="status"></p></div><p class="evidence-note">原函數已用三個合成儲存格測試。此互動展示已儲存的判斷，沒有即時執行 OCR。<a href="../../evidence/review-rule-audit.json" target="_blank" rel="noopener">查看測試紀錄 ↗</a></p></div>
+      <p class="artifact-footnote">示例表共 20,000 格，文字層與指定選區測試全部吻合。</p>
+      <div class="table-toolbar"><div class="segmented" role="group" aria-label="查看轉換結果"><button class="selected" id="show-excel" aria-pressed="true">Excel 輸出</button><button id="show-source" aria-pressed="false">原 PDF</button></div><button id="table-zoom" class="table-zoom" aria-pressed="false" aria-controls="excel-view">放大數值 ＋</button><label>頁數 <select id="pdf-page" aria-label="PDF 頁數"></select></label></div><div id="excel-view" class="sheet-scroll" tabindex="0" role="region" aria-label="實際 Excel 數值預覽，可左右捲動"><table id="actual-table"></table></div><div id="source-view" class="pdf-source" hidden><img id="pdf-source-img" loading="lazy" src="../../assets/pdf-page-1.webp" alt="原始示例 PDF 第一頁，50 列乘 20 欄數值表格" width="1100" height="820"><p id="pdf-source-caption">原 PDF 第 1 頁。切換頁數可對照相同頁的 Excel 輸出。</p></div><div id="cell-detail" class="cell-detail"><span id="cell-location">第 1 頁・A1</span><strong id="cell-value">0.01</strong><p id="cell-info" class="cell-info" role="status">點選儲存格查看位置及實際數值，橫向捲動可看全部 20 欄。</p></div>
+      <div class="review-example"><p class="eyebrow">遇到疑點，怎樣處理？</p><h4>欄名疑點覆核</h4><p>示例例子：影像辨識讀出 <code>Mx-x</code>，但這類欄名的 x／y 容易混淆。原程式保留讀值，交人回看原圖。</p><button id="review-rule-run" class="button small" aria-expanded="false" aria-controls="review-rule-output" disabled>載入原規則結果…</button><div id="review-rule-output" hidden><ol><li><strong>觸發：</strong>影像讀值符合容易混淆的欄名規則。</li><li><strong>Python：</strong><code>needs_review</code> 標記待人覆核，不猜成另一個欄名。</li><li><strong>修正：</strong>人回看來源及欄位關係，確認後才修改或保留。</li></ol><p id="review-rule-status" role="status"></p></div><p class="evidence-note">原函數已用三個示例儲存格測試。此互動展示已儲存的判斷，沒有即時執行 OCR。<a href="../../evidence/review-rule-audit.json" target="_blank" rel="noopener">查看測試紀錄 ↗</a></p></div>
     </details>
   </section>
 <section id="approach" class="wrap page-section assurance" aria-labelledby="method-title">
@@ -21,7 +21,7 @@
         <a class="text-link" href="../../evidence/20000-cells-converted.xlsx" download>下載同一份 Excel ↓</a>
       </div>
       <div class="audit-console">
-        <div class="audit-caption"><strong>工作簿驗收</strong><span>合成測試資料</span></div>
+        <div class="audit-caption"><strong>工作簿驗收</strong><span>示例測試資料</span></div>
         <div class="audit-number"><b>20,000</b> 格</div>
         <p>20 頁 × 50 行 × 20 欄</p>
         <div class="audit-sheets" id="audit-sheets" aria-hidden="true"></div>

@@ -1,0 +1,12 @@
+# merge.py：先留參考縮圖，再把簽署外觀寫進頁面，最後才合併
+s = pymupdf.open(f)
+if s.is_encrypted:
+    raise ValueError("檔案有密碼保護")              # 不處理加密檔
+r = thumbs(s) if self.verify.get() else []          # 36 dpi 參考縮圖
+s.bake(annots=True, widgets=True)                   # 簽署欄位／註解 → 頁面內容，保留外觀
+merged.insert_pdf(s)                                # 來源檔只讀，不會被儲存
+
+# 存檔後逐頁核對：與原頁縮圖的平均像素差 > 0.5 就列出交人覆核
+a = np.frombuffer(chk[pos].get_pixmap(dpi=36).samples, np.uint8)
+if a.shape != r.shape or abs(a.astype(np.int16) - r.astype(np.int16)).mean() > 0.5:
+    mism.append(f"{ok[fi]}（第 {pos + 1} 頁）")

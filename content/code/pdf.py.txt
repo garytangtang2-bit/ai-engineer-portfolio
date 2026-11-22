@@ -1,0 +1,14 @@
+# ocr3.py：三個讀法（圖形引擎、字型重畫、OCR）逐格比對
+if same:
+    info["agree"] += 1
+    if getattr(c, "fit_ok", False) and c.chk != "bad":
+        c.conf = max(c.conf, 0.95)  # three readers agree
+        c.chk = "ok|" + t
+elif (getattr(c, "fit_ok", False) or not font_known) and c.chk != "bad":
+    # 只有 OCR 不同，而引擎與字型重畫一致：OCR 對細小數字最弱，只記錄、不標紅
+    c.chk = "ocr_only"
+    c.third = r
+else:
+    c.conf = min(c.conf, 0.2)
+    c.chk = "bad"            # 可疑：交人以 PDF 為準確認
+    info["flagged"] += 1

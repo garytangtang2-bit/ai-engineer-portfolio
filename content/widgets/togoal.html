@@ -29,4 +29,4 @@
         <div><dt>共用資料</dt><dd>Supabase 儲存教材與筆記段落，供問答、出題及複習讀取。</dd></div>
       </dl>
     </div>
-<section id="togoal-architecture" class="engineering-panel" aria-label="技術與取捨"><h3>技術與取捨</h3><dl class="engineering-list"><div><dt>前端與 UI</dt><dd>由零建立 Next.js 教材工作區。簡報流程分步收集需求，用戶可修改大綱及投影片，再以 PptxGenJS 匯出。</dd></div><div><dt>後端與 API</dt><dd>設計教材匯入、出題及問答 API。Supabase 管理登入和教材資料，整合 Google 登入及 Stripe 訂閱。</dd></div><div><dt>RAG 與成本</dt><dd>問答從選定教材取段落，讓回答附上來源。先估算上下文長度，超出模型預算才額外呼叫壓縮模型。合適的繁中問答會重用有效的教材快取。</dd></div><div><dt>部署與交付</dt><dd>獨立完成架構、程式和介面，以 GitHub 管理版本並部署到 Vercel。正式站支援問答、模擬試、口試及可編輯簡報。</dd></div></dl></section>
+<section id="togoal-architecture" class="engineering-panel" aria-label="技術與取捨"><h3>技術與取捨</h3><dl class="engineering-list"><div><dt>前端與 UI</dt><dd>Next.js 教材工作區：簡報流程分步收集需求，用戶可修改大綱及投影片，再以 PptxGenJS 匯出。</dd></div><div><dt>後端與 API</dt><dd>設計教材匯入、出題及問答 API。Supabase 管理登入和教材資料，整合 Google 登入及 Stripe 訂閱。</dd></div><div><dt>RAG 與成本</dt><dd>問答只讀選定教材的編號段落，回答以 [段落編號] 引用來源。先估算上下文長度，超出模型預算才額外呼叫壓縮模型。合適的繁中問答會重用有效的教材快取。</dd></div><div><dt>部署與交付</dt><dd>我定義架構、資料模型和介面流程，程式由 AI 編碼代理實作；以 GitHub 管理版本並部署到 Vercel。正式站支援問答、模擬試、口試及可編輯簡報。</dd></div></dl></section>

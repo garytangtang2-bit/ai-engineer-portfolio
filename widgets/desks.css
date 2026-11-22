@@ -1,80 +1,80 @@
 /* Public workspaces. Their sample data, commands and exports belong to the case modules. */
 .desk {
-  --paper:#f3f4ec; --ink:#172c2b; --sub:#455f59; --line:#bdc9bd; --accent:#b6e4a5;
+  --paper:#ecf0f4; --ink:#161e2d; --sub:#444f60; --line:#bdc2c9; --accent:#a3c3e6;
   color-scheme:light; color:var(--ink); background:var(--paper);
-  border:1px solid #93a6a255; border-radius:15px; overflow:hidden;
+  border:1px solid #929aa755; border-radius:15px; overflow:hidden;
   font-family:Folio,FolioTC,"Microsoft JhengHei",sans-serif;
 }
 .desk *, .desk *::before, .desk *::after {box-sizing:border-box}
 .desk [hidden]{display:none!important}
 .desk .desk-head {position:static;display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:15px 22px;min-height:62px;background:#172e2e;color:#f2f6e9;border:0;border-bottom:1px solid #6b8a805c}
+  padding:15px 22px;min-height:62px;background:#161f2f;color:#e9f0f6;border:0;border-bottom:1px solid #6a778b5c}
 .desk-brand {display:flex;align-items:center;gap:12px;line-height:1.25}
 .desk .desk-brand strong {color:inherit;font:650 clamp(1.05rem,2.1vw,1.4rem)/1.25 var(--font);letter-spacing:-.035em}
 .desk-mark {width:31px;height:31px;display:grid;place-items:center;background:var(--accent);color:var(--ink);
  border-radius:8px;font:650 23px/1 Folio,sans-serif;flex-shrink:0}
-.desk .desk-tag {border:1px solid #afc8bc88;color:#dce8db;padding:4px 9px;border-radius:30px;font:500 .78rem/1.45 var(--font);white-space:nowrap}
+.desk .desk-tag {border:1px solid #aeb9c988;color:#dbe1e8;padding:4px 9px;border-radius:30px;font:500 .78rem/1.45 var(--font);white-space:nowrap}
 .desk .desk-meta,.desk .sheet-rule {font-weight:650;font-size:.79rem;letter-spacing:.045em}
 .desk :is(a,button,input,textarea,summary):focus-visible {outline:3px solid #b76612;outline-offset:3px}
 .desk .desk-action,.desk .desk-download {display:inline-flex;align-items:center;justify-content:center;border:0;min-height:44px;padding:8px 17px;
- border-radius:7px;background:#133f3b;color:white;text-decoration:none;font:650 .97rem/1.4 var(--font);cursor:pointer}
+ border-radius:7px;background:#122240;color:white;text-decoration:none;font:650 .97rem/1.4 var(--font);cursor:pointer}
 .desk .desk-action:hover,.desk .desk-download:hover{filter:brightness(1.12)}
-.desk .desk-link {color:#224d44;font-weight:650;min-height:44px;display:inline-flex;align-items:center;text-underline-offset:4px}
+.desk .desk-link {color:#21324e;font-weight:650;min-height:44px;display:inline-flex;align-items:center;text-underline-offset:4px}
 .desk h3,.desk p,.desk blockquote,.desk figure {margin:0}
-.desk .status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#b9e7bb;vertical-align:middle;margin-right:5px}
+.desk .status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#b8cde8;vertical-align:middle;margin-right:5px}
 .minutes-split {display:grid;grid-template-columns:.91fr 1.09fr}
-.listen-pane {padding:clamp(22px,3.2vw,43px);background:linear-gradient(145deg,#1c3a3a,#234a43);color:#f0f4e9}
-.listen-pane .desk-meta {color:#c4decf}
-.desk .time-readout {display:block;font:500 clamp(2.8rem,4.8vw,4.3rem)/1.14 Folio,sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-.075em;margin:8px 0;color:#eff9e9}
-.time-readout span {color:#9cc6ae}
+.listen-pane {padding:clamp(22px,3.2vw,43px);background:linear-gradient(145deg,#1b263b,#22314b);color:#e9eff4}
+.listen-pane .desk-meta {color:#c3cedf}
+.desk .time-readout {display:block;font:500 clamp(2.8rem,4.8vw,4.3rem)/1.14 Folio,sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-.075em;margin:8px 0;color:#e9f1f9}
+.time-readout span {color:#9badc7}
 .meter-line {height:37px;display:flex;align-items:center;gap:3px;max-width:340px;margin:0 0 16px;overflow:hidden}
-.meter-line i {flex:1;height:var(--h);min-width:1px;border-radius:3px;background:#c3e5a9}
+.meter-line i {flex:1;height:var(--h);min-width:1px;border-radius:3px;background:#a7c7e7}
 .desk .listen-pane blockquote {color:white;border:0;padding:0;font-size:clamp(1.05rem,1.9vw,1.5rem);line-height:1.5;font-weight:600}
-.reply-line {border-top:1px solid #a0bfa746;margin:18px 0 16px;padding-top:10px}
-.reply-line span {font-size:.79rem;color:#bcd9cb}.desk .reply-line p {color:#ecf1e5;font-size:1rem}
-.listen-pane .desk-action {background:#d3edb7;color:#20352a}
-.minute-sheet {padding:clamp(23px,3.4vw,47px);background:linear-gradient(115deg,#efeadb,#faf7ed);color:#27332e}
-.sheet-rule {display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #798579;padding-bottom:9px;color:#43594d}
+.reply-line {border-top:1px solid #9fadc046;margin:18px 0 16px;padding-top:10px}
+.reply-line span {font-size:.79rem;color:#bbc7da}.desk .reply-line p {color:#e5ebf1;font-size:1rem}
+.listen-pane .desk-action {background:#b5d2ef;color:#1f2836}
+.minute-sheet {padding:clamp(23px,3.4vw,47px);background:linear-gradient(115deg,#efeadb,#faf7ed);color:#272c33}
+.sheet-rule {display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #797e85;padding-bottom:9px;color:#424c5a}
 .sheet-rule span[lang]{font-family:Folio,sans-serif;letter-spacing:.09em}
-.minute-sheet h3 {font:400 clamp(2.85rem,5.1vw,4.85rem)/.9 Georgia,"Times New Roman",serif;letter-spacing:-.066em;margin:24px 0;color:#263a32}
-.minute-sheet h3 em {color:#3e6653}
-.minute-entry {display:flex;align-items:baseline;gap:12px;border-top:1px solid #aeb5a3;padding-top:12px}
-.minute-entry>span {font:600 .78rem Folio,sans-serif;color:#5c6b5e}
-.minute-entry b {font:650 1.06rem var(--font);color:#293e32}
-.desk #quick-minutes {color:#37513e;font-size:1.02rem;line-height:1.45;margin:5px 0}
-.minute-sheet small {display:block;color:#36563b;margin:8px 0 0}
-.minute-sheet .desk-download {margin-top:8px;background:#e4eddb;color:#1f4e3d;border:1px solid #7e9a80}
-.sheet-desk {--paper:#eef3ed}
-.sheet-overview {display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:22px 26px 15px;border-bottom:1px solid #bdcabc}
+.minute-sheet h3 {font:400 clamp(2.85rem,5.1vw,4.85rem)/.9 Georgia,"Times New Roman",serif;letter-spacing:-.066em;margin:24px 0;color:#252e3b}
+.minute-sheet h3 em {color:#3d4e67}
+.minute-entry {display:flex;align-items:baseline;gap:12px;border-top:1px solid #a2acb6;padding-top:12px}
+.minute-entry>span {font:600 .78rem Folio,sans-serif;color:#5c626b}
+.minute-entry b {font:650 1.06rem var(--font);color:#28313f}
+.desk #quick-minutes {color:#364252;font-size:1.02rem;line-height:1.45;margin:5px 0}
+.minute-sheet small {display:block;color:#354457;margin:8px 0 0}
+.minute-sheet .desk-download {margin-top:8px;background:#dae4ee;color:#1e314f;border:1px solid #7d8a9b}
+.sheet-desk {--paper:#edf0f3}
+.sheet-overview {display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:22px 26px 15px;border-bottom:1px solid #bcc2ca}
 .sheet-overview .desk-meta {color:var(--sub)}
 .sheet-overview h3 {font:550 clamp(2.5rem,5.3vw,4.5rem)/1 Folio,var(--font);letter-spacing:-.071em;color:var(--ink);margin:5px 0}
 .sheet-overview h3 small {font:650 1.05rem var(--font);letter-spacing:0}
-.sheet-overview p {color:#456050;text-align:right;font:550 .92rem/1.65 var(--font)}
+.sheet-overview p {color:#445061;text-align:right;font:550 .92rem/1.65 var(--font)}
 .sheet-desk .pdf-compare {display:grid;grid-template-columns:1fr 1fr;align-items:start;gap:19px;padding:20px 26px}
 .sheet-desk .pdf-compare :is(figcaption,h4) {display:flex;align-items:baseline;gap:6px;justify-content:space-between;color:var(--ink);font:650 1rem var(--font);margin:0 0 7px}
 .sheet-desk .pdf-compare small {color:var(--sub);font-weight:500;font-size:.76rem}
-.sheet-desk .source-crop,.sheet-desk #quick-cells {border:1px solid #718b78;border-radius:4px;overflow:hidden}
-.sheet-desk #quick-cells {background:#b3c1b7}
-.sheet-desk #quick-cells button {background:#fff;color:#203d2d;min-height:28px;font:550 .95rem Folio,sans-serif;border-color:#bacbbf}
-.sheet-desk #quick-cells button[aria-pressed=true]{color:#fff;background:#235b45}
-.sheet-desk #source-marker {border-color:#286c50;background-color:#abd8b045}
+.sheet-desk .source-crop,.sheet-desk #quick-cells {border:1px solid #707c8c;border-radius:4px;overflow:hidden}
+.sheet-desk #quick-cells {background:#b3b9c1}
+.sheet-desk #quick-cells button {background:#fff;color:#1f2c3e;min-height:28px;font:550 .95rem Folio,sans-serif;border-color:#b9c1cc}
+.sheet-desk #quick-cells button[aria-pressed=true]{color:#fff;background:#21385d}
+.sheet-desk #source-marker {border-color:#26426e;background-color:#aabfd945}
 .sheet-actions {display:flex;align-items:center;gap:15px;flex-wrap:wrap;padding:0 26px 20px}
-.sheet-actions .cell-match {flex:1 1 160px;color:#2f6049;background:none;border:0;margin:0;padding:0;font-weight:650}
-.cost-desk {--accent:#e0ee96;--paper:#eaf0df}.cost-desk .desk-head {background:#293523}
+.sheet-actions .cell-match {flex:1 1 160px;color:#2e4261;background:none;border:0;margin:0;padding:0;font-weight:650}
+.cost-desk {--accent:#97c5ed;--paper:#dee8f1}.cost-desk .desk-head {background:#222c36}
 .cost-desk .usage-layout {grid-template-columns:.85fr 1.15fr;margin:0;border:0;border-radius:0;background:none}
-.cost-desk .usage-play {padding:clamp(20px,3.1vw,38px);background:#e8eedf;color:#213523}
+.cost-desk .usage-play {padding:clamp(20px,3.1vw,38px);background:#dfe7ee;color:#202a36}
 .cost-desk .usage-play h3,.media-desk .artifact-body h3{font:600 clamp(1.65rem,3.2vw,2.8rem)/1.2 var(--font);letter-spacing:-.055em;color:inherit;margin:0 0 10px}
-.cost-desk .usage-play p,.cost-desk .usage-input small {color:#3c533e}
-.cost-desk .usage-input {background:#f9faf4;border:1px solid #a8b9a1;color:#253c2a}
-.cost-desk .usage-input summary,.cost-desk .usage-input label{color:#263d2a}
-.cost-desk .usage-report {padding:clamp(20px,3vw,35px);background:#1d302a;color:#eaefdd;border:0}
-.cost-desk .usage-report .audit-caption {background:none;color:#e6f0de;padding:0 0 10px;border-bottom:1px solid #65766c}
-.cost-desk .usage-report .audit-caption :is(strong,span),.cost-desk .usage-report :is(#usage-summary,.text-link,#usage-rows strong,.usage-chart span,.usage-chart output){color:#e8f3e3}
-.cost-desk #usage-rows small {color:#b7d1bf}
-.cost-desk .usage-chart b {background:#bfeea3}
-.cost-desk .usage-chart>div:first-child b {background:#9eb8ad}
-.cost-desk .usage-message {color:#3c533e}
-.cost-desk .usage-play .button {color:#fff;background:#294b36;border:1px solid #35593f}
+.cost-desk .usage-play p,.cost-desk .usage-input small {color:#3b4654}
+.cost-desk .usage-input {background:#f4f7fa;border:1px solid #a0acba;color:#242f3d}
+.cost-desk .usage-input summary,.cost-desk .usage-input label{color:#25303e}
+.cost-desk .usage-report {padding:clamp(20px,3vw,35px);background:#1c2431;color:#dce6f0;border:0}
+.cost-desk .usage-report .audit-caption {background:none;color:#dde7f1;padding:0 0 10px;border-bottom:1px solid #646c77}
+.cost-desk .usage-report .audit-caption :is(strong,span),.cost-desk .usage-report :is(#usage-summary,.text-link,#usage-rows strong,.usage-chart span,.usage-chart output){color:#e3ebf3}
+.cost-desk #usage-rows small {color:#b6c2d2}
+.cost-desk .usage-chart b {background:#a2c8ef}
+.cost-desk .usage-chart>div:first-child b {background:#9da8b9}
+.cost-desk .usage-message {color:#3b4654}
+.cost-desk .usage-play .button {color:#fff;background:#28374c;border:1px solid #34445a}
 .media-desk {--paper:#f6f0f3;--ink:#302536;--accent:#edbee0;background:var(--paper);color:var(--ink)}
 .media-desk .desk-head {background:#332b43}
 .media-desk .artifact-body {padding:22px 26px}
@@ -87,18 +87,18 @@
 .media-desk .batch-files>div:last-child{border:0}.media-desk .batch-files dt {font:650 1rem Folio,var(--font);color:#3d3044}
 .media-desk .batch-files dd {margin:0;padding:2px 9px;border-radius:20px;background:#e9e6ea;color:#4d4b59}
 .media-desk .batch-files [data-state=blocked] dd {background:#ffe3cc;color:#76380e}
-.media-desk .batch-files :is([data-state=ready],[data-state=changed]) dd{background:#d7ebdc;color:#29513a}
+.media-desk .batch-files :is([data-state=ready],[data-state=changed]) dd{background:#d6dfec;color:#283952}
 .media-desk .artifact-footnote {color:#5a4959;border-top:1px solid #d0c1cf;padding:12px 26px;margin:0;background:#eee6ed}
-.product-viewfinder {padding-bottom:15px;background:#dfede7;color:#132f31}
-.product-viewfinder .browser-bar {background:#173537;color:white;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;gap:9px}
-.product-viewfinder .browser-bar a {min-height:44px;display:inline-flex;align-items:center;color:#d5f3df;font-weight:600;text-underline-offset:4px}
+.product-viewfinder {padding-bottom:15px;background:#dfe4ed;color:#121d32}
+.product-viewfinder .browser-bar {background:#162238;color:white;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;gap:9px}
+.product-viewfinder .browser-bar a {min-height:44px;display:inline-flex;align-items:center;color:#d4e1f4;font-weight:600;text-underline-offset:4px}
 .product-domain {display:inline-flex;align-items:center;gap:8px;font:650 1.22rem/1.25 Folio,var(--font)}
-.product-domain i {border:2px solid #a4e5ce;width:15px;height:15px;border-radius:50%;box-shadow:inset 0 0 0 3px #173537;background:#a4e5ce}
-.product-domain small {font:500 .81rem/1.3 var(--font);color:#cedeDA}
+.product-domain i {border:2px solid #a2bde7;width:15px;height:15px;border-radius:50%;box-shadow:inset 0 0 0 3px #162238;background:#a2bde7}
+.product-domain small {font:500 .81rem/1.3 var(--font);color:#ced4de}
 .product-viewfinder .product-views {display:flex;gap:4px;flex-wrap:wrap;padding:10px 14px}
-.product-viewfinder .product-views button {flex:0 1 auto;background:transparent;color:#294744;border:1px solid transparent;border-radius:6px;min-height:44px;padding:6px 12px;font-size:.91rem}
-.product-viewfinder .product-views button[aria-pressed=true]{background:#f9fffa;color:#143d38;border-color:#8daaa0}
-.product-viewfinder .product-picture {background:#fafcf9;border:1px solid #a6bcb4;border-radius:8px;margin:0 14px}
+.product-viewfinder .product-views button {flex:0 1 auto;background:transparent;color:#283448;border:1px solid transparent;border-radius:6px;min-height:44px;padding:6px 12px;font-size:.91rem}
+.product-viewfinder .product-views button[aria-pressed=true]{background:#fafcfe;color:#13233e;border-color:#8c98ab}
+.product-viewfinder .product-picture {background:#f9fafc;border:1px solid #a5aebd;border-radius:8px;margin:0 14px}
 .product-viewfinder .product-picture img {display:block;width:100%;height:auto;max-height:none}
 .product-viewfinder .product-picture[data-enlarged=true] img {width:175%}
 .product-viewfinder :is(a,button):focus-visible {outline:3px solid #ca8d35;outline-offset:2px}

@@ -1,18 +1,18 @@
 <!doctype html>
 <html lang="zh-Hant-HK"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>講座管理摘要｜Gary Tang AI Engineer</title><meta name="description" content="將長篇講座整理成給管理層看的 Word／PDF，重點、引圖和疑點都可以沿時間碼回到原片。"><meta name="theme-color" content="#0b1118"><link rel="canonical" href="https://garytangtang2-bit.github.io/ai-engineer-portfolio/projects/briefing/">
-<link rel="stylesheet" href="../../gallery.css"><script type="module" src="../../gallery.js"></script></head>
+<title>講座轉錄與管理摘要｜Gary Tang AI Engineer</title><meta name="description" content="先以調校過的本機粵語 ASR 取得帶時間碼逐字稿，再對照投影片及錄音，把決策和風險整理成管理摘要。"><meta name="theme-color" content="#05070c"><link rel="canonical" href="https://garytangtang2-bit.github.io/ai-engineer-portfolio/projects/briefing/">
+<link rel="stylesheet" href="../../gallery.css"><link rel="stylesheet" href="../../materials.css"><link rel="stylesheet" href="../../theme.css"><script type="module" src="../../gallery.js"></script></head>
 <body class="gallery-body"><a class="jump-main" href="#main">跳至主要內容</a>
 <header class="mast"><div class="frame mast-bar"><a class="signature" href="../../"><span aria-hidden="true" class="sig-mark">gt</span><span>Gary Tang</span></a>
 <nav aria-label="網站導覽"><a href="../../#work">作品</a><a href="../../#about">關於</a><a class="cv-link" href="../../assets/Gary-Tang-CV.pdf">履歷 PDF <span aria-hidden="true">↗</span></a></nav></div></header>
 <main id="main" class="case-body frame"><div class="case-crumb"><a href="../../#work" data-back>← 全部作品</a><span>／ 影音與發佈</span></div>
-<section class="case-heading"><div><p class="eyeline">影音與發佈 · 作品個案</p><h1>講座管理摘要</h1><p>將長篇講座整理成給管理層看的 Word／PDF，重點、引圖和疑點都可以沿時間碼回到原片。</p><div class="case-actions"><a class="main-btn" href="#method">查看實作流程 ↓</a></div></div>
+<section class="case-heading"><div><p class="eyeline">影音與發佈 · 作品個案</p><h1>講座轉錄與管理摘要</h1><p>先以調校過的本機粵語 ASR 取得帶時間碼逐字稿，再對照投影片及錄音，把決策和風險整理成管理摘要。</p><div class="case-actions"><a class="main-btn" href="#method">查看實作流程 ↓</a></div></div>
 <div class="exhibit"><figure class="proof-case" id="evidence"><a class="proof-open" href="../../assets/work/briefing.webp" aria-label="放大圖片：原講座摘要報告中的管理層決策問題表">
-<div class="proof-mount"><img src="../../assets/work/briefing.webp" alt="原講座摘要報告中的管理層決策問題表"></div>
-<span class="proof-zoom" aria-hidden="true">⤢　放大圖片</span></a><figcaption><b>報告局部</b>從已完成的講座摘要截取決策問題表，只展示通用部分。</figcaption></figure>
-<dialog class="proof-viewer" aria-label="作品實物圖"><div class="proof-toolbar"><button type="button" class="proof-scale" aria-pressed="false">原始尺寸</button><button type="button" class="proof-close" autofocus>關閉 ×</button></div><div class="proof-scroll" role="region" aria-label="圖片，可捲動" tabindex="0"><img alt="原講座摘要報告中的管理層決策問題表"></div><p>從已完成的講座摘要截取決策問題表，只展示通用部分。</p></dialog><div class="case-outcome"><span>交付成果</span><strong>長篇錄影 → 管理摘要</strong></div></div></section>
+<div class="proof-mount" style="--ar:1420/550;--ratio:2.5818"><img src="../../assets/work/briefing.webp" width="1420" height="550" alt="原講座摘要報告中的管理層決策問題表"></div>
+<span class="proof-zoom" aria-hidden="true">放大圖片</span></a><figcaption><b>報告局部</b>從已完成的講座摘要截取決策問題表，只展示通用部分。</figcaption></figure>
+<dialog class="proof-viewer" aria-label="作品實物圖"><div class="proof-toolbar"><button type="button" class="proof-scale" aria-pressed="false">原始尺寸</button><button type="button" class="proof-close" autofocus>關閉 ×</button></div><div class="proof-scroll" role="region" aria-label="圖片，可捲動" tabindex="0"><img alt="原講座摘要報告中的管理層決策問題表"></div><p>從已完成的講座摘要截取決策問題表，只展示通用部分。</p></dialog><div class="case-outcome"><span>交付成果</span><strong>本機逐字稿 → 管理摘要</strong></div></div></section>
 <div class="reading-shell"><section id="method" class="method"><p class="eyeline">ENGINEERING NOTES</p><h2>我怎樣做</h2><p class="case-context">把「先讀結論」與「需要時查來源」放進同一份交付物。</p>
-<ol class="build-steps"><li><h3>準備素材</h3><p>用本機逐字稿保留說話的時間位置。</p></li><li><h3>選取結論</h3><p>先寫管理層要看的要點，再配合原句、畫面及疑點。</p></li><li><h3>輸出版本</h3><p>按閱讀需要編排精簡及詳細文件，保留回查線索。</p></li></ol><ul class="tech-pills" aria-label="技術與工具"><li>Python</li><li>AI Skills</li><li>Word</li><li>PDF</li></ul></section>
-<nav class="next-case" aria-label="瀏覽其他作品"><a href="../../#work" data-back>← 全部作品</a><a href="../transcribe/">下一件 · 粵語影片轉錄 Skill →</a></nav></div></main>
+<ol class="build-steps"><li><h3>本機轉錄</h3><p>沿用會議紀錄流程中調校過的本機粵語轉錄（language=yue、VAD、按片詞表、第二引擎對照），寫入逐字稿、術語及時間碼，摘要時可回到原段核對。</p></li><li><h3>選取結論</h3><p>先寫管理層要看的要點，再配合原句、畫面及疑點。</p></li><li><h3>輸出版本</h3><p>按閱讀需要編排精簡及詳細文件，保留回查線索。</p></li></ol><ul class="tech-pills" aria-label="技術與工具"><li>Python</li><li>AI Skills</li><li>Word</li><li>PDF</li></ul></section>
+<section class="related-tools"><h2>相關工具</h2><a href="../meeting/"><strong>粵語會議紀錄</strong><span>由會議錄影整理英文紀錄。同事只需重聽有疑問的片段，確認日期和決定。</span></a></section><nav class="next-case" aria-label="瀏覽其他作品"><a href="../../#work" data-back>← 全部作品</a><a href="../animation/">下一件 · 程式化施工動畫 →</a></nav></div></main>
 <footer class="folio-footer frame" id="contact"><div><h2>聯絡 Gary</h2><p>履歷內附電郵及電話，歡迎聯絡我面談。</p></div><a class="main-btn" href="../../assets/Gary-Tang-CV.pdf">開啟履歷及聯絡資料 <span aria-hidden="true">↗</span></a></footer>
 </body></html>

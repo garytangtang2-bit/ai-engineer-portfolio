@@ -1,0 +1,15 @@
+// pile/index.html：最近 4 個鑽孔的反距離加權（IDW），同時回傳最近測點距離
+function idw(e, n, pts, k = 4) {
+  const ds = pts.map(p => ({ d: Math.hypot(p.e - e, p.n - n), v: p.v, p }))
+                .sort((a, b) => a.d - b.d).slice(0, k);
+  if (!ds.length) return null;
+  if (ds[0].d < 0.01) return { v: ds[0].v, dmin: ds[0].d, spread: 0, near: ds[0].p };
+  let sw = 0, s = 0;
+  ds.forEach(x => { const w = 1 / (x.d * x.d); sw += w; s += w * x.v; });
+  const vs = ds.slice(0, 3).map(x => x.v);
+  return { v: s / sw, dmin: ds[0].d, spread: Math.max(...vs) - Math.min(...vs), near: ds[0].p };
+}
+
+// 繪圖時：距最近鑽孔超過 45 m 一律留空，不外推
+const q = idw(p.e, p.n, rockPts);
+if (!q || q.dmin > 45) continue;

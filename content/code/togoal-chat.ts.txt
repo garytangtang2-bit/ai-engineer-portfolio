@@ -1,0 +1,20 @@
+// src/app/api/sources/[id]/chat/route.ts（節錄）
+// 1. 只讀這位用戶選定的一份教材，段落逐一標上編號
+const rawContext = chunks.length > 0
+  ? (chunks as Array<{ index: number; heading: string; content: string }>)
+      .map(c => `[${c.index}] ${c.heading}:\n${c.content}`)
+      .join("\n\n")
+  : (source.content_text ?? source.transcript ?? "");
+
+// 2. 系統規則中的兩條接地規則及引用格式
+RULES:
+- Answer ONLY from the content provided. Cite inline using [chunk_index] notation.
+- If the answer is not in the content, say so clearly — do NOT fall back on your own training knowledge.
+- End every response with: CITATIONS: [{"chunk_index":0,"heading":"...","excerpt":"..."}]
+
+// 3. 串流完成後取出 CITATIONS JSON，連同答案存入 chat_messages
+const citationsMatch = fullContent.match(/CITATIONS:\s*(\[[\s\S]*?\])/);
+let citations: Citation[] = [];
+if (citationsMatch) {
+  try { citations = JSON.parse(citationsMatch[1]); } catch { /* ignore */ }
+}

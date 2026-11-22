@@ -30,7 +30,7 @@ usageInput.closest('details').addEventListener('toggle', event => {
   if (event.target.open && !usageInput.value && !inputEdited) populateSample().catch(() => { usageMessage.textContent = '未能讀取範例，可自行貼入紀錄。'; });
 });
 $('usage-reset').addEventListener('click', async () => {
-  try { await populateSample(true); clearUsageReport('已還原合成例子，可重新對帳。'); }
+  try { await populateSample(true); clearUsageReport('已還原示例例子，可重新對帳。'); }
   catch { usageMessage.textContent = '範例暫未能載入。'; }
 });
 $('usage-run').addEventListener('click', async () => {
@@ -75,7 +75,7 @@ $('usage-run').addEventListener('click', async () => {
       row.append(title, status);
       rows.append(row);
     }
-    usageMessage.textContent = (inputEdited ? '輸入資料' : '合成測試') + '已完成對帳。納入 ' + report.accepted + ' 項，另列 ' + report.pending + ' 項。';
+    usageMessage.textContent = (inputEdited ? '輸入資料' : '示例測試') + '已完成對帳。納入 ' + report.accepted + ' 項，另列 ' + report.pending + ' 項。';
   } catch (error) {
     summary.textContent = '修正輸入後可再執行。';
     usageMessage.textContent = error instanceof SyntaxError ? 'JSON 格式有誤，請檢查括號和逗號。' : error.message;

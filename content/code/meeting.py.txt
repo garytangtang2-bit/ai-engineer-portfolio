@@ -1,0 +1,12 @@
+# meeting_app.py：詞表放提示尾段（Whisper 只保留提示最後約 224 個 token）
+W = [w for w in json.load(open(hp, encoding="utf-8"))["W"]
+     if w not in ("MENT", "NO", "II", "GS", "SE", "IM")]   # 先濾走雜碎詞
+return "以下係廣東話建築地基設計會議，夾雜英文術語：" + ", ".join(reversed(W[:70])) + "。"
+
+# 固定解碼設定：靜音段先略過，每段不沿用上一段的文字（錯字不會一路帶落去）
+segs, info = model.transcribe(src, language=LANGS[self.lang], vad_filter=True, beam_size=5,
+                              initial_prompt=vocab_prompt(), condition_on_previous_text=False)
+
+# 校正表：英文鍵只按整個詞替換（ERS 的規則不可改到 users）
+if re.fullmatch(r"[A-Za-z0-9 .&-]+", key):
+    pat = "(?<![A-Za-z0-9])" + pat + "(?![A-Za-z0-9])"

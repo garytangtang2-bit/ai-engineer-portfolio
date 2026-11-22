@@ -1,0 +1,14 @@
+# prep.py word_guard()：粵語的 Whisper 字邊界不可靠（字頭偏遲、尾音偏早），以響度作準
+s0, e1 = ws[0][0], ws[-1][1]
+na = min(a, s0 - 0.08) if s0 - a <= slack else s0 - pre   # 只在有呼吸／長停頓時才收窄
+nb = max(b, e1 + 0.10) if b - e1 <= slack else e1 + post
+if ENERGY is not None:   # 剪接點不可落在有人聲的位置：向外推到聲音消失
+    db, floor = ENERGY
+    v = lambda t: db[min(len(db) - 1, max(0, int(t * 100)))] >= floor + 12
+    while na > a and v(na - 0.01):
+        na -= 0.01
+    while nb < b and v(nb):
+        nb += 0.01
+
+# gate.py：交片閘門，任何一項 FAIL 都不准交片
+verdict = "FAIL（唔准交片）" if fails else ("PASS（有 WARN，要逐個改或者寫明原因）" if any(r[1] == "WARN" for r in rows) else "PASS")
