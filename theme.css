@@ -1146,3 +1146,6 @@ sup.fn a:hover,sup.fn a:focus-visible {color:var(--champ-hi);text-decoration:und
   .key-stats {flex-direction:column;gap:4px}
   .key-stats li {font-size:1.08rem}
 }
+
+/* The gradient text is clipped to the line box; give the descender of "g" room. */
+.hero-type h1 span {padding-bottom:.16em;margin-bottom:-.16em}
