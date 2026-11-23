@@ -2,7 +2,8 @@
 // folded orbit ribbon, with a gaussian-like cross-section (dense bright cores, sparse edges). Shape and glow come
 // from particle density plus additive blending (WebGL2; Canvas 2D fallback at a reduced count).
 //
-// Physics (CPU, fixed 1/120 s steps, semi-implicit Euler) runs only on an ACTIVE SET: particles that are displaced
+// Physics (CPU, semi-implicit Euler; each frame advances by exactly the measured frame time in equal substeps of
+// at most 1/60 s, so motion stays even at 60, 75, 120, 144 or 165 Hz) runs only on an ACTIVE SET: particles that are displaced
 // or moving. Resting particles sit at home (ribbon position + ambient drift, computed in the vertex shader).
 // - Cursor motion transfers momentum: particles in the radius are pulled toward the cursor's velocity plus a smooth,
 //   low-frequency swirl field (wavelength ~120 px), divided by mass. Afterwards they glide on with inertia.
@@ -14,6 +15,9 @@
 //   momentum-conserving, with positional correction).
 // - Offsets have a soft limit: a stiffer spring beyond 220 px instead of a hard clamp.
 // All arrays are allocated per layout; nothing is allocated per frame.
+// Particles are stored in 16 random tiers, each sorted by home x, so the adaptive count drops whole tiers and the
+// particles near the cursor sit in a few contiguous index runs: only those runs are uploaded each frame.
+// Points are drawn as crisp anti-aliased discs (about one device pixel of edge) with a faint tight glow.
 export function mountParticles(hero) {
   const canvas = hero.querySelector('canvas');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
@@ -22,13 +26,14 @@ export function mountParticles(hero) {
   const PALETTE = ['#4f86ff','#8fb8ff','#dce9ff','#f3f6fc','#c3ccda','#d9c39a'].map(h => [1,3,5].map(k => parseInt(h.slice(k,k+2),16)/255));
 
   // Physics tuning.
-  const DT = 1/120, MAX_SUBSTEPS = 3;
+  const DT = 1/60, MAX_SUBSTEPS = 3;    // substep cap (stable: stiffest spring gives omega*h ~ 0.2); 3/60 s covers a 50 ms frame
   const DRAG = 3, DRAG2 = .0012;          // linear (1/s) and quadratic (1/px) air drag
   const HOME_W = 2.4;                       // return spring (rad/s); with the drag this gives zeta ~0.6-0.7, ~2.5 s
   const HOME_DELAY = .25, HOME_RAMP = .5;   // s untouched before the spring starts, and its fade-in
   const SOFT_LIMIT = 220, SOFT_K = 140;      // beyond this offset a stiffer spring takes over
   const RESTITUTION = .7;
   const COLL_SET_CAP = 5000, COLL_TEST_CAP = 70000, COLL_CELL = 6;
+  const TIERS = 16, CHUNK = 64;              // count steps by whole tiers; dirty upload tracked per 64 particles
 
   let gl = null, ctx2d = null;
   try { gl = canvas.getContext('webgl2', {alpha:true, premultipliedAlpha:true, antialias:false, depth:false, stencil:false}); } catch (e) { gl = null; }
@@ -45,9 +50,10 @@ export function mountParticles(hero) {
   let cue = new Float32Array([-1e4, -1e4, -1e4, -1e4]);   // scroll cue box: particles dim behind it
   let mask = null;                           // {from, to, box:[x0,y0,x1,y1]} in CSS px, or null
   let mask2d = null;
-  let frame = 0, last = 0, acc = 0, visible = true, running = false, dirty = true, t0 = performance.now();
+  let frame = 0, last = 0, visible = true, running = false, dirty = true, t0 = performance.now();
   let ptrX = 0, ptrY = 0, segX0 = 0, segY0 = 0, pending = false, tracking = false;
   let collisions = 0, collisionsTotal = 0;
+  let REL, nrel = 0, CDIRTY, fullUpload = true, TIER = 1;   // released this frame, dirty chunks
   // Adaptive count: frame intervals over 2 s windows.
   const FT = new Float32Array(240); let ftN = 0, ftStart = 0, adjustments = 0;
 
@@ -84,13 +90,17 @@ export function mountParticles(hero) {
     let seed = 710572;
     const rand = () => ((seed = (Math.imul(1664525,seed) + 1013904223) >>> 0) / 4294967296);
     const gauss = () => Math.sqrt(-2*Math.log(rand()+1e-9))*Math.cos(6.2831853*rand());
-    if (gl) { NMAX = narrow ? 25000 : 120000; NMIN = narrow ? 10000 : 40000; }
-    else { NMAX = NMIN = 8000; }
-    if (!MAX || MAX !== NMAX) { MAX = NMAX; N = gl ? (narrow ? 20000 : 90000) : 8000; adjustments = 0; }
+    // Points are ~1.5x (desktop) / ~1.3x (phone) the old size, so fewer are needed for the same light.
+    const SIZE = narrow ? 1.3 : 1.5, ALPHA = narrow ? .95 : .86;
+    if (gl) { NMAX = narrow ? 17600 : 72000; NMIN = narrow ? 6600 : 22500; }
+    else { NMAX = NMIN = 6400; }
+    if (!MAX || MAX !== NMAX) { MAX = NMAX; N = gl ? (narrow ? 13200 : 54000) : 6400; adjustments = 0; }
+    TIER = MAX/TIERS;
     HX = new Float32Array(MAX); HY = new Float32Array(MAX); KP = new Float32Array(MAX); CKP = new Float32Array(MAX); SKP = new Float32Array(MAX);
     INVM = new Float32Array(MAX); RC = new Float32Array(MAX); TT = new Float32Array(MAX);
     ACT = new Uint8Array(MAX); AL = new Int32Array(MAX); na = 0;
-    DYN = new Float32Array(MAX*4);
+    DYN = new Float32Array(MAX*4); REL = new Int32Array(MAX); nrel = 0;
+    CDIRTY = new Uint8Array(Math.ceil(MAX/CHUNK)); fullUpload = true;
     STAT = new Float32Array(MAX*9);          // home x,y | size, alpha, phase, depth | r,g,b
     const B = bands(), p = [0,0,0];
     for (let i = 0; i < MAX; i++) {
@@ -115,10 +125,11 @@ export function mountParticles(hero) {
       const alpha = (sparkle ? .5 : .09 + rand()*.17) * (.6+.4*depth) * (lat ? 1 : 1.6);
       HX[i] = x; HY[i] = y;
       KP[i] = lat*7 + rand()*.35; CKP[i] = Math.cos(KP[i]); SKP[i] = Math.sin(KP[i]);
-      const mass = (diam/2.2)**2 * (.8 + rand()*.4);
+      const mass = (diam/2.2)**2 * (.8 + rand()*.4);   // physics keeps the unscaled size
       INVM[i] = 1/mass; RC[i] = Math.min(3, diam*.5*1.35);
       const o = i*9, c = PALETTE[col];
-      STAT[o] = x; STAT[o+1] = y; STAT[o+2] = diam*(.85+.3*depth); STAT[o+3] = alpha; STAT[o+4] = rand()*6.2832; STAT[o+5] = depth;
+      STAT[o] = x; STAT[o+1] = y; STAT[o+2] = diam*(sparkle ? .8 : SIZE)*(.85+.3*depth); STAT[o+3] = alpha*ALPHA; STAT[o+4] = rand()*6.2832; STAT[o+5] = depth;
+      // (sparkles stay small so they read as points, not bubbles)
       STAT[o+6] = c[0]; STAT[o+7] = c[1]; STAT[o+8] = c[2];
     }
     // Density balance: where the projection folds the ribbon onto itself, thousands of particles stack in a few pixels.
@@ -132,9 +143,17 @@ export function mountParticles(hero) {
       for (let i = 0; i < MAX; i++) {
         const d = dens[cell(i)]; if (d <= D0) continue;
         const f = D0/d, o = i*9;
-        if (STAT[o+2] < 4) { STAT[o+3] *= Math.pow(f, .5); STAT[o+2] *= .8 + .2*f; }
+        if (STAT[o+2] < 4*SIZE) { STAT[o+3] *= Math.pow(f, .5); STAT[o+2] *= .8 + .2*f; }
         else STAT[o+3] *= Math.pow(f, .25);
       }
+    }
+    // Tiers: particle i (generated in random order) joins tier i % TIERS; inside a tier, sort by home x.
+    {
+      const order = new Uint32Array(MAX), key = new Float64Array(MAX);
+      for (let i = 0; i < MAX; i++) { order[i] = i; key[i] = (i % TIERS)*1e7 + HX[i] + 2e5; }
+      order.sort((a, b) => key[a] - key[b]);
+      const perm = (A, k) => { const C = A.slice(); for (let j = 0; j < MAX; j++) for (let q = 0; q < k; q++) A[j*k+q] = C[order[j]*k+q]; };
+      perm(HX, 1); perm(HY, 1); perm(KP, 1); perm(CKP, 1); perm(SKP, 1); perm(INVM, 1); perm(RC, 1); perm(STAT, 9);
     }
     // Highlight stars, dropped where they would sit behind the text block.
     stars = [[5.23,-.35,5,58,0],[2.82,.36,1,52,2.1],[.65,.38,3,24,4.2],[4.20,.24,2,22,1.3]]
@@ -179,10 +198,10 @@ export function mountParticles(hero) {
   }
 
   function setCount(n) {
-    n = Math.max(NMIN, Math.min(NMAX, Math.round(n)));
+    n = Math.max(NMIN, Math.min(NMAX, Math.round(n/TIER)*TIER));
     if (n === N) return;
     for (let a = 0; a < na; a++) { const i = AL[a]; if (i >= n) { ACT[i] = 0; DYN.fill(0, i*4, i*4+4); AL[a] = AL[--na]; a--; } }
-    N = n; buildHomeGrid(); dirty = true;
+    N = n; buildHomeGrid(); dirty = true; fullUpload = true;
   }
 
   // ---------- physics ----------
@@ -232,7 +251,7 @@ export function mountParticles(hero) {
     }
   }
 
-  function step(t) {
+  function step(t, h) {
     for (let a = 0; a < na; a++) {
       const i = AL[a], o = i*4;
       let ox = DYN[o], oy = DYN[o+1], vx = DYN[o+2], vy = DYN[o+3];
@@ -241,9 +260,9 @@ export function mountParticles(hero) {
       let ax = -drag*vx - k*ox, ay = -drag*vy - k*oy;
       const o2 = ox*ox+oy*oy;
       if (o2 > SOFT_LIMIT*SOFT_LIMIT) { const d = Math.sqrt(o2), f = SOFT_K*(d-SOFT_LIMIT)/d; ax -= f*ox; ay -= f*oy; }
-      vx += ax*DT; vy += ay*DT; ox += vx*DT; oy += vy*DT;   // semi-implicit Euler
+      vx += ax*h; vy += ay*h; ox += vx*h; oy += vy*h;   // semi-implicit Euler
       if (s >= 1 && ox*ox+oy*oy < .25 && vx*vx+vy*vy < 1) {   // within half a pixel: snap home
-        DYN[o] = DYN[o+1] = DYN[o+2] = DYN[o+3] = 0; ACT[i] = 0; AL[a] = AL[--na]; a--;
+        DYN[o] = DYN[o+1] = DYN[o+2] = DYN[o+3] = 0; ACT[i] = 0; AL[a] = AL[--na]; a--; REL[nrel++] = i;
         continue;
       }
       DYN[o] = ox; DYN[o+1] = oy; DYN[o+2] = vx; DYN[o+3] = vy;
@@ -333,11 +352,11 @@ export function mountParticles(hero) {
     vec2 p = aHome + drift + aDyn.xy;
     vec2 v = aDyn.zw*uMotion; float sp = length(v);
     float boost = min(1., sp/520.);
-    float r = aProp.x*.5*(1.+boost*.45);
+    float r = aProp.x*.5*(1.+boost*.25);
     if (uStar > .5) r *= 1. + .06*uMotion*sin(uTime*1.3+ph);
-    float L = sp > 40. ? min(16., sp*.022) : 0.;
+    float L = sp > 260. ? min(5., (sp-260.)*.01) : 0.;   // short streak, fast particles only
     vDir = sp > .001 ? v/sp : vec2(1., 0.); vLen = L; vR = r;
-    float pt = min(uMaxPt/uScale, (uStar > .5 ? r*2. : r*4.) + L + 2.);
+    float pt = min(uMaxPt/uScale, (uStar > .5 ? r*2. + 2. : r*2.8 + 2./uScale) + L);
     vPt = pt; gl_PointSize = pt*uScale;
     float tw = uStar > .5 ? 1. : mix(1., .78+.22*sin(uTime*(1.1+depth*1.7)+ph*3.), uMotion);
     float a = min(1., aProp.y*tw + boost*.25);
@@ -356,13 +375,19 @@ export function mountParticles(hero) {
   }`;
   const FS = `#version 300 es
   precision highp float;
-  in vec3 vCol; in float vA, vLen, vR, vPt; in vec2 vDir; uniform float uStar; out vec4 o;
+  in vec3 vCol; in float vA, vLen, vR, vPt; in vec2 vDir; uniform float uStar, uScale; out vec4 o;
   void main() {
     vec2 q = (gl_PointCoord-.5)*vPt;
     vec2 d = q - vDir*clamp(dot(q, vDir), -vLen*.5, vLen*.5);
     float d2 = dot(d, d)/(vR*vR);
-    float a = uStar > .5 ? exp(-d2*90.) + .32*exp(-d2*9.) + .1*exp(-d2*2.2)
-                         : (exp(-d2*1.7) + .16*exp(-d2*.38)) * (vLen > 0. ? vR*2./(vR*2.+vLen*.35) : 1.);
+    float a;
+    if (uStar > .5) a = exp(-d2*90.) + .32*exp(-d2*9.) + .1*exp(-d2*2.2);
+    else {
+      // Crisp disc: anti-aliased edge one device pixel wide, plus a faint glow that fades out within ~1.4 radii.
+      float e = .5/uScale, dd = sqrt(dot(d, d));
+      a = (1. - smoothstep(vR - e, vR + e, dd))*(1. - .3*min(1., dd/vR)) + .07*exp(-d2*2.5);   // slightly brighter centre
+      a *= vLen > 0. ? vR*2./(vR*2.+vLen*.5) : 1.;
+    }
     a *= vA;
     if (a < .003) discard;
     o = vec4(vCol*a, a);
@@ -428,6 +453,24 @@ export function mountParticles(hero) {
     gl.bindBuffer(gl.ARRAY_BUFFER, bufStar); gl.bufferData(gl.ARRAY_BUFFER, S, gl.STATIC_DRAW);
   }
 
+  // Upload only the chunks touched this frame (active particles plus those that just snapped home), merged into runs.
+  function uploadDyn() {
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufDyn);
+    if (fullUpload) { gl.bufferSubData(gl.ARRAY_BUFFER, 0, DYN, 0, N*4); fullUpload = false; nrel = 0; return; }
+    const nc = Math.ceil(N/CHUNK);
+    for (let a = 0; a < na; a++) CDIRTY[(AL[a]/CHUNK)|0] = 1;
+    for (let k = 0; k < nrel; k++) CDIRTY[(REL[k]/CHUNK)|0] = 1;
+    nrel = 0;
+    for (let c = 0; c < nc; c++) {
+      if (!CDIRTY[c]) continue;
+      let e = c, gap = 0;
+      for (let k = c+1; k < nc && gap <= 4; k++) { if (CDIRTY[k]) { e = k; gap = 0; } else gap++; }   // bridge small gaps
+      const i0 = c*CHUNK, i1 = Math.min(N, (e+1)*CHUNK);
+      gl.bufferSubData(gl.ARRAY_BUFFER, i0*16, DYN, i0*4, (i1-i0)*4);
+      CDIRTY.fill(0, c, e+1); c = e;
+    }
+  }
+
   function drawGL(t, still) {
     const useHdr = ensureTarget();
     gl.bindFramebuffer(gl.FRAMEBUFFER, useHdr ? fbo : null);
@@ -440,7 +483,7 @@ export function mountParticles(hero) {
     gl.uniform1f(U.uMaskOn, mask ? 1 : 0);
     if (mask) { gl.uniform4f(U.uBox, mask.box[0], mask.box[1], mask.box[2], mask.box[3]); gl.uniform2f(U.uGrad, mask.from, mask.to); }
     gl.uniform4f(U.uCue, cue[0], cue[1], cue[2], cue[3]);
-    if (dirty) { gl.bindBuffer(gl.ARRAY_BUFFER, bufDyn); gl.bufferSubData(gl.ARRAY_BUFFER, 0, DYN, 0, N*4); }
+    if (dirty) uploadDyn();
     gl.uniform1f(U.uStar, 0); gl.bindVertexArray(vao); gl.drawArrays(gl.POINTS, 0, N);
     if (stars.length) { gl.uniform1f(U.uStar, 1); gl.bindVertexArray(starVao); gl.vertexAttrib4f(3, 0, 0, 0, 0); gl.drawArrays(gl.POINTS, 0, stars.length); }
     gl.bindVertexArray(null);
@@ -464,10 +507,10 @@ export function mountParticles(hero) {
       const x = HX[i] + (still ? 0 : Math.sin(t*.55+ph)*.9*depth) + DYN[o], y = HY[i] + (still ? 0 : Math.cos(t*.47+ph)*.7*depth) + DYN[o+1];
       const vx = still ? 0 : DYN[o+2], vy = still ? 0 : DYN[o+3], sp = Math.sqrt(vx*vx+vy*vy), boost = Math.min(1, sp/520);
       const a = Math.min(1, STAT[s+3]*(still ? 1 : .78+.22*Math.sin(t*(1.1+depth*1.7)+ph*3)) + boost*.25);
-      const r = STAT[s+2]*.5*(1+boost*.45);
+      const r = STAT[s+2]*.5*(1+boost*.25);
       c.globalAlpha = Math.min(1, a*2.6);   // ~1/12 of the WebGL count, so each point carries more light
       c.fillStyle = c.strokeStyle = `rgb(${STAT[s+6]*255|0},${STAT[s+7]*255|0},${STAT[s+8]*255|0})`;
-      if (sp > 40) { const len = Math.min(16, sp*.022)/sp; c.lineWidth = r*1.4; c.beginPath(); c.moveTo(x-vx*len, y-vy*len); c.lineTo(x, y); c.stroke(); }
+      if (sp > 260) { const len = Math.min(5, (sp-260)*.01)/sp; c.lineWidth = r*1.4; c.beginPath(); c.moveTo(x-vx*len, y-vy*len); c.lineTo(x, y); c.stroke(); }
       else { c.beginPath(); c.arc(x, y, r, 0, 6.2832); c.fill(); }
     }
     for (const [x, y, size, col] of stars) {
@@ -500,7 +543,7 @@ export function mountParticles(hero) {
     frame = 0;
     const still = reduce.matches;
     const interval = last ? now-last : 16.7;
-    const dts = Math.min(.1, interval/1000);
+    const dts = Math.min(.05, interval/1000);
     last = now;
     const t = (now-t0)/1000;
     if (!still) {
@@ -517,10 +560,10 @@ export function mountParticles(hero) {
         segX0 = ptrX; segY0 = ptrY; pending = false;
       }
       const hadActive = na > 0;
-      acc += dts;
-      let n = 0;
-      while (acc >= DT && n < MAX_SUBSTEPS) { step(t); acc -= DT; n++; }
-      if (n === MAX_SUBSTEPS) acc = Math.min(acc, DT);
+      if (na) {   // advance by exactly this frame's time, in equal substeps of at most DT
+        const n = Math.min(MAX_SUBSTEPS, Math.max(1, Math.ceil(dts/DT - 1e-6))), h = Math.min(dts, MAX_SUBSTEPS*DT)/n;
+        for (let k = 0; k < n; k++) step(t, h);
+      }
       if (na) collideAll();
       if (hadActive || na) dirty = true;
     }

@@ -3,7 +3,7 @@
   --paper:#ecf0f4; --ink:#161e2d; --sub:#444f60; --line:#bdc2c9; --accent:#a3c3e6;
   color-scheme:light; color:var(--ink); background:var(--paper);
   border:1px solid #929aa755; border-radius:15px; overflow:hidden;
-  font-family:Folio,FolioTC,"Microsoft JhengHei",sans-serif;
+  font-family:FolioTC,"Microsoft JhengHei",sans-serif;
 }
 .desk *, .desk *::before, .desk *::after {box-sizing:border-box}
 .desk [hidden]{display:none!important}

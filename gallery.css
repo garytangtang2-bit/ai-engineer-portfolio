@@ -1,6 +1,9 @@
-@font-face{font-family:Folio;src:url(fonts/space-grotesk.woff2) format("woff2");font-weight:300 700;font-display:swap}
-@font-face{font-family:FolioTC;src:url(fonts/noto-sans-tc.woff2) format("woff2");font-weight:400 900;font-display:optional}
-:root{--base:#0b1118;--card:#15202b;--light:#f5f6f2;--quiet:#b5c3cb;--dim:#93aab6;--blue:#b5e4f3;--warm:#f2d4a2;--edge:#34434e;--font:Folio,FolioTC,"Microsoft JhengHei","PingFang TC",system-ui,sans-serif;color-scheme:dark}
+/* Fonts (round 13): Noto Sans TC body, Noto Serif TC headings, IBM Plex Mono for numbers, labels, captions and code.
+   Self-hosted subsets of the site's own text, preloaded; display:optional so late fonts never shift the layout. */
+@font-face{font-family:FolioTC;src:url(fonts/noto-sans-tc-site.woff2) format("woff2");font-weight:400 700;font-display:optional}
+@font-face{font-family:FolioSerif;src:url(fonts/noto-serif-tc-head.woff2) format("woff2");font-weight:700 900;font-display:optional}
+@font-face{font-family:Folio;src:url(fonts/ibm-plex-mono-latin.woff2) format("woff2");font-weight:400 700;font-display:optional}
+:root{--base:#0b1118;--card:#15202b;--light:#f5f6f2;--quiet:#b5c3cb;--dim:#93aab6;--blue:#b5e4f3;--warm:#f2d4a2;--edge:#34434e;--font:FolioTC,"Microsoft JhengHei","PingFang TC",system-ui,sans-serif;color-scheme:dark}
 *,*::after,*::before{box-sizing:border-box}
 html{scroll-padding-top:18px}
 body.gallery-body{margin:0;color:var(--light);font:400 1rem/1.65 var(--font);background-color:var(--base);background-image:url(assets/atmosphere-grain.png),radial-gradient(ellipse 76% 630px at 95% 7%,#654b302c,transparent),radial-gradient(ellipse 75% 700px at -12% 240px,#456d853d,transparent);background-attachment:scroll}

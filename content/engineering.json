@@ -15,12 +15,12 @@
       [
         "model",
         "本機轉錄（ASR）",
-        "faster-whisper 等最多 6 個本機引擎各自轉錄；按場詞表放在提示尾段。約與錄音等長，是整個流程最長的一步。"
+        "- 引擎：faster-whisper 等最多 6 個本機引擎各自轉錄。\n- 詞表：按場詞表放在提示尾段。\n- 耗時：約與錄音等長，是整個流程最長的一步。"
       ],
       [
         "code",
         "融合與過濾",
-        "每 30 秒一窗並列各引擎讀法；至少 2 個引擎聽到的術語才當聽到；重複迴圈輸出丟棄。"
+        "- 對齊：每 30 秒一窗並列各引擎讀法。\n- 採信：至少 2 個引擎聽到的術語才當聽到。\n- 丟棄：重複迴圈輸出丟棄。"
       ],
       [
         "model",
@@ -73,7 +73,7 @@
     "evaluation": [
       [
         "41 個",
-        "用 11 場過往會議盲測並對照正式紀錄，找出 41 個真資訊錯誤：轉錄聽錯 10 個（24%）、理解／歸屬／時態錯 23 個（56%）、沒有用上已有資料 7 個（17%）、錄音沒有該內容 1 個。主要瓶頸不在轉錄。"
+        "**主要瓶頸不在轉錄。**\n- 盲測：用 11 場過往會議盲測並對照正式紀錄，找出 41 個真資訊錯誤。\n- 轉錄：轉錄聽錯 10 個（24%）。\n- 理解：理解／歸屬／時態錯 23 個（56%）。\n- 資料：沒有用上已有資料 7 個（17%）。\n- 其他：錄音沒有該內容 1 個。"
       ],
       [
         "51 ／ 63",
@@ -122,8 +122,8 @@
         ]
       },
       {
-        "claim": "人手時間由 5 小時縮至約 10 分鐘。以往：看錄影約 1.5 小時，加理解術語、重組句子和跟上次格式約 3.5 小時；現在只需回答 AI 的疑問。",
-        "method": "",
+        "claim": "**人手時間由 5 小時縮至約 10 分鐘。**\n- 以往：看錄影約 1.5 小時，加理解術語、重組句子和跟上次格式約 3.5 小時。\n- 現在：只需回答 AI 列出的疑問（最多 10 題）。",
+        "method": "以 30 場會議計。",
         "shown_on": [
           "index.html 主要數字列",
           "首頁精選個案段落",
@@ -141,8 +141,8 @@
         ]
       },
       {
-        "claim": "轉錄在本機進行；App 的雲端轉錄是付費選項，並設有防浪費規則：近乎無聲的片段不送出、結果先存檔避免重複付費、結果過短才重試；後備模型用 temperature 0 及最少思考。覆核每項檢查開一個全新的 Sonnet 代理。",
-        "method": "程式碼及流程文件核對：meeting_app.py 第 127、204–221、274–275、286、669 行；design-meeting-minutes/references/layered-flow.md 第 65–67 行。",
+        "claim": "**所有語音轉錄都在本機以 Whisper 等引擎進行，轉錄零 API 費用。**\n- 代價：轉錄約與錄音等長。\n- 模型：只用於 AI 起草和覆核（Claude Code 代理，只處理文字）。\n- 覆核：覆核的每項檢查開一個全新的 Sonnet 代理。",
+        "method": "設計部版本的 App 只有本機轉錄引擎；design-meeting-minutes SKILL.md 第 64 行；layered-flow.md 第 65–67 行。",
         "section": "cost",
         "shown_on": [
           "首頁「我怎樣把 AI 做準、做平」",
@@ -163,23 +163,16 @@
         [
           "local",
           "轉錄",
-          "本機 Whisper（免費）",
-          "App 雖有雲端 Gemini（付費）及混合選項，保密錄音只用本機",
-          "不付轉錄 API 費；代價是轉錄約與錄音等長"
-        ],
-        [
-          "code",
-          "選用雲端轉錄時",
-          "程式先檢查每段錄音",
-          "近乎無聲的片段不送付費 API；已轉錄的結果先存檔",
-          "之後的步驟出錯重跑，同一段錄音不會再付一次費"
+          "本機 Whisper 等引擎",
+          "所有語音轉錄都在本機進行，保密錄音不離開本機",
+          "轉錄零 API 費用；代價是轉錄約與錄音等長"
         ],
         [
           "cloud",
-          "後備轉錄",
-          "一般 Gemini Flash 模型，temperature 0、最少思考",
-          "專用轉錄模型出錯才改用；結果過短（每分鐘少於 120 字）就重試，並濾走混入逐字稿的模型自言自語",
-          "後備模型設為最少思考，不開額外推理"
+          "AI 起草",
+          "Claude Code 主控代理（只處理文字，不上載錄音）",
+          "把同事確認的內容寫成英文紀錄初稿",
+          "模型只做需要理解和寫作的部分"
         ],
         [
           "agent",
@@ -198,14 +191,9 @@
       ],
       "sources": [
         "engineering.json meeting.decisions[1]",
-        "engineering.json meeting.pipeline[0]",
-        "E:/CV/output/tool-ui/meeting/meeting_app.py:127",
+        "engineering.json meeting.pipeline[0],[1],[5]",
         "engineering.json meeting.constraints[1]",
-        "meeting_app.py:274-275 (silent chunks never sent to the paid API)",
-        "meeting_app.py:669 (cache Gemini result, never bill the same audio twice)",
-        "meeting_app.py:204-217 (FLASH_MODEL back-up, temperature 0.0, thinking_level minimal)",
-        "meeting_app.py:221-228 (_JUNK filter)",
-        "meeting_app.py:286-293 (MIN_CHARS_PER_MIN = 120 retry)",
+        "E:/CV/tmp/evidence/09_Skills/design-meeting-minutes/SKILL.md:64 (no Gemini, no cloud, no upload of recordings); design-department app has local ASR only",
         "E:/CV/tmp/evidence/14_可運行版/4_會議紀錄App/.claude/skills/design-meeting-minutes/references/layered-flow.md:65-67",
         "engineering.json meeting.pipeline[3],[4]",
         "engineering.json meeting.claims[1]"
@@ -254,7 +242,7 @@
       [
         "按風險抽查控制成本",
         "每格都用視覺模型覆核",
-        "抽查準確率為 99.99%；全格視覺覆核可達 100%，但 API 成本約為抽查的 20 倍。生產流程按交付要求選擇抽查。"
+        "- 抽查：抽查準確率為 99.99%。\n- 全格：全格視覺覆核可達 100%，但 API 成本約為抽查的 20 倍。\n- 選擇：生產流程按交付要求選擇抽查。"
       ],
       [
         "三個讀法交叉",
@@ -279,7 +267,7 @@
       ],
       [
         "22,766 格",
-        "全格盲讀驗證：最大一份正文 22,766 格 + 表頭 591 格全部盲讀。425 處差異全部是 App 錯，已改正；另有 17 格是盲讀者抄錯。"
+        "**425 處差異全部是 App 錯，已改正。**\n- 範圍：全格盲讀驗證：最大一份正文 22,766 格 + 表頭 591 格全部盲讀。\n- 另有：17 格是盲讀者抄錯。"
       ],
       [
         "0 差異",
@@ -335,8 +323,8 @@
         ]
       },
       {
-        "claim": "抽查準確率 99.99%：生產流程按風險抽查，由獨立視覺模型盲讀必讀格及分層隨機樣本，抽中錯誤即擴大至整欄、整表或整份。全格視覺覆核可達 100%，但 API 成本約為抽查的 20 倍。",
-        "method": "",
+        "claim": "**抽查準確率 99.99%。**\n- 抽查：生產流程按風險抽查，由獨立視覺模型盲讀必讀格及分層隨機樣本。\n- 擴大：抽中錯誤即擴大至整欄、整表或整份。\n- 全格：全格視覺覆核可達 100%，但 API 成本約為抽查的 20 倍。",
+        "method": "每份文件的必讀（高風險）格全部盲讀，其餘數字格分層抽 10%（最少 300 格、最多 3,000 格）；抽樣錯誤超過 5 格即整份全格盲讀（audit_plan.py：SAMPLE_PCT 0.10、SAMPLE_MIN 300、SAMPLE_MAX 3000、MAX_SAMPLE_ERRORS 5）。",
         "shown_on": [
           "index.html 主要數字列 (sub-line 「抽查準確率 99.99%」)",
           "個案頁「我怎樣做」說明 (projects.json pdf.detail)",
@@ -369,7 +357,7 @@
     ],
     "audit": {
       "title": "抽查準確率 99.99% 怎樣量度",
-      "intro": "99.99% 來自生產流程的抽查，不是逐格全讀。讀者是獨立的視覺模型，只看原 PDF 圖像，看不到 App 的數值。",
+      "intro": "**99.99% 來自生產流程的抽查，不是逐格全讀。**\n- 誰讀：獨立的視覺模型，只看原 PDF 圖像，看不到 App 的數值。\n- 讀甚麼：每份文件的必讀格全部盲讀；其餘數字格分層抽 10%（最少 300 格、最多 3,000 格）。\n- 出錯時：抽樣錯誤超過 5 格 → 整份文件改為全格盲讀。",
       "layers": [
         [
           "必讀格",
@@ -537,7 +525,7 @@
         "實際項目：36 個開挖區域、13 條板樁的開挖土方。"
       ]
     ],
-    "eval_note": "土方為 bank volume，未計鬆散系數、超挖及墊層；模型用作投標展示，並非施工圖。公開示範使用重新設計的虛構地盤。",
+    "eval_note": "**土方為 bank volume，未計鬆散系數、超挖及墊層。**\n- 用途：模型用作投標展示，並非施工圖。\n- 資料：公開示範使用重新設計的虛構地盤。",
     "failures": [
       [
         "推測被當成圖上資料",
@@ -796,8 +784,8 @@
         ]
       },
       {
-        "claim": "剪片交 Sonnet 代理、新動畫才用 Opus；審片兩輪及審稿代理用 Haiku，規則在 Haiku 上調校，並持續監察評分有否變鬆。沒有量度過 Haiku 與 Opus 的質素對比。",
-        "method": "Skill 文件核對：reels-video-editing/剪片細節.md 第 414、417–419 行；SKILL.md 第 108、154、159 行；reels-script-set/寫稿細節.md 第 543、550、555 行；盲聽指令.md 第 5、7 行。",
+        "claim": "**先用 Opus 取得參考結果，再換 Haiku，質素以參考結果驗收。**\n- 參考：新流程先用 Opus 跑通並取得參考結果，再換 Haiku。\n- 補強：Haiku 做得較差的地方逐步補規則和程式，直至追上 Opus 參考結果。\n- 成本：按 API 定價推算，Haiku 每 token 成本約為 Opus 的 2.5%；補充的規則會加長提示，實際節省略低於這個比例。\n- 分工：本流程剪片交 Sonnet 代理，新動畫才用 Opus。\n- 審查：審片兩輪及審稿代理由 Sonnet 改用 Haiku（按 API 定價推算每 token 約低 95%）。\n- 監察：判定規則在 Haiku 上調校，並持續監察評分有否變鬆。",
+        "method": "Skill 文件核對：reels-video-editing/剪片細節.md 第 414、417–419 行；SKILL.md 第 108、154、159 行；reels-script-set/寫稿細節.md 第 543、550、555 行；盲聽指令.md 第 5、7 行。方法：先用 Opus 取得參考結果，再換 Haiku 並補規則和程式，以參考結果驗收。定價：Anthropic API 標價，每百萬 token 輸入／輸出：Opus 5.5 $4／$20、Sonnet 5.5 $2／$10、Haiku 5.5 $0.10／$0.50（提示 ≤100K）。",
         "section": "cost",
         "shown_on": [
           "首頁「我怎樣把 AI 做準、做平」",
@@ -841,23 +829,24 @@
           "審片",
           "兩輪 Haiku 代理（medium）",
           "第 1 輪查明顯錯誤，第 2 輪查設計並最後把關；第 2 輪於 2026-11-21 由 Sonnet 改為 Haiku；要看的格由主控先揀定",
-          "審片不用中高階模型"
+          "按 API 定價推算，每 token 約比 Sonnet 低 95%"
         ],
         [
           "light",
           "審稿",
           "Haiku 代理：盲聽、參考對照、邏輯",
           "判定規則在 Haiku 上調校；參考對照和邏輯審查由 Sonnet 改為 Haiku，邏輯審查同時收窄查證範圍",
-          "審稿不用 Sonnet；頭幾條稿留意評分有否變鬆"
+          "參考對照和邏輯審查按 API 定價推算，每 token 約比 Sonnet 低 95%"
         ]
       ],
-      "note": "判定規則只在 Haiku 上測試過，並因應測試結果改過兩次，仍未算驗證；頭 10 條新稿會留意有沒有誤判。代理一次只做一件事，避免讀入的內容越積越多。",
+      "note": "**判定規則只在 Haiku 上測試過，仍未算驗證。**\n- 方法：新流程先用 Opus 跑通並取得參考結果，再換 Haiku；Haiku 做得較差的地方逐步補規則和程式，直至追上參考結果。\n- 代價：補充的規則會加長提示，實際節省略低於單價比例。\n- 修訂：判定規則因應測試結果改過兩次。\n- 監察：頭 10 條新稿會留意有沒有誤判。\n- 上下文：代理一次只做一件事，避免讀入的內容越積越多。",
       "sources": [
         "engineering.json autocut.pipeline[0]-[4], autocut.decisions[2]",
         "C:/Users/garyt/.claude/skills/reels-video-editing/剪片細節.md:414,417-419",
         "C:/Users/garyt/.claude/skills/reels-video-editing/SKILL.md:108,151,154,159",
         "C:/Users/garyt/.claude/skills/reels-script-set/寫稿細節.md:543,550,555",
-        "C:/Users/garyt/.claude/skills/reels-script-set/盲聽指令.md:5,7"
+        "C:/Users/garyt/.claude/skills/reels-script-set/盲聽指令.md:5,7",
+        "Gary 2026-11-23: Opus-first reference → Haiku → patch with rules/code; Anthropic list prices Opus 5.5 $4/$20, Sonnet 5.5 $2/$10, Haiku 5.5 $0.10/$0.50 per 1M tokens"
       ]
     }
   },
@@ -955,7 +944,7 @@
     ],
     "claims": [
       {
-        "claim": "一人主導設計及上線，現有 1,000+ 用戶：由 UI、登入、訂閱到 PPTX 輸出，程式由 AI 編碼代理實作，經 GitHub 管理版本、Vercel 部署。",
+        "claim": "一人主導設計及上線，現有 2,000+ 註冊用戶：由 UI、登入、訂閱到 PPTX 輸出，程式由 AI 編碼代理實作，經 GitHub 管理版本、Vercel 部署。",
         "method": "",
         "shown_on": [
           "index.html 主要數字列",
@@ -973,7 +962,7 @@
         ]
       },
       {
-        "claim": "預設模型為 Gemini 2.5 Flash-Lite；可用模型由伺服器按方案決定；每次問答先扣點數並限流；超出預算才壓縮；預設模型的繁中問答使用一小時上下文快取。",
+        "claim": "**預設模型為 Gemini 2.5 Flash-Lite。**\n- 模型：可用模型由伺服器按方案決定。\n- 用量：每次問答先扣點數並限流。\n- 壓縮：超出預算才壓縮。\n- 快取：預設模型的繁中問答使用一小時上下文快取。",
         "method": "程式碼核對（certifyai.git HEAD）：src/app/api/sources/[id]/chat/route.ts 第 17、35、54–56、69、147–161 行；src/lib/models.ts 第 28–38、75–80 行；src/lib/compressor.ts 第 11、19 行；src/lib/plan-gates.ts 第 33–34 行。",
         "section": "cost",
         "shown_on": [
@@ -1198,7 +1187,7 @@
     ]
   },
   "_cost_principles": {
-    "eyebrow": "COST & RELIABILITY",
+    "eyebrow": "§2 方法",
     "title": "我怎樣把 AI 做準、做平",
     "note": "五條原則，每條都連到個案頁的「模型與成本」表。",
     "cards": [
@@ -1229,14 +1218,14 @@
       },
       {
         "title": "用通過評估的最便宜模型",
-        "rule": "先在便宜的模型上調好規則，再看是否需要更強的模型。",
-        "evidence": "ToGoalAi 預設 Gemini 2.5 Flash-Lite，伺服器按方案決定可用模型。短片流程的 Skill（可重用的 AI 代理指令包）調校規則後，把審查代理由 Sonnet 改為 Haiku，並持續監察評分有否變鬆。",
+        "rule": "先用 Opus 跑通並取得參考結果，再換 Haiku；Haiku 做得差的地方逐步補規則和程式，直至追上參考結果。",
+        "evidence": "按 API 定價推算，Haiku 每 token 約為 Opus 的 2.5%；規則會加長提示，實際節省略低。短片 Skill 已把審查代理由 Sonnet 改為 Haiku。",
         "href": "projects/autocut/#cost",
         "link": "AutoCut 影片製作",
         "sources": [
-          "certifyai.git HEAD src/app/api/sources/[id]/chat/route.ts:17,54-56",
-          "certifyai.git HEAD src/lib/models.ts:75-80",
-          "C:/Users/garyt/.claude/skills/reels-script-set/寫稿細節.md:543,550,555",
+          "Gary 2026-11-23: Opus-first → Haiku → patch with rules/code",
+          "Anthropic list prices: Opus 5.5 $4/$20, Sonnet 5.5 $2/$10, Haiku 5.5 $0.10/$0.50 per 1M tokens",
+          "C:/Users/garyt/.claude/skills/reels-script-set/寫稿細節.md:550,555",
           "C:/Users/garyt/.claude/skills/reels-video-editing/剪片細節.md:419"
         ]
       },
@@ -1244,8 +1233,8 @@
         "title": "先量度再改",
         "rule": "先用過往資料盲測、把錯誤分類，再決定改哪裏。",
         "evidence": "會議紀錄用 11 場會議盲測，41 個錯誤逐個歸因。PDF 以 22,766 格全格盲讀驗證，改規則後逐格回歸。",
-        "href": "projects/meeting/#engineering",
-        "link": "粵語會議紀錄",
+        "href": "projects/meeting/#results",
+        "link": "設計會議全流程 · Minutes 模組",
         "sources": [
           "engineering.json meeting.evaluation[0]",
           "engineering.json pdf.evaluation[1]",
@@ -1255,11 +1244,11 @@
       {
         "title": "本機優先",
         "rule": "能在本機跑的模型就在本機跑：不按次收費，保密錄音也留在本機。",
-        "evidence": "會議轉錄用本機 Whisper，App 的雲端 Gemini 是付費選項，保密錄音不用。PDF 的 OCR 改用本機 GPU，1,800 格由約 40 秒降到 2.3 秒。",
+        "evidence": "會議紀錄的語音轉錄全部在本機進行，轉錄零 API 費用。PDF 的 OCR 改用本機 GPU，1,800 格由約 40 秒降到 2.3 秒。",
         "href": "projects/meeting/#cost",
-        "link": "粵語會議紀錄",
+        "link": "設計會議全流程 · Minutes 模組",
         "sources": [
-          "E:/CV/output/tool-ui/meeting/meeting_app.py:127",
+          "Gary 2026-11-23: design-department app has no cloud ASR",
           "engineering.json meeting.constraints[1]",
           "engineering.json pdf.decisions[3]"
         ]
