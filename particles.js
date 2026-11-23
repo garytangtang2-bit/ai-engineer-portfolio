@@ -23,7 +23,7 @@ export function mountParticles(hero) {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   const hint = hero.querySelector('.particle-hint');
   const textColumn = hero.querySelector('.hero-type');
-  const PALETTE = ['#4f86ff','#8fb8ff','#dce9ff','#f3f6fc','#c3ccda','#d9c39a','#5fd2ff','#9d8cff','#e8b98a'].map(h => [1,3,5].map(k => parseInt(h.slice(k,k+2),16)/255));
+  const PALETTE = ['#4f86ff','#8fb8ff','#dce9ff','#f3f6fc','#c3ccda','#d9c39a','#46679f','#7f9dcc','#c4d1e6'].map(h => [1,3,5].map(k => parseInt(h.slice(k,k+2),16)/255));
 
   // Physics tuning.
   const DT = 1/60, MAX_SUBSTEPS = 3;    // substep cap (stable: stiffest spring gives omega*h ~ 0.2); 3/60 s covers a 50 ms frame
@@ -95,7 +95,7 @@ export function mountParticles(hero) {
     // field, so the ribbon keeps its light with fewer of them.
     // LOOK = [size, alpha, count] multipliers on the original dense field.
     // Sharpness comes from many tiny, near-opaque points of almost the same size; large translucent discs read as blur.
-    const LOOK = [.75, 7, 1.3];
+    const LOOK = [.72, 4.6, 1.3];
     const SIZE = (narrow ? 1.3 : 1.5)*LOOK[0], ALPHA = (narrow ? .95 : .86)*LOOK[1];
     const cnt = n => Math.round(n*LOOK[2]/TIERS)*TIERS;
     if (gl) { NMAX = cnt(narrow ? 17600 : 72000); NMIN = cnt(narrow ? 6600 : 22500); }
@@ -121,21 +121,20 @@ export function mountParticles(hero) {
         project(theta, lat, p); x = p[0]; y = p[1];
         depth = Math.min(1, Math.max(0, .5 + p[2]*.9));
       }
-      const sparkle = rand() < .04;
+      const sparkle = rand() < .025;
       const diam = sparkle ? 4 + rand()*2 : 1.5 + 2*Math.pow(rand(), 2.6);
       const warm = .5+.5*Math.cos(theta+.6);
       // Icy blue dominates (#8fb8ff to #dce9ff), deeper blue in the shadowed side, silver accents; near-white only
       // for sparkles; champagne on its band plus a light scatter.
-      const hue = warm*.8 + rand()*.2;
-      const zone = [7, 0, 6, 1, 2, 3, 8];   // violet, deep blue, cyan, light blue, icy, white, warm amber
-      const col = gold || rand() < .035 ? 5 : sparkle ? (rand() < .5 ? 3 : 6) : rand() < .12 ? zone[(rand()*7)|0] : zone[Math.min(6, (hue*7)|0)];
-      const alpha = (sparkle ? .5 : .09 + rand()*.17) * (.6+.4*depth) * (lat ? 1 : 1.6);
+      const tone = depth*.7 + rand()*.3 + (warm-.5)*.12;   // mostly depth: far = deep blue, near = silver
+      const col = gold || rand() < .02 ? 5 : sparkle ? 3 : tone < .32 ? 6 : tone < .58 ? 7 : tone < .86 ? 8 : 3;
+      const alpha = (sparkle ? .5 : .09 + rand()*.17) * (.22+.78*depth*depth) * (lat ? 1 : 1.6);
       HX[i] = x; HY[i] = y;
       KP[i] = lat*7 + rand()*.35; CKP[i] = Math.cos(KP[i]); SKP[i] = Math.sin(KP[i]);
       const mass = (diam/2.2)**2 * (.8 + rand()*.4);   // physics keeps the unscaled size
       INVM[i] = 1/mass; RC[i] = Math.min(3, diam*.5*1.35);
       const o = i*9, c = PALETTE[col];
-      STAT[o] = x; STAT[o+1] = y; STAT[o+2] = SIZE*(sparkle ? 1.9 : .95 + .3*(diam-1.5))*(.85+.3*depth); STAT[o+3] = alpha*ALPHA; STAT[o+4] = rand()*6.2832; STAT[o+5] = depth;
+      STAT[o] = x; STAT[o+1] = y; STAT[o+2] = SIZE*(sparkle ? 1.9 : .95 + .3*(diam-1.5))*(.72+.56*depth); STAT[o+3] = alpha*ALPHA; STAT[o+4] = rand()*6.2832; STAT[o+5] = depth;
       STAT[o+6] = c[0]; STAT[o+7] = c[1]; STAT[o+8] = c[2];
     }
     // Density balance: where the projection folds the ribbon onto itself, thousands of particles stack in a few pixels.
