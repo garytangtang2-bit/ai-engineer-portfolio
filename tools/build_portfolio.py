@@ -220,7 +220,7 @@ def home():
 <div class="bio"><h3>我的工作方式</h3><div class="method-statement"><p class="lead">AI 編碼代理寫程式，我負責設計與驗收</p><p><b class="lead">我以 AI 編碼代理實作，本站所有系統的程式碼都由代理撰寫。</b>我負責系統框架、規則與限制、目標、執行方法、評估及驗收，以及安全邊界：代理一出錯就即時叫停，代理的每次改動都先在沙盒內進行。</p></div><p><b class="lead">我在工程公司設計部負責 AI 工具。</b>做法是先跟同事走一次原流程，分清哪些步驟用程式、哪些交給模型、哪些必須由人決定，再按<a href="#cost">上面五條原則</a>選模型、盲測和驗收。</p>
 <div class="stack-marks" aria-label="常用技術">{stack}</div>{intro_film('')}
 <dl><div><dt>求職方向</dt><dd>AI Engineer 全職職位：LLM 應用與代理、RAG、模型評估、本機模型部署及成本控制。</dd></div>
-<div><dt>產品與維護</dt><dd>一人主導及維護網站與手機 App，程式由 Claude Code 和 Codex 等編碼代理實作。熟悉 Python、JavaScript、Three.js，能讀懂、測試及驗收代理寫的程式。</dd></div>
+<div><dt>產品與維護</dt><dd>一人主導及維護網站與手機 App，程式由 Claude Code 和 Codex 等編碼代理實作。熟悉 Python、JavaScript、Three.js 及 Playwright 瀏覽器自動化，能讀懂、測試及驗收代理寫的程式。</dd></div>
 <div><dt>AI 與部署</dt><dd>RAG、n8n、AI Skills、API 整合、Supabase、GitHub、Vercel。</dd></div>
 <div><dt>工作經歷</dt><dd>2026.09 至今 · Kin Wing Engineering Co. Ltd<br>Assistant AI and design Administrator，設計部。</dd></div>
 <div><dt>學歷與證書</dt><dd>國立政治大學公共行政學系，2026.06 畢業。經 HKCAAVQ 評估等同香港榮譽學士學位。持有 Claude 101、AI Fluency 證書。</dd></div></dl></div></div></section></main>'''
