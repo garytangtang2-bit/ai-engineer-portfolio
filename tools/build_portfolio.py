@@ -237,8 +237,6 @@ def demo(widget, anchor, heading='親手試用', marker=True):
 
 
 def supplementary_for(pid):
-    if pid == 'autocut':
-        return (CONTENT/'autocut-proof.html').read_text(encoding='utf-8')
     if pid == 'transcribe':
         return (CONTENT/'asr-calibration.html').read_text(encoding='utf-8')
     if pid == 'pile-review':
@@ -384,8 +382,6 @@ def case_page(p, idx):
     if p['id'] in inspection and not widget:
         fragment = reader(p['id'], 'demo')
     supplementary = supplementary_for(p['id'])
-    if p['id'] == 'autocut':
-        supplementary = f'<section id="render" class="render-section"><h3>真實發佈短片</h3>{supplementary}</section>'
     module_html = modules_section(p, children, path) if children else ''
     related = ''
     if p.get('related'):
@@ -395,8 +391,6 @@ def case_page(p, idx):
     first_jump = '<a class="main-btn" href="#demo">前往互動示範 ↓</a>' if widget else '<a class="main-btn" href="#method">查看實作流程 ↓</a>'
     if p['id'] in inspection and not widget:
         first_jump = '<a class="main-btn" href="#demo">打開輸出紀錄 ↓</a>'
-    if p['id'] == 'autocut':
-        first_jump = '<a class="main-btn" href="#render">播放成片片段</a><a class="soft-btn" href="#demo">操作時間軸</a>'
     if ENGINEERING.get(p['id'], {}).get('rag_flow'):
         first_jump += '<a class="soft-btn" href="#rag-flow">接地與引用流程 ↓</a>'
     if children:
