@@ -273,7 +273,7 @@ def module_card(c, number, path):
     cls = 'module-top' if figure else 'module-top no-proof'
     head = (f'<div class="{cls}"><div><p class="eyeline">模組 {number:02d} · {esc(c["group"])}</p><h3 id="{c["id"]}-title">{esc(c["title"])}</h3>{rich(c["intro"], cls="module-intro")}'
             f'<div class="module-result"><span>成果</span><strong>{kn(esc(c["result"]))}</strong></div></div>{figure}</div>')
-    more = (f'<details class="mod-more"><summary>步驟、細節與工具</summary>{rich(c["detail"], cls="module-intro")}'
+    more = (f'<details class="mod-more"><summary>步驟、細節與工具</summary>{rich(c["detail"], cls="module-intro")}{rich(c["how"], cls="module-intro case-how") if c.get("how") else ""}'
             f'<ol class="build-steps">{steps}</ol><ul class="tech-pills" aria-label="技術與工具">{chips}</ul>{supplement}</details>')
     return f'<article class="module-card" id="{c["id"]}" aria-labelledby="{c["id"]}-title">{head}{more}{extra}<a class="module-back" href="#modules">↑ 返回模組總覽</a></article>'
 
@@ -403,7 +403,9 @@ def key_section(p, chips):
 def fold_teasers(pid):
     """One-line summaries shown on the collapsed detail sections."""
     e = ENGINEERING.get(pid) or {}
-    parts = [] if 'pipeline' in e else ['完整步驟與背景說明']
+    parts = ['系統架構、技術與流程'] if project_by_id.get(pid, {}).get('how') else []
+    if 'pipeline' not in e:
+        parts.append('完整步驟與背景說明')
     if 'pipeline' in e:
         parts.append('模型、程式與人手分工')
     if e.get('rag_flow'):
@@ -467,7 +469,8 @@ def case_page(p, idx):
         sections += rsec('engineering', '問題', '問題與限制', eng['problem'], cls='sec-problem', fold=teaser['problem'])
     # Full step text only when it says more than the one-line flow in the key points.
     longer = any(key_line(d) != plain(d).strip() for d in (x.split('｜', 1)[1] for x in p['steps']))
-    method_body = rich(p["detail"], cls="case-context") + (f'<ol class="build-steps">{steps_list(p["steps"])}</ol>' if longer else '')
+    how = rich(p['how'], cls='case-context case-how') if p.get('how') else ''
+    method_body = rich(p["detail"], cls="case-context") + how + (f'<ol class="build-steps">{steps_list(p["steps"])}</ol>' if longer else '')
     sections += rsec('method', '做法', '做法細節', method_body, cls='method', wide=eng['method'] if eng else '', fold=teaser['method'])
     if eng or supplementary:
         sections += rsec('results', '結果', eng['outcome_title'] if eng else '實際成果', eng['results'] if eng else '', cls='sec-results', wide=supplementary, fold=teaser['results'])
