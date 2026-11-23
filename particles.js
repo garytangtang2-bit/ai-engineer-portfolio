@@ -94,7 +94,8 @@ export function mountParticles(hero) {
     // enlarging the points only made them read as out-of-focus bokeh. Each point is brighter than in the old dense
     // field, so the ribbon keeps its light with fewer of them.
     // LOOK = [size, alpha, count] multipliers on the original dense field.
-    const LOOK = [.62, 2.6, .5];
+    // Sharpness comes from many tiny, near-opaque points of almost the same size; large translucent discs read as blur.
+    const LOOK = [.62, 3.8, 1.3];
     const SIZE = (narrow ? 1.3 : 1.5)*LOOK[0], ALPHA = (narrow ? .95 : .86)*LOOK[1];
     const cnt = n => Math.round(n*LOOK[2]/TIERS)*TIERS;
     if (gl) { NMAX = cnt(narrow ? 17600 : 72000); NMIN = cnt(narrow ? 6600 : 22500); }
@@ -133,7 +134,7 @@ export function mountParticles(hero) {
       const mass = (diam/2.2)**2 * (.8 + rand()*.4);   // physics keeps the unscaled size
       INVM[i] = 1/mass; RC[i] = Math.min(3, diam*.5*1.35);
       const o = i*9, c = PALETTE[col];
-      STAT[o] = x; STAT[o+1] = y; STAT[o+2] = diam*SIZE*(sparkle ? .6 : 1)*(.85+.3*depth); STAT[o+3] = alpha*ALPHA; STAT[o+4] = rand()*6.2832; STAT[o+5] = depth;
+      STAT[o] = x; STAT[o+1] = y; STAT[o+2] = SIZE*(sparkle ? 1.9 : .95 + .3*(diam-1.5))*(.85+.3*depth); STAT[o+3] = alpha*ALPHA; STAT[o+4] = rand()*6.2832; STAT[o+5] = depth;
       STAT[o+6] = c[0]; STAT[o+7] = c[1]; STAT[o+8] = c[2];
     }
     // Density balance: where the projection folds the ribbon onto itself, thousands of particles stack in a few pixels.
@@ -358,7 +359,7 @@ export function mountParticles(hero) {
     if (uStar > .5) r *= 1. + .06*uMotion*sin(uTime*1.3+ph);
     float L = sp > 260. ? min(5., (sp-260.)*.01) : 0.;   // short streak, fast particles only
     vDir = sp > .001 ? v/sp : vec2(1., 0.); vLen = L; vR = r;
-    float pt = min(uMaxPt/uScale, (uStar > .5 ? r*2. + 2. : r*4. + 2./uScale) + L);
+    float pt = min(uMaxPt/uScale, (uStar > .5 ? r*2. + 2. : r*2. + 2./uScale) + L);
     vPt = pt; gl_PointSize = pt*uScale;
     float tw = uStar > .5 ? 1. : mix(1., .78+.22*sin(uTime*(1.1+depth*1.7)+ph*3.), uMotion);
     float a = min(1., aProp.y*tw + boost*.25);
@@ -385,9 +386,9 @@ export function mountParticles(hero) {
     float a;
     if (uStar > .5) a = exp(-d2*90.) + .32*exp(-d2*9.) + .1*exp(-d2*2.2);
     else {
-      // Crisp core with an anti-aliased edge one device pixel wide and a faint glow just outside it.
-      float e = .5/uScale, dd = sqrt(dot(d, d)), core = 1. - smoothstep(vR - e, vR + e, dd);
-      a = core + (1. - core)*.22*exp(-dd*dd/(vR*vR)*.9);
+      // Hard disc: anti-aliased edge one device pixel wide, no glow.
+      float e = .5/uScale, dd = sqrt(dot(d, d));
+      a = 1. - smoothstep(vR - e, vR + e, dd);
       a *= vLen > 0. ? vR*2./(vR*2.+vLen*.5) : 1.;
     }
     a *= vA;
