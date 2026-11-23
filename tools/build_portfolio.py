@@ -146,7 +146,7 @@ def page(title, description, path, body, widgets=(), canonical='', ids=(), head_
 <header class="mast"><div class="frame mast-bar"><a class="signature" href="{path or './'}"><span aria-hidden="true" class="sig-mark">gt</span><span>Gary Tang</span></a>
 <nav aria-label="網站導覽"><a href="{path}#work">作品</a><a href="{path}#about">關於</a><a class="cv-link" href="{path}{pdf_name}">履歷 PDF <span aria-hidden="true">↗</span></a></nav></div></header>
 {body}
-<footer class="folio-footer frame" id="contact"><div><h2>聯絡 Gary</h2><p>正尋找 AI Engineer 全職職位。履歷內附電郵及電話，歡迎聯絡我面談。</p></div><div class="footer-cta"><a class="main-btn" href="{path}{pdf_name}">開啟履歷及聯絡資料 <span aria-hidden="true">↗</span></a><a class="soft-btn" href="{path}{pdf_name_en}" hreflang="en">English CV <span aria-hidden="true">↗</span></a></div></footer>
+<footer class="folio-footer frame" id="contact"><div><h2>聯絡 Gary</h2><p>履歷內附電郵及電話，歡迎聯絡我面談。</p></div><div class="footer-cta"><a class="main-btn" href="{path}{pdf_name}">開啟履歷及聯絡資料 <span aria-hidden="true">↗</span></a><a class="soft-btn" href="{path}{pdf_name_en}" hreflang="en">English CV <span aria-hidden="true">↗</span></a></div></footer>
 </body></html>'''
 
 
@@ -199,7 +199,7 @@ def home():
     compact_cards = '\n'.join(tool_row(p) for p in others)
     stack = ''.join(f'<span><img src="assets/logos/{logo}.svg" alt="" width="19" height="19" loading="lazy">{name}</span>' for logo,name in [('python','Python'),('javascript','JavaScript'),('threedotjs','Three.js'),('github','GitHub')])
     body = f'''<main id="main" data-home><div class="hero-stage"><canvas class="particle-field" aria-hidden="true"></canvas><section id="home" class="frame landing">
-<div class="hero-type"><p class="eyeline"><span class="tone-dot"></span> AI ENGINEER <span class="role-city">／ 香港 · 正尋找全職職位</span></p>
+<div class="hero-type"><p class="eyeline"><span class="tone-dot"></span> AI ENGINEER <span class="role-city">／ 香港</span></p>
 <h1>鄧嘉維<span lang="en">Gary Tang</span></h1><p class="hero-statement">現於工程公司設計部負責 AI 工作流，會議紀錄、報表核對等系統已由同事日常使用；另一人主導 AI 學習平台 ToGoalAi 上線。擅長粵語語音轉錄、LLM／RAG、文件理解，以及模型評估與成本控制。</p>
 <div class="hero-actions"><a class="main-btn" href="#work">瀏覽全部作品 <span aria-hidden="true">↓</span></a><a class="soft-btn" href="{pdf_name}">履歷及聯絡 <span aria-hidden="true">↗</span></a></div></div>
 <p class="particle-hint" hidden aria-hidden="true"><i></i><span>移動滑鼠，攪動粒子</span><span>拖動手指，攪動粒子</span></p></section><a class="scroll-cue" href="#results" aria-label="向下捲動至量度過的成果"><span>向下捲動</span><i aria-hidden="true"></i></a></div>
