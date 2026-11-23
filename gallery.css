@@ -133,7 +133,7 @@ body.gallery-body {
 .proof-card figcaption {background:#111c25;color:#bfd1d6;border-block:1px solid #c5dde51a;padding:3px 16px;font-size:.72rem;letter-spacing:.04em}
 .proof-case .proof-open {position:relative;display:block;color:var(--light);cursor:zoom-in}
 .proof-case .proof-mount {height:clamp(225px,18vw,330px);padding:14px}
-.proof-zoom {position:absolute;right:10px;bottom:9px;padding:4px 10px;border-radius:24px;background:#101c27ed;border:1px solid #78909d;font-size:.75rem}
+.proof-zoom {position:absolute;right:10px;top:9px;padding:4px 10px;border-radius:24px;background:#101c27ed;border:1px solid #78909d;font-size:.75rem}
 .proof-case figcaption {color:#c1cfd6;font-size:.87rem;line-height:1.6;padding:13px 18px;border-bottom:1px solid var(--edge)}
 .proof-case figcaption b {display:block;color:#b3e5f2;font-weight:650}
 .proof-viewer {position:fixed;inset:0;max-height:94dvh;max-width:96vw;width:fit-content;margin:auto;padding:15px;border:1px solid #748895;border-radius:14px;background:#15202a;color:#e1edf0;box-shadow:0 22px 88px #0008}

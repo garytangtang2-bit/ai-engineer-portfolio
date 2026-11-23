@@ -742,6 +742,7 @@ a.main-btn::after {background:linear-gradient(105deg,transparent 30%,rgba(243,23
 /* ROUND 4 — case hero fills the first screen; the next section starts on the fold */
 :root {--crumb-h:58px}
 .case-heading {min-height:calc(100vh - var(--mast-h) - var(--crumb-h));min-height:calc(100svh - var(--mast-h) - var(--crumb-h));align-content:center;box-sizing:border-box}
+@media (max-width:700px) {.case-heading {min-height:0}}
 @media (max-width:700px) {
   :root {--crumb-h:44px}
   .case-body .case-crumb {padding-top:6px;min-height:0;height:var(--crumb-h);box-sizing:border-box}
