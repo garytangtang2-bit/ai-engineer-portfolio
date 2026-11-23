@@ -17,8 +17,7 @@
 // All arrays are allocated per layout; nothing is allocated per frame.
 // Particles are stored in 16 random tiers, each sorted by home x, so the adaptive count drops whole tiers and the
 // particles near the cursor sit in a few contiguous index runs: only those runs are uploaded each frame.
-// Points are small bright discs (about one device pixel of anti-aliased edge) with a tight glow; a few carry cross
-// flares, and one warm highlight is drawn as a sun with a halo.
+// Points are very small crisp discs (about one device pixel of anti-aliased edge) with a faint tight glow.
 export function mountParticles(hero) {
   const canvas = hero.querySelector('canvas');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
@@ -91,11 +90,12 @@ export function mountParticles(hero) {
     let seed = 710572;
     const rand = () => ((seed = (Math.imul(1664525,seed) + 1013904223) >>> 0) / 4294967296);
     const gauss = () => Math.sqrt(-2*Math.log(rand()+1e-9))*Math.cos(6.2831853*rand());
-    // Star-field look: small points (about 1-3 CSS px) that are bright, with a crisp core and a tight glow. Large
-    // flat discs read as out-of-focus bokeh and tens of thousands of faint dots read as grain; neither looks sharp.
+    // Very small points (about 1-2 CSS px), drawn on a canvas at the screen's native resolution so each stays sharp;
+    // enlarging the points only made them read as out-of-focus bokeh. Each point is brighter than in the old dense
+    // field, so the ribbon keeps its light with fewer of them.
     // LOOK = [size, alpha, count] multipliers on the original dense field.
-    const LOOK = [.8, 4.6, .26];
-    const SIZE = (narrow ? 1.15 : 1.25)*LOOK[0], ALPHA = (narrow ? .95 : .86)*LOOK[1];
+    const LOOK = [.62, 2.6, .5];
+    const SIZE = (narrow ? 1.3 : 1.5)*LOOK[0], ALPHA = (narrow ? .95 : .86)*LOOK[1];
     const cnt = n => Math.round(n*LOOK[2]/TIERS)*TIERS;
     if (gl) { NMAX = cnt(narrow ? 17600 : 72000); NMIN = cnt(narrow ? 6600 : 22500); }
     else { NMAX = NMIN = 6400; }
@@ -120,20 +120,20 @@ export function mountParticles(hero) {
         project(theta, lat, p); x = p[0]; y = p[1];
         depth = Math.min(1, Math.max(0, .5 + p[2]*.9));
       }
-      const sparkle = rand() < .02, flare = sparkle && rand() < .3;   // flares: a few bright points with cross spikes
-      const diam = sparkle ? 2.6 + rand()*1.6 : 1.5 + 2*Math.pow(rand(), 2.6);
+      const sparkle = rand() < .015;
+      const diam = sparkle ? 4 + rand()*2 : 1.5 + 2*Math.pow(rand(), 2.6);
       const warm = .5+.5*Math.cos(theta+.6);
       // Icy blue dominates (#8fb8ff to #dce9ff), deeper blue in the shadowed side, silver accents; near-white only
       // for sparkles; champagne on its band plus a light scatter.
       const hue = warm*.45 + rand()*.55;
-      const col = gold || rand() < .06 ? 5 : sparkle ? (rand() < .6 ? 3 : 2) : hue < .08 ? 0 : hue < .4 ? 1 : hue < .8 ? 2 : 3;
+      const col = gold || rand() < .035 ? 5 : sparkle ? (rand() < .3 ? 3 : 2) : hue < .2 ? 0 : hue < .62 ? 1 : hue < .93 ? 2 : 4;
       const alpha = (sparkle ? .5 : .09 + rand()*.17) * (.6+.4*depth) * (lat ? 1 : 1.6);
       HX[i] = x; HY[i] = y;
       KP[i] = lat*7 + rand()*.35; CKP[i] = Math.cos(KP[i]); SKP[i] = Math.sin(KP[i]);
       const mass = (diam/2.2)**2 * (.8 + rand()*.4);   // physics keeps the unscaled size
       INVM[i] = 1/mass; RC[i] = Math.min(3, diam*.5*1.35);
       const o = i*9, c = PALETTE[col];
-      STAT[o] = x; STAT[o+1] = y; STAT[o+2] = diam*SIZE*(.85+.3*depth); STAT[o+3] = alpha*ALPHA; STAT[o+4] = rand()*6.2832; STAT[o+5] = depth + (flare ? 2 : 0);
+      STAT[o] = x; STAT[o+1] = y; STAT[o+2] = diam*SIZE*(sparkle ? .6 : 1)*(.85+.3*depth); STAT[o+3] = alpha*ALPHA; STAT[o+4] = rand()*6.2832; STAT[o+5] = depth;
       STAT[o+6] = c[0]; STAT[o+7] = c[1]; STAT[o+8] = c[2];
     }
     // Density balance: where the projection folds the ribbon onto itself, thousands of particles stack in a few pixels.
@@ -159,10 +159,8 @@ export function mountParticles(hero) {
       const perm = (A, k) => { const C = A.slice(); for (let j = 0; j < MAX; j++) for (let q = 0; q < k; q++) A[j*k+q] = C[order[j]*k+q]; };
       perm(HX, 1); perm(HY, 1); perm(KP, 1); perm(CKP, 1); perm(SKP, 1); perm(INVM, 1); perm(RC, 1); perm(STAT, 9);
     }
-    // Highlight stars, dropped where they would sit behind the text block.
-    stars = [[5.23,-.35,5,58,0],[2.82,.36,1,52,2.1],[.65,.38,3,24,4.2],[4.20,.24,2,22,1.3]]
-      .map(([angle,lat,col,size,phase]) => { project(angle,lat,p); return [p[0],p[1],size,col,phase]; })
-      .filter(s => !mask || s[0] < mask.box[0] || s[0] > mask.box[2] || s[1] < mask.box[1] || s[1] > mask.box[3]);
+    // No large highlight stars: their wide glow read as a sun. Only the small points are drawn.
+    stars = [];
     // Grids.
     HG_W = Math.ceil(width/HG_CELL)+1; HG_H = Math.ceil(height/HG_CELL)+1;
     HG_START = new Int32Array(HG_W*HG_H+1); HG_ITEMS = new Int32Array(MAX);
@@ -349,9 +347,9 @@ export function mountParticles(hero) {
   const VS = `#version 300 es
   layout(location=0) in vec2 aHome; layout(location=1) in vec4 aProp; layout(location=2) in vec3 aCol; layout(location=3) in vec4 aDyn;
   uniform vec2 uRes; uniform float uScale, uTime, uMotion, uMaxPt, uStar, uMaskOn; uniform vec4 uBox, uCue; uniform vec2 uGrad;
-  out vec3 vCol; out float vA, vLen, vR, vPt, vFl; out vec2 vDir;
+  out vec3 vCol; out float vA, vLen, vR, vPt; out vec2 vDir;
   void main() {
-    float ph = aProp.z, fl = step(1.5, aProp.w), depth = aProp.w - 2.*fl;
+    float ph = aProp.z, depth = aProp.w;
     vec2 drift = uMotion*uStar*0. + uMotion*(1.-uStar)*vec2(sin(uTime*.55+ph)*.9, cos(uTime*.47+ph)*.7)*depth;
     vec2 p = aHome + drift + aDyn.xy;
     vec2 v = aDyn.zw*uMotion; float sp = length(v);
@@ -360,8 +358,7 @@ export function mountParticles(hero) {
     if (uStar > .5) r *= 1. + .06*uMotion*sin(uTime*1.3+ph);
     float L = sp > 260. ? min(5., (sp-260.)*.01) : 0.;   // short streak, fast particles only
     vDir = sp > .001 ? v/sp : vec2(1., 0.); vLen = L; vR = r;
-    float pt = min(uMaxPt/uScale, (uStar > .5 ? r*2. + 2. : r*(fl > .5 ? 24. : 4.6) + 2./uScale) + L);
-    vFl = fl;
+    float pt = min(uMaxPt/uScale, (uStar > .5 ? r*2. + 2. : r*4. + 2./uScale) + L);
     vPt = pt; gl_PointSize = pt*uScale;
     float tw = uStar > .5 ? 1. : mix(1., .78+.22*sin(uTime*(1.1+depth*1.7)+ph*3.), uMotion);
     float a = min(1., aProp.y*tw + boost*.25);
@@ -380,34 +377,22 @@ export function mountParticles(hero) {
   }`;
   const FS = `#version 300 es
   precision highp float;
-  in vec3 vCol; in float vA, vLen, vR, vPt, vFl; in vec2 vDir; uniform float uStar, uScale; out vec4 o;
+  in vec3 vCol; in float vA, vLen, vR, vPt; in vec2 vDir; uniform float uStar, uScale; out vec4 o;
   void main() {
     vec2 q = (gl_PointCoord-.5)*vPt;
     vec2 d = q - vDir*clamp(dot(q, vDir), -vLen*.5, vLen*.5);
     float d2 = dot(d, d)/(vR*vR);
     float a;
-    vec2 ad = abs(q); float hair = .55/uScale, hot = 0.;
-    if (uStar > .5) {
-      // Highlight stars: the warm one is a sun (solid disc and wide halo); the others are cross flares.
-      if (vCol.r > vCol.b) {
-        float e = .6/uScale, dd = sqrt(dot(q, q)), rc = vR*.24, core = 1. - smoothstep(rc - e, rc + e, dd);
-        a = core + .5*exp(-d2*12.) + .22*exp(-d2*3.5) + .08*exp(-d2*1.1);
-        hot = core*(1. - smoothstep(0., rc, dd))*.85;   // white-hot centre
-      } else {
-        float sp = exp(-ad.y/hair)*exp(-ad.x/(vR*.42)) + exp(-ad.x/hair)*exp(-ad.y/(vR*.42));
-        a = exp(-d2*160.) + .9*sp + .22*exp(-d2*14.) + .05*exp(-d2*3.);
-      }
-    } else {
-      // Crisp core with an anti-aliased edge one device pixel wide, plus a tight glow about twice the radius.
-      float e = .5/uScale, dd = sqrt(dot(d, d));
-      float core = 1. - smoothstep(vR - e, vR + e, dd);
-      a = core + (1. - core)*.3*exp(-dd*dd/(vR*vR)*.8);
-      if (vFl > .5) a += exp(-ad.y/hair)*exp(-ad.x/(vR*3.6)) + exp(-ad.x/hair)*exp(-ad.y/(vR*3.6));
+    if (uStar > .5) a = exp(-d2*90.) + .32*exp(-d2*9.) + .1*exp(-d2*2.2);
+    else {
+      // Crisp core with an anti-aliased edge one device pixel wide and a faint glow just outside it.
+      float e = .5/uScale, dd = sqrt(dot(d, d)), core = 1. - smoothstep(vR - e, vR + e, dd);
+      a = core + (1. - core)*.22*exp(-dd*dd/(vR*vR)*.9);
       a *= vLen > 0. ? vR*2./(vR*2.+vLen*.5) : 1.;
     }
     a *= vA;
     if (a < .003) discard;
-    o = vec4(mix(vCol, vec3(1., .98, .93), hot)*a, a);
+    o = vec4(vCol*a, a);
   }`;
 
   function initGL() {
@@ -520,7 +505,7 @@ export function mountParticles(hero) {
     c.clearRect(0, 0, width, height);
     c.globalCompositeOperation = 'lighter';
     for (let i = 0; i < N; i++) {
-      const s = i*9, o = i*4, depth = STAT[s+5] % 2, ph = STAT[s+4];
+      const s = i*9, o = i*4, depth = STAT[s+5], ph = STAT[s+4];
       const x = HX[i] + (still ? 0 : Math.sin(t*.55+ph)*.9*depth) + DYN[o], y = HY[i] + (still ? 0 : Math.cos(t*.47+ph)*.7*depth) + DYN[o+1];
       const vx = still ? 0 : DYN[o+2], vy = still ? 0 : DYN[o+3], sp = Math.sqrt(vx*vx+vy*vy), boost = Math.min(1, sp/520);
       const a = Math.min(1, STAT[s+3]*(still ? 1 : .78+.22*Math.sin(t*(1.1+depth*1.7)+ph*3)) + boost*.25);
