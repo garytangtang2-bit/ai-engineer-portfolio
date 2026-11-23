@@ -146,7 +146,7 @@ def page(title, description, path, body, widgets=(), canonical='', ids=(), head_
 <header class="mast"><div class="frame mast-bar"><a class="signature" href="{path or './'}"><span aria-hidden="true" class="sig-mark">gt</span><span>Gary Tang</span></a>
 <nav aria-label="網站導覽"><a href="{path}#work">作品</a><a href="{path}#about">關於</a><a class="cv-link" href="{path}{pdf_name}">履歷 PDF <span aria-hidden="true">↗</span></a></nav></div></header>
 {body}
-<footer class="folio-footer frame" id="contact"><div><h2>聯絡 Gary</h2><p>履歷內附電郵及電話，歡迎聯絡我面談。</p></div><div class="footer-cta"><a class="main-btn" href="{path}{pdf_name}">開啟履歷及聯絡資料 <span aria-hidden="true">↗</span></a><a class="soft-btn" href="{path}{pdf_name_en}" hreflang="en">English CV <span aria-hidden="true">↗</span></a></div></footer>
+<footer class="folio-footer frame" id="contact"><div><h2>聯絡 Gary</h2><p>正尋找 AI Engineer 全職職位。履歷內附電郵及電話，歡迎聯絡我面談。</p></div><div class="footer-cta"><a class="main-btn" href="{path}{pdf_name}">開啟履歷及聯絡資料 <span aria-hidden="true">↗</span></a><a class="soft-btn" href="{path}{pdf_name_en}" hreflang="en">English CV <span aria-hidden="true">↗</span></a></div></footer>
 </body></html>'''
 
 
@@ -199,11 +199,11 @@ def home():
     compact_cards = '\n'.join(tool_row(p) for p in others)
     stack = ''.join(f'<span><img src="assets/logos/{logo}.svg" alt="" width="19" height="19" loading="lazy">{name}</span>' for logo,name in [('python','Python'),('javascript','JavaScript'),('threedotjs','Three.js'),('github','GitHub')])
     body = f'''<main id="main" data-home><div class="hero-stage"><canvas class="particle-field" aria-hidden="true"></canvas><section id="home" class="frame landing">
-<div class="hero-type"><p class="eyeline"><span class="tone-dot"></span> AI ENGINEER <span class="role-city">／ 香港</span></p>
-<h1>鄧嘉維<span lang="en">Gary Tang</span></h1><p class="hero-statement">我為工程團隊設計、評估及交付 AI 系統：粵語語音轉錄、LLM／RAG 和文件理解。能用程式的不交給模型，每個系統都預留人手覆核。</p>
+<div class="hero-type"><p class="eyeline"><span class="tone-dot"></span> AI ENGINEER <span class="role-city">／ 香港 · 正尋找全職職位</span></p>
+<h1>鄧嘉維<span lang="en">Gary Tang</span></h1><p class="hero-statement">現於工程公司設計部負責 AI 工作流，會議紀錄、報表核對等系統已由同事日常使用；另一人主導 AI 學習平台 ToGoalAi 上線。擅長粵語語音轉錄、LLM／RAG、文件理解，以及模型評估與成本控制。</p>
 <div class="hero-actions"><a class="main-btn" href="#work">瀏覽全部作品 <span aria-hidden="true">↓</span></a><a class="soft-btn" href="{pdf_name}">履歷及聯絡 <span aria-hidden="true">↗</span></a></div></div>
 <p class="particle-hint" hidden aria-hidden="true"><i></i><span>移動滑鼠，攪動粒子</span><span>拖動手指，攪動粒子</span></p></section><a class="scroll-cue" href="#results" aria-label="向下捲動至量度過的成果"><span>向下捲動</span><i aria-hidden="true"></i></a></div>
-<section class="home-section metrics-section" id="results" aria-labelledby="results-title"><div class="frame rgrid">{home_head('§1 成果', '量度過的成果', 'results-title', '每個數字都連到相應的個案頁。')}
+<section class="home-section metrics-section" id="results" aria-labelledby="results-title"><div class="frame rgrid">{home_head('§1 成果', '已上線的成果', 'results-title', '會議紀錄和 PDF 系統由設計部同事使用；ToGoalAi 是我的個人產品。每個數字都連到個案頁。')}
 <div class="metric-rail rsec-wide" aria-label="主要成果"><a href="projects/meeting/" aria-label="會議紀錄人手時間由 5 小時縮至約 10 分鐘，以 30 場會議計"><span>會議紀錄人手時間</span><strong><span class="nw">5<small> 小時</small></span><i>→</i><span class="nw">10<small> 分鐘</small></span></strong><em>以 30 場會議計 · 總歷時約 90 分鐘</em></a>
 <a href="projects/pdf/" aria-label="PDF 還原 Excel 由 16 小時縮至 30 分鐘"><span>PDF 還原 Excel</span><strong><span class="nw">16<small> 小時</small></span><i>→</i><span class="nw">30<small> 分鐘</small></span></strong><em>抽查準確率 99.99%</em></a>
 <a href="projects/togoal/" aria-label="ToGoalAi 學習平台，2,000 名以上註冊用戶"><span>ToGoalAi 學習平台</span><strong><span class="nw">2,000+<small> 註冊用戶</small></span></strong><em>一人主導上線</em></a></div></div></section>
@@ -213,13 +213,14 @@ def home():
 <p class="feature-module"><b>使用中</b>Minutes 模組：同事只需回答 AI 列出的疑問（最多 <span class="kn">10 題</span>），每題可重聽約 <span class="kn">26 秒</span>原聲片段；一份紀錄的人手時間由約 <span class="kn">5 小時</span>縮至約 <span class="kn">10 分鐘</span>（以 30 場會議計）。</p><div class="feature-links"><a href="projects/meeting/#cycle">看完整工作流時間線 <span aria-hidden="true">↗</span></a><a href="projects/meeting/#demo">試做一次會議答疑 <span aria-hidden="true">↗</span></a></div></div>
 <a class="instrument feature-cycle" data-reactive href="projects/meeting/#cycle" aria-label="打開設計會議循環時間線"><div class="instrument-top"><span class="tiny-led"></span><strong>設計會議循環時間線</strong><span>建構中</span></div><img src="assets/work/meeting-small.webp" width="1280" height="720" loading="lazy" decoding="async" alt="設計會議循環時間線節錄：開會日至收到即處理階段，AI、我、工程師、上司和程式各自的節點及箭頭；本機轉錄及撰寫英文 Minutes 節點標示為使用中"></a></section>
 <section class="frame catalogue home-section rgrid" id="work" aria-labelledby="work-title">{home_head('§3 作品', '作品目錄', 'work-title', extra=f'<span class="index-count" aria-live="polite" id="result-count">{len(FLAGSHIPS)+len(others)} 件作品</span>')}
-<p class="data-note"><b>關於示範資料</b>客戶及公司資料屬機密，本站所有互動示範改用重新建立的示例資料；程式、流程和評估方法與實際使用的相同，評估數字來自實際工作文件。</p>
+<p class="data-note"><b>關於示範資料</b>公司及項目資料屬機密，本站所有互動示範改用重新建立的示例資料；程式、流程和評估方法與實際使用的相同，評估數字來自實際工作文件。</p>
 <div class="rsec-wide"><div class="index-controls" hidden><div class="index-filters" role="group" aria-label="按作品類別篩選">{filters}</div><label class="index-search"><span aria-hidden="true">⌕</span><input type="search" id="catalogue-search" aria-label="搜尋作品或技術" placeholder="搜尋作品或技術" maxlength="80"></label></div>
 <h3 class="tier-title">主要項目 <small>每個附架構、關鍵決定、評估和失敗防護</small></h3><div class="flagship-block" data-card-section><div class="work-grid flagship-grid">{featured}</div><div class="flag-list">{dense}</div></div><section class="compact-section" data-card-section aria-labelledby="compact-title"><h3 id="compact-title">其他工具</h3><div class="tool-list">{compact_cards}</div></section><div class="no-matches" hidden><p>找不到符合這些條件的作品。</p><button type="button" id="clear-index">顯示全部作品</button></div></div><a class="index-return" href="#work" hidden>↑ 返回篩選</a></section>
 <section class="about-band home-section" id="about" aria-labelledby="about-title"><div class="frame rgrid about-grid"><header class="rsec-head profile"><p class="marker">§4 關於</p><h2 id="about-title">關於我</h2><img loading="lazy" src="assets/gary-tang.webp" alt="鄧嘉維" width="180" height="220"><p>鄧嘉維 · Tang Ka Wai, Gary</p></header>
-<div class="bio"><h3>先量度，再交付</h3><div class="method-statement"><p class="lead">我的工程方法</p><p><b class="lead">我以 AI 編碼代理實作，本站所有系統的程式碼都由代理撰寫。</b>我負責系統框架、規則與限制、目標、執行方法、評估及驗收，以及安全邊界：代理一出錯就即時叫停，代理的每次改動都先在沙盒內進行。</p></div><p><b class="lead">我在工程公司設計部負責 AI 工具。</b>做法是先跟同事走一次原流程，分清哪些步驟用程式、哪些交給模型、哪些必須由人決定，再按<a href="#cost">上面五條原則</a>選模型、盲測和驗收。</p>
+<div class="bio"><h3>我的工作方式</h3><div class="method-statement"><p class="lead">AI 編碼代理寫程式，我負責設計與驗收</p><p><b class="lead">我以 AI 編碼代理實作，本站所有系統的程式碼都由代理撰寫。</b>我負責系統框架、規則與限制、目標、執行方法、評估及驗收，以及安全邊界：代理一出錯就即時叫停，代理的每次改動都先在沙盒內進行。</p></div><p><b class="lead">我在工程公司設計部負責 AI 工具。</b>做法是先跟同事走一次原流程，分清哪些步驟用程式、哪些交給模型、哪些必須由人決定，再按<a href="#cost">上面五條原則</a>選模型、盲測和驗收。</p>
 <div class="stack-marks" aria-label="常用技術">{stack}</div>{intro_film('')}
-<dl><div><dt>產品與維護</dt><dd>一人主導及維護網站與手機 App，程式由 Claude Code 和 Codex 等編碼代理實作。熟悉 Python、JavaScript、Three.js，能讀懂、測試及驗收代理寫的程式。</dd></div>
+<dl><div><dt>求職方向</dt><dd>AI Engineer 全職職位：LLM 應用與代理、RAG、模型評估、本機模型部署及成本控制。</dd></div>
+<div><dt>產品與維護</dt><dd>一人主導及維護網站與手機 App，程式由 Claude Code 和 Codex 等編碼代理實作。熟悉 Python、JavaScript、Three.js，能讀懂、測試及驗收代理寫的程式。</dd></div>
 <div><dt>AI 與部署</dt><dd>RAG、n8n、AI Skills、API 整合、Supabase、GitHub、Vercel。</dd></div>
 <div><dt>工作經歷</dt><dd>2026.09 至今 · Kin Wing Engineering Co. Ltd<br>Assistant AI and design Administrator，設計部。</dd></div>
 <div><dt>學歷與證書</dt><dd>國立政治大學公共行政學系，2026.06 畢業。經 HKCAAVQ 評估等同香港榮譽學士學位。持有 Claude 101、AI Fluency 證書。</dd></div></dl></div></div></section></main>'''
@@ -271,7 +272,7 @@ def module_card(c, number, path):
         extra += demo(c['widget'], f'{c["id"]}-demo', marker=False)
     cls = 'module-top' if figure else 'module-top no-proof'
     head = (f'<div class="{cls}"><div><p class="eyeline">模組 {number:02d} · {esc(c["group"])}</p><h3 id="{c["id"]}-title">{esc(c["title"])}</h3>{rich(c["intro"], cls="module-intro")}'
-            f'<div class="module-result"><span>交付成果</span><strong>{kn(esc(c["result"]))}</strong></div></div>{figure}</div>')
+            f'<div class="module-result"><span>成果</span><strong>{kn(esc(c["result"]))}</strong></div></div>{figure}</div>')
     more = (f'<details class="mod-more"><summary>步驟、細節與工具</summary>{rich(c["detail"], cls="module-intro")}'
             f'<ol class="build-steps">{steps}</ol><ul class="tech-pills" aria-label="技術與工具">{chips}</ul>{supplement}</details>')
     return f'<article class="module-card" id="{c["id"]}" aria-labelledby="{c["id"]}-title">{head}{more}{extra}<a class="module-back" href="#modules">↑ 返回模組總覽</a></article>'
@@ -476,7 +477,7 @@ def case_page(p, idx):
     title = "".join(f'<span class="nw">{esc(t)}</span>' for t in p["title_parts"]) if p.get("title_parts") else esc(p["title"])
     head = f'''<div class="case-crumb">{prev}<span>／ {p["group"]}</span></div>
 <section class="case-heading"><div><p class="eyeline">{p['group']} · {'互動個案' if widget else '作品個案'}</p><h1>{title}</h1>{rich(p["intro"], cls="case-intro")}<div class="case-actions">{first_jump}</div></div>
-<div class="exhibit">{art(p,path,detail=True)}<div class="case-outcome"><span>交付成果</span><strong>{kn(esc(p['result']))}</strong></div></div></section>'''
+<div class="exhibit">{art(p,path,detail=True)}<div class="case-outcome"><span>成果</span><strong>{kn(esc(p['result']))}</strong></div></div></section>'''
     body = f'''<main id="main" class="case-body frame">{number_figures(head + key_section(p, chips) + fragment + cycle + sections + module_html)}
 <div class="reading-shell">{related}<nav class="next-case" aria-label="瀏覽其他作品">{prev}<a href="../{neighbour['id']}/">下一件 · {esc(neighbour['title'])} →</a></nav></div></main>'''
     return page(p['title']+'｜Gary Tang AI Engineer',p['intro'],path,body,widgets,case_href(p),ids=[p['id'],*(c['id'] for c in children)])
