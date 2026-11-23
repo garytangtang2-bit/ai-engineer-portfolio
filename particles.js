@@ -92,8 +92,9 @@ export function mountParticles(hero) {
     const gauss = () => Math.sqrt(-2*Math.log(rand()+1e-9))*Math.cos(6.2831853*rand());
     // Points are ~1.5x (desktop) / ~1.3x (phone) the old size, so fewer are needed for the same light.
     // Fewer, larger, more solid points: tens of thousands of tiny faint dots read as video grain, not particles.
-    // LOOK = [size, alpha, count] multipliers; total light stays close to the old dense field.
-    const LOOK = [2.8, 1.6, .14];
+    // LOOK = [size, alpha, count] multipliers; near-opaque points (translucent large ones read as bokeh blur).
+    // Total light stays close to the old dense field.
+    const LOOK = [2.2, 4.2, .09];
     const SIZE = (narrow ? 1.3 : 1.5)*LOOK[0], ALPHA = (narrow ? .95 : .86)*LOOK[1];
     const cnt = n => Math.round(n*LOOK[2]/TIERS)*TIERS;
     if (gl) { NMAX = cnt(narrow ? 17600 : 72000); NMIN = cnt(narrow ? 6600 : 22500); }
@@ -387,9 +388,10 @@ export function mountParticles(hero) {
     float a;
     if (uStar > .5) a = exp(-d2*90.) + .32*exp(-d2*9.) + .1*exp(-d2*2.2);
     else {
-      // Crisp disc: anti-aliased edge one device pixel wide, plus a faint glow that fades out within ~1.4 radii.
+      // Crisp, nearly flat disc with an anti-aliased edge one device pixel wide and no glow; a soft radial falloff
+      // made the larger points read as out-of-focus bokeh.
       float e = .5/uScale, dd = sqrt(dot(d, d));
-      a = (1. - smoothstep(vR - e, vR + e, dd))*(1. - .3*min(1., dd/vR)) + .03*exp(-d2*2.5);   // slightly brighter centre
+      a = (1. - smoothstep(vR - e, vR + e, dd))*(1. - .1*min(1., dd/vR));
       a *= vLen > 0. ? vR*2./(vR*2.+vLen*.5) : 1.;
     }
     a *= vA;
@@ -620,7 +622,8 @@ export function mountParticles(hero) {
     radius = narrow ? 110 : Math.max(140, Math.min(180, fieldWidth*.2));
     const dpr = devicePixelRatio||1;
     // WebGL renders at 2x even on 1x screens (capped near 6.2 M device px) and the browser downsamples: clean round edges.
-    scale = gl ? Math.max(Math.min(dpr, 2), Math.min(2, Math.sqrt(6.2e6/Math.max(1, width*height)))) : Math.min(dpr, width > 1100 ? 1.5 : 2);
+    // Phones are often 3x: a 2x cap there makes the browser upscale the canvas 1.5x, which blurs every point.
+    scale = gl ? Math.max(Math.min(dpr, 2), Math.min(Math.max(dpr, 2), 3, Math.sqrt(6.2e6/Math.max(1, width*height)))) : Math.min(dpr, width > 1100 ? 1.5 : 2);
     canvas.width = Math.max(1,Math.round(width*scale)); canvas.height = Math.max(1,Math.round(height*scale));
     buildMask(box);
     layout();
