@@ -1131,3 +1131,19 @@ sup.fn a:hover,sup.fn a:focus-visible {color:var(--champ-hi);text-decoration:und
 .mod-more>summary:hover {border-color:var(--champ)}
 .mod-more>.module-intro {margin-top:16px}
 @media (forced-colors:active) {.fold-sum h2 {color:CanvasText}}
+
+/* Key points: steps drawn as a flow (boxes and arrows), outcomes as large figures */
+.key-steps {grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:28px}
+.key-steps li {position:relative;display:block;padding:14px 16px 16px;border:1px solid var(--glass-line);border-top:2px solid var(--champ-2,var(--champ));border-radius:12px;background:rgba(12,17,29,.55)}
+.key-steps li::before {display:block;margin-bottom:6px;line-height:1}
+.key-steps li:not(:last-child)::after {content:"→";position:absolute;top:50%;right:-22px;transform:translateY(-50%);font:600 1.05rem/1 var(--mono);color:var(--champ)}
+.key-steps b {display:block;font-size:1.02rem;margin-bottom:4px}
+.key-steps span {display:block;font-size:.9rem;line-height:1.6}
+.key-stats {list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:10px 28px}
+.key-stats li {font:700 1.2rem/1.4 var(--font);color:var(--ice-hi,var(--text-1));font-variant-numeric:tabular-nums}
+@media (max-width:900px) {
+  .key-steps {grid-auto-flow:row;gap:22px}
+  .key-steps li:not(:last-child)::after {content:"↓";top:auto;bottom:-20px;right:auto;left:22px;transform:none}
+  .key-stats {flex-direction:column;gap:4px}
+  .key-stats li {font-size:1.08rem}
+}

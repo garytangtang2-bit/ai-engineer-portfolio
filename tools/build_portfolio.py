@@ -391,7 +391,9 @@ def key_section(p, chips):
     if e.get('constraints'):
         rows.append(('要解決', f'<p>{inline(e["constraints"][0])}</p>'))
     steps = ''.join(f'<li><b>{esc(t)}</b><span>{esc(key_line(d))}</span></li>' for t, d in (x.split('｜', 1) for x in p['steps']))
-    rows.append(('做法', f'<ol class="key-steps">{steps}</ol>'))
+    rows.append(('流程', f'<ol class="key-steps">{steps}</ol>'))
+    if p.get('highlights'):
+        rows.append(('成果', '<ul class="key-stats">' + ''.join(f'<li>{kn(esc(h))}</li>' for h in p['highlights']) + '</ul>'))
     rows.append(('工具', f'<ul class="tech-pills" aria-label="技術與工具">{chips}</ul>'))
     body = '<dl class="key-grid">' + ''.join(f'<div><dt>{k}</dt><dd>{v}</dd></div>' for k, v in rows) + '</dl>'
     return rsec('key', '重點', '一眼看懂', body, cls='key-points')
@@ -400,7 +402,7 @@ def key_section(p, chips):
 def fold_teasers(pid):
     """One-line summaries shown on the collapsed detail sections."""
     e = ENGINEERING.get(pid) or {}
-    parts = ['完整步驟'] if 'pipeline' in e else ['完整步驟與背景說明']
+    parts = [] if 'pipeline' in e else ['完整步驟與背景說明']
     if 'pipeline' in e:
         parts.append('模型、程式與人手分工')
     if e.get('rag_flow'):
@@ -462,7 +464,9 @@ def case_page(p, idx):
     sections = ''
     if eng:
         sections += rsec('engineering', '問題', '問題與限制', eng['problem'], cls='sec-problem', fold=teaser['problem'])
-    method_body = f'{rich(p["detail"], cls="case-context")}<ol class="build-steps">{steps_list(p["steps"])}</ol>'
+    # Full step text only when it says more than the one-line flow in the key points.
+    longer = any(key_line(d) != plain(d).strip() for d in (x.split('｜', 1)[1] for x in p['steps']))
+    method_body = rich(p["detail"], cls="case-context") + (f'<ol class="build-steps">{steps_list(p["steps"])}</ol>' if longer else '')
     sections += rsec('method', '做法', '做法細節', method_body, cls='method', wide=eng['method'] if eng else '', fold=teaser['method'])
     if eng or supplementary:
         sections += rsec('results', '結果', eng['outcome_title'] if eng else '實際成果', eng['results'] if eng else '', cls='sec-results', wide=supplementary, fold=teaser['results'])
