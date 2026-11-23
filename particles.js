@@ -39,7 +39,7 @@ export function mountParticles(hero) {
   try { gl = canvas.getContext('webgl2', {alpha:true, premultipliedAlpha:true, antialias:false, depth:false, stencil:false}); } catch (e) { gl = null; }
   if (!gl) { ctx2d = canvas.getContext('2d', {alpha:true}); if (!ctx2d) return; }
 
-  let width = 0, height = 0, scale = 1, narrow = false, fine = false, fieldLeft, fieldWidth, fieldTop, fieldHeight, radius = 160;
+  let width = 0, height = 0, scale = 1, narrow = false, fieldLeft, fieldWidth, fieldTop, fieldHeight, radius = 160;
   let MAX = 0, N = 0, NMIN = 0, NMAX = 0;
   // Per particle: home, static look, phase for the swirl field, physics state.
   let HX, HY, STAT, KP, CKP, SKP, INVM, RC, TT, ACT, AL, na = 0, DYN;
@@ -91,12 +91,14 @@ export function mountParticles(hero) {
     const rand = () => ((seed = (Math.imul(1664525,seed) + 1013904223) >>> 0) / 4294967296);
     const gauss = () => Math.sqrt(-2*Math.log(rand()+1e-9))*Math.cos(6.2831853*rand());
     // Points are ~1.5x (desktop) / ~1.3x (phone) the old size, so fewer are needed for the same light.
-    // Low-DPR screens: the canvas is supersampled (see resize), so points shrink to ~1-2.6 CSS px and get brighter.
-    // Big faint discs there blur into a grainy haze; small bright ones read as crisp points.
-    const SIZE = (narrow ? 1.3 : 1.5)*(fine ? .62 : 1), ALPHA = (narrow ? .95 : .86)*(fine ? 2.3 : 1);
-    if (gl) { NMAX = narrow ? 17600 : 72000; NMIN = narrow ? 6600 : 22500; }
+    // Fewer, larger, more solid points: tens of thousands of tiny faint dots read as video grain, not particles.
+    // LOOK = [size, alpha, count] multipliers; total light stays close to the old dense field.
+    const LOOK = [1.4, 2.0, .3];
+    const SIZE = (narrow ? 1.3 : 1.5)*LOOK[0], ALPHA = (narrow ? .95 : .86)*LOOK[1];
+    const cnt = n => Math.round(n*LOOK[2]/TIERS)*TIERS;
+    if (gl) { NMAX = cnt(narrow ? 17600 : 72000); NMIN = cnt(narrow ? 6600 : 22500); }
     else { NMAX = NMIN = 6400; }
-    if (!MAX || MAX !== NMAX) { MAX = NMAX; N = gl ? (narrow ? 13200 : 54000) : 6400; adjustments = 0; }
+    if (!MAX || MAX !== NMAX) { MAX = NMAX; N = gl ? cnt(narrow ? 13200 : 54000) : 6400; adjustments = 0; }
     TIER = MAX/TIERS;
     HX = new Float32Array(MAX); HY = new Float32Array(MAX); KP = new Float32Array(MAX); CKP = new Float32Array(MAX); SKP = new Float32Array(MAX);
     INVM = new Float32Array(MAX); RC = new Float32Array(MAX); TT = new Float32Array(MAX);
@@ -130,7 +132,7 @@ export function mountParticles(hero) {
       const mass = (diam/2.2)**2 * (.8 + rand()*.4);   // physics keeps the unscaled size
       INVM[i] = 1/mass; RC[i] = Math.min(3, diam*.5*1.35);
       const o = i*9, c = PALETTE[col];
-      STAT[o] = x; STAT[o+1] = y; STAT[o+2] = diam*(sparkle ? (fine ? .55 : .8) : SIZE)*(.85+.3*depth); STAT[o+3] = alpha*ALPHA; STAT[o+4] = rand()*6.2832; STAT[o+5] = depth;
+      STAT[o] = x; STAT[o+1] = y; STAT[o+2] = diam*(sparkle ? .8*LOOK[0] : SIZE)*(.85+.3*depth); STAT[o+3] = alpha*ALPHA; STAT[o+4] = rand()*6.2832; STAT[o+5] = depth;
       // (sparkles stay small so they read as points, not bubbles)
       STAT[o+6] = c[0]; STAT[o+7] = c[1]; STAT[o+8] = c[2];
     }
@@ -617,9 +619,8 @@ export function mountParticles(hero) {
     fieldTop = narrow ? height-fieldHeight-12 : (height-fieldHeight)*.5-5;
     radius = narrow ? 110 : Math.max(140, Math.min(180, fieldWidth*.2));
     const dpr = devicePixelRatio||1;
-    // WebGL renders at 2x even on 1x screens (capped near 6.2 M device px) and the browser downsamples: round, sub-pixel dots.
+    // WebGL renders at 2x even on 1x screens (capped near 6.2 M device px) and the browser downsamples: clean round edges.
     scale = gl ? Math.max(Math.min(dpr, 2), Math.min(2, Math.sqrt(6.2e6/Math.max(1, width*height)))) : Math.min(dpr, width > 1100 ? 1.5 : 2);
-    fine = !!gl && dpr < 1.75;
     canvas.width = Math.max(1,Math.round(width*scale)); canvas.height = Math.max(1,Math.round(height*scale));
     buildMask(box);
     layout();
