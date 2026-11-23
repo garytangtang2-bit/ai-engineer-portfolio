@@ -620,7 +620,7 @@ export function mountParticles(hero) {
     const dpr = devicePixelRatio||1;
     // WebGL renders at 2x even on 1x screens (capped near 6.2 M device px) and the browser downsamples: clean round edges.
     // Phones are often 3x: a 2x cap there makes the browser upscale the canvas 1.5x, which blurs every point.
-    scale = gl ? Math.max(Math.min(dpr, 2), Math.min(Math.max(dpr, 2), 3, Math.sqrt(6.2e6/Math.max(1, width*height)))) : Math.min(dpr, width > 1100 ? 1.5 : 2);
+    scale = gl ? Math.max(Math.min(dpr, 2), Math.min(Math.max(dpr, 2), 3, Math.sqrt(6.2e6/Math.max(1, width*height)))) : Math.max(1, Math.min(dpr, 3, Math.sqrt(6.2e6/Math.max(1, width*height))));   // 2D fallback: native too, no upscaling
     canvas.width = Math.max(1,Math.round(width*scale)); canvas.height = Math.max(1,Math.round(height*scale));
     buildMask(box);
     layout();
