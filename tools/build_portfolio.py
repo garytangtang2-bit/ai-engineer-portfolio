@@ -205,7 +205,7 @@ def home():
 </section><a class="scroll-cue" href="#results" aria-label="向下捲動至量度過的成果"><span>向下捲動</span><i aria-hidden="true"></i></a></div>
 <section class="home-section metrics-section" id="results" aria-labelledby="results-title"><div class="frame rgrid">{home_head('§1 成果', '已上線的成果', 'results-title', '會議紀錄和 PDF 系統由設計部同事使用；ToGoalAi 是我的個人產品。每個數字都連到個案頁。')}
 <div class="metric-rail rsec-wide" aria-label="主要成果"><a href="projects/meeting/" aria-label="會議紀錄人手時間由 5 小時縮至約 10 分鐘，以 30 場會議計（包括補做的過往錄音）"><span>會議紀錄人手時間</span><strong><span class="nw">5<small> 小時</small></span><i>→</i><span class="nw">10<small> 分鐘</small></span></strong><em>以 30 場會議計 · 總歷時約 90 分鐘</em></a>
-<a href="projects/pdf/" aria-label="PDF 還原 Excel 由 16 小時縮至 30 分鐘"><span>PDF 還原 Excel</span><strong><span class="nw">16<small> 小時</small></span><i>→</i><span class="nw">30<small> 分鐘</small></span></strong><em>抽查準確率 99.99%<small class="metric-note">風險抽樣 · 獨立視覺模型盲核</small></em></a>
+<a href="projects/pdf/" aria-label="PDF 還原 Excel 由 16 小時縮至 30 分鐘"><span>PDF 還原 Excel</span><strong><span class="nw">16<small> 小時</small></span><i>→</i><span class="nw">30<small> 分鐘</small></span></strong><em>抽查準確率 99.9%<small class="metric-note">風險抽樣 · 獨立視覺模型盲核</small></em></a>
 <a href="projects/togoal/" aria-label="ToGoalAi 學習平台，2,000 名以上註冊用戶"><span>ToGoalAi 學習平台</span><strong><span class="nw">2,000+<small> 註冊用戶</small></span></strong><em>獨立開發並上線</em></a></div></div></section>
 {cost_section()}
 <section class="frame feature-band home-section" aria-labelledby="feature-title"><div class="feature-copy"><p class="eyeline">精選個案 ／ 完整工作流</p><h2 id="feature-title">設計會議全流程自動化</h2>
