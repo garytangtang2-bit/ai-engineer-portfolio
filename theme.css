@@ -843,7 +843,6 @@ body.gallery-body {font-family:var(--font)}
 .rsec {padding-block:clamp(40px,5vw,76px);border-top:1px solid var(--hair);scroll-margin-top:var(--mast-h)}
 .rsec>.rsec-wide {margin-top:clamp(22px,2.6vw,36px)}
 .rsec>.rsec-body+.rsec-wide {margin-top:clamp(28px,3vw,44px)}
-@media (min-width:1100px) {.rsec-head {position:sticky;top:calc(var(--mast-h) + 28px)}}
 @media (max-width:900px) {
   .rsec-head,.rsec-body,.rgrid>.section-note,.rgrid>.data-note {grid-column:1 / -1}
   .rsec-head {margin-bottom:16px}
