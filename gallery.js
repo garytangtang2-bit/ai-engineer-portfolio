@@ -98,6 +98,8 @@ async function applyAnchor() {
   if (target) {
     let parent = target.parentElement?.closest('details');
     let revealed = false;
+    const own = target.querySelector(':scope > details.fold');
+    if (own && !own.open) {own.open = true; revealed = true;}
     while (parent) {
       if (!parent.open) {parent.open = true; revealed = true;}
       parent = parent.parentElement?.closest('details');
@@ -335,3 +337,8 @@ setupReveal();
 setupCounters();
 applyAnchor();
 window.addEventListener('hashchange',applyAnchor);
+// A link to the hash already in the address bar fires no hashchange; still open a folded target.
+document.addEventListener('click', e => {
+  const a = e.target.closest?.('a[href^="#"]');
+  if (a && a.getAttribute('href') === location.hash) applyAnchor();
+});

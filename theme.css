@@ -1075,3 +1075,59 @@ sup.fn a:hover,sup.fn a:focus-visible {color:var(--champ-hi);text-decoration:und
 
 /* footer: Chinese + English CV buttons side by side */
 .footer-cta {display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+
+/* ---------- Case pages: key points first, detail folded ---------- */
+.key-points .rsec-head h2 {font-size:clamp(1.55rem,1.1rem + 1.15vw,2.3rem)}
+.key-grid {margin:0;display:grid}
+.key-grid>div {display:grid;grid-template-columns:5.5em minmax(0,1fr);gap:18px;padding-block:18px;border-top:1px solid var(--hair)}
+.key-grid>div:first-child {border-top:0;padding-top:4px}
+.key-grid dt {font:600 .8rem/1.9 var(--mono);letter-spacing:.04em;color:var(--champ)}
+.key-grid dd {margin:0;min-width:0;color:var(--text-1);font-size:1.06rem;line-height:1.75}
+.key-grid dd>p {margin:0;max-width:62ch}
+.key-steps {list-style:none;counter-reset:k;margin:0;padding:0;display:grid;gap:12px}
+.key-steps li {counter-increment:k;display:grid;grid-template-columns:2.2em minmax(0,1fr);column-gap:4px}
+.key-steps li::before {content:counter(k,decimal-leading-zero);font:500 .85rem/2.05 var(--mono);color:var(--gold-2,var(--champ))}
+.key-steps b {font-weight:700;color:var(--text-1)}
+.key-steps span {grid-column:2;color:var(--text-2);font-size:.98rem;line-height:1.7}
+.key-grid .tech-pills {margin:2px 0 0}
+
+.rsec.deep {display:block;padding-block:0}
+.fold>summary {list-style:none;cursor:pointer;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--col-gap);
+  align-items:center;padding-block:clamp(22px,2.4vw,32px);-webkit-tap-highlight-color:transparent}
+.fold>summary::-webkit-details-marker {display:none}
+.fold-sum .marker {grid-column:1 / span 4;grid-row:1;margin:0 0 4px}
+.fold-sum h2 {grid-column:1 / span 4;grid-row:2;margin:0;font-family:var(--serif);font-weight:900;letter-spacing:.01em;line-height:1.25;
+  font-size:clamp(1.25rem,1rem + .7vw,1.7rem);color:var(--text-1);text-wrap:balance}
+.fold-teaser {grid-column:5 / span 7;grid-row:1 / span 2;color:var(--text-2);line-height:1.7;font-size:.98rem}
+.fold-btn {grid-column:12;grid-row:1 / span 2;justify-self:end;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;
+  font:600 .8rem/1 var(--mono);letter-spacing:.04em;color:var(--ice-hi,var(--champ));border:1px solid var(--hair-hi);border-radius:999px;padding:9px 14px}
+.fold-btn::before {content:"展開"}
+.fold-btn::after {content:"+";font-size:1rem;line-height:.8}
+.fold[open] .fold-btn::before {content:"收起"}
+.fold[open] .fold-btn::after {content:"−"}
+.fold>summary:hover .fold-btn {border-color:var(--champ)}
+.fold>summary:hover h2 {color:var(--champ-hi,var(--text-1))}
+.fold>summary:focus-visible {outline:2px solid var(--champ);outline-offset:4px;border-radius:6px}
+.fold-inner {display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--col-gap);align-items:start;padding-bottom:clamp(36px,4.6vw,68px)}
+.fold-inner>.rsec-wide {margin-top:clamp(22px,2.6vw,36px)}
+.fold-inner>.rsec-body:first-child {margin-top:4px}
+.fold-inner>.rsec-body+.rsec-wide {margin-top:clamp(28px,3vw,44px)}
+.fold-inner .cycle-status {margin:0 0 14px}
+@media (max-width:900px) {
+  .key-grid>div {grid-template-columns:1fr;gap:6px}
+  .fold>summary {grid-template-columns:minmax(0,1fr) auto;row-gap:2px}
+  .fold-sum .marker,.fold-sum h2 {grid-column:1}
+  .fold-btn {grid-column:2;padding:8px 12px}
+  .fold-teaser {grid-column:1 / -1;grid-row:3;margin-top:8px;font-size:.94rem}
+  .fold-inner>.rsec-body {grid-column:1 / -1}
+}
+
+.mod-more {margin:18px 0 4px}
+.mod-more>summary {list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font:600 .82rem/1 var(--mono);letter-spacing:.04em;
+  color:var(--ice-hi,var(--champ));border:1px solid var(--hair-hi);border-radius:999px;padding:9px 14px}
+.mod-more>summary::-webkit-details-marker {display:none}
+.mod-more>summary::after {content:"+"}
+.mod-more[open]>summary::after {content:"−"}
+.mod-more>summary:hover {border-color:var(--champ)}
+.mod-more>.module-intro {margin-top:16px}
+@media (forced-colors:active) {.fold-sum h2 {color:CanvasText}}

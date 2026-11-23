@@ -83,10 +83,16 @@ def sentences(t):
     return [x for x in re.split(r'(?<=[。！？])', t) if x.strip()]
 
 
-def rsec(sid, marker, title, body, cls='', head_extra='', wide='', title_id=None):
+def rsec(sid, marker, title, body, cls='', head_extra='', wide='', title_id=None, fold=None):
     """Report section: § marker and heading in the left columns (sticky on wide screens), body on the right;
-    `wide` content spans the whole grid under the heading."""
+    `wide` content spans the whole grid under the heading.
+    With `fold` (a one-line summary) the section is collapsed: only the heading and that line show until opened."""
     tid = title_id or f'{sid}-title'
+    if fold is not None:
+        inner = (f'<div class="rsec-body">{head_extra}{body}</div>' if body or head_extra else '') + (f'<div class="rsec-wide">{wide}</div>' if wide else '')
+        return (f'<section class="rsec deep {cls}" id="{sid}" aria-labelledby="{tid}"><details class="fold"><summary class="fold-sum">'
+                f'<span class="marker">§ {marker}</span><h2 id="{tid}">{title}</h2><span class="fold-teaser">{fold}</span>'
+                f'<span class="fold-btn" aria-hidden="true"></span></summary><div class="fold-inner">{inner}</div></details></section>')
     return (f'<section class="rsec {cls}" id="{sid}" aria-labelledby="{tid}"><header class="rsec-head"><p class="marker">§ {marker}</p>'
             f'<h2 id="{tid}">{title}</h2>{head_extra}</header>' + (f'<div class="rsec-body">{body}</div>' if body else '') +
             (f'<div class="rsec-wide">{wide}</div>' if wide else '') + '</section>')
@@ -257,15 +263,18 @@ def module_card(c, number, path):
         label, caption, alt = WORK_IMAGES[c['id']]
         href = f'{path}assets/work/{c["id"]}.webp'
         figure = f'<figure class="proof-figure"><a class="proof-open" href="{href}" data-caption="{esc(caption,quote=True)}" aria-label="放大圖片：{esc(alt,quote=True)}"><img src="{href}" loading="lazy" decoding="async" alt="{esc(alt,quote=True)}"></a><figcaption><b>{esc(label)}</b>{esc(caption)}</figcaption></figure>'
-    extra = supplementary_for(c['id'])
+    supplement = supplementary_for(c['id'])
+    extra = ''
     if c['id'] in inspection and not c.get('widget'):
         extra += reader(c['id'], f'{c["id"]}-output', marker=False)
     if c.get('widget'):
         extra += demo(c['widget'], f'{c["id"]}-demo', marker=False)
     cls = 'module-top' if figure else 'module-top no-proof'
     head = (f'<div class="{cls}"><div><p class="eyeline">模組 {number:02d} · {esc(c["group"])}</p><h3 id="{c["id"]}-title">{esc(c["title"])}</h3>{rich(c["intro"], cls="module-intro")}'
-            f'<div class="module-result"><span>交付成果</span><strong>{kn(esc(c["result"]))}</strong></div>{rich(c["detail"], cls="module-intro")}</div>{figure}</div>')
-    return f'<article class="module-card" id="{c["id"]}" aria-labelledby="{c["id"]}-title">{head}<ol class="build-steps">{steps}</ol><ul class="tech-pills" aria-label="技術與工具">{chips}</ul>{extra}<a class="module-back" href="#modules">↑ 返回模組總覽</a></article>'
+            f'<div class="module-result"><span>交付成果</span><strong>{kn(esc(c["result"]))}</strong></div></div>{figure}</div>')
+    more = (f'<details class="mod-more"><summary>步驟、細節與工具</summary>{rich(c["detail"], cls="module-intro")}'
+            f'<ol class="build-steps">{steps}</ol><ul class="tech-pills" aria-label="技術與工具">{chips}</ul>{supplement}</details>')
+    return f'<article class="module-card" id="{c["id"]}" aria-labelledby="{c["id"]}-title">{head}{more}{extra}<a class="module-back" href="#modules">↑ 返回模組總覽</a></article>'
 
 
 def modules_section(p, children, path):
@@ -368,6 +377,56 @@ def eng_parts(pid):
     return {'problem': cons, 'method': method, 'results': results, 'outcome_title': outcome_title, 'limits': limits}
 
 
+def key_line(d):
+    """First sentence of a step description, without a leading bullet or a short 「標籤：」 prefix."""
+    first = d.strip().splitlines()[0].lstrip('- ').strip()
+    first = re.sub(r'^[^：，。]{1,6}：', '', first)
+    return plain(sentences(first)[0] if sentences(first) else first)
+
+
+def key_section(p, chips):
+    """The page's key points before any detail: the problem in one line, each step in one line, the tools."""
+    e = ENGINEERING.get(p['id'], {})
+    rows = []
+    if e.get('constraints'):
+        rows.append(('要解決', f'<p>{inline(e["constraints"][0])}</p>'))
+    steps = ''.join(f'<li><b>{esc(t)}</b><span>{esc(key_line(d))}</span></li>' for t, d in (x.split('｜', 1) for x in p['steps']))
+    rows.append(('做法', f'<ol class="key-steps">{steps}</ol>'))
+    rows.append(('工具', f'<ul class="tech-pills" aria-label="技術與工具">{chips}</ul>'))
+    body = '<dl class="key-grid">' + ''.join(f'<div><dt>{k}</dt><dd>{v}</dd></div>' for k, v in rows) + '</dl>'
+    return rsec('key', '重點', '一眼看懂', body, cls='key-points')
+
+
+def fold_teasers(pid):
+    """One-line summaries shown on the collapsed detail sections."""
+    e = ENGINEERING.get(pid) or {}
+    parts = ['完整步驟'] if 'pipeline' in e else ['完整步驟與背景說明']
+    if 'pipeline' in e:
+        parts.append('模型、程式與人手分工')
+    if e.get('rag_flow'):
+        parts.append('接地與引用流程')
+    if e.get('cost'):
+        parts.append('模型與成本')
+    if e.get('decisions'):
+        parts.append('關鍵取捨')
+    if e.get('code'):
+        parts.append('程式節錄')
+    method = '、'.join(parts[:-1]) + ('及' if len(parts) > 1 else '') + parts[-1] + '。'
+    cons = e.get('constraints') or []
+    claims = [c for c in e.get('claims', []) if c.get('section') != 'cost']
+    results = ''
+    if claims:
+        results = plain(sentences(plain(claims[0]['claim']))[0])
+        if len(claims) > 1:
+            results += f'（共 {len(claims)} 項，附量度方法）'
+    return {
+        'problem': f'{len(cons)} 項輸入及環境限制，決定了後面每一步的做法。' if cons else '',
+        'method': method,
+        'results': results or '實際成果及量度方法。',
+        'limits': f'{len(e.get("failures", []))} 種可能出錯的情況，以及各自的防護。',
+    }
+
+
 def case_page(p, idx):
     path = '../../'
     widget = p.get('widget')
@@ -388,7 +447,7 @@ def case_page(p, idx):
         links = ''.join(f'<a href="../{module["id"]}/"><strong>{esc(module["title"])}</strong><span>{esc(plain(module["intro"]))}</span></a>' for module in (project_by_id[slug] for slug in p['related']))
         related = rsec('related', '相關', '相關工具', '', cls='related-tools', wide=f'<div class="related-list">{links}</div>')
     neighbour = next(projects[(idx+offset)%len(projects)] for offset in range(1, len(projects)) if not projects[(idx+offset)%len(projects)].get('parent'))
-    first_jump = '<a class="main-btn" href="#demo">前往互動示範 ↓</a>' if widget else '<a class="main-btn" href="#method">查看實作流程 ↓</a>'
+    first_jump = '<a class="main-btn" href="#demo">前往互動示範 ↓</a>' if widget else '<a class="main-btn" href="#key">看重點 ↓</a>'
     if p['id'] in inspection and not widget:
         first_jump = '<a class="main-btn" href="#demo">打開輸出紀錄 ↓</a>'
     if ENGINEERING.get(p['id'], {}).get('rag_flow'):
@@ -397,25 +456,25 @@ def case_page(p, idx):
         first_jump += f'<a class="soft-btn" href="#modules">{len(children)+1} 個組成模組 ↓</a>'
     cycle = ''
     if p['id'] == 'meeting':
-        cycle = meeting_cycle.section()
-        first_jump = '<a class="main-btn" href="#cycle">完整工作流 ↓</a>' + first_jump.replace('main-btn','soft-btn',1)
+        cycle = meeting_cycle.section(rsec, '由一次設計會議到下一次的全流程圖；目前只有「本機轉錄及撰寫英文 Minutes」已在設計部使用。')
     eng = eng_parts(p['id'])
+    teaser = fold_teasers(p['id'])
     sections = ''
     if eng:
-        sections += rsec('engineering', '問題', '問題與限制', eng['problem'], cls='sec-problem')
-    method_body = f'{rich(p["detail"], cls="case-context")}<ol class="build-steps">{steps_list(p["steps"])}</ol><ul class="tech-pills" aria-label="技術與工具">{chips}</ul>'
-    sections += rsec('method', '做法', '我怎樣做', method_body, cls='method', wide=eng['method'] if eng else '')
+        sections += rsec('engineering', '問題', '問題與限制', eng['problem'], cls='sec-problem', fold=teaser['problem'])
+    method_body = f'{rich(p["detail"], cls="case-context")}<ol class="build-steps">{steps_list(p["steps"])}</ol>'
+    sections += rsec('method', '做法', '做法細節', method_body, cls='method', wide=eng['method'] if eng else '', fold=teaser['method'])
     if eng or supplementary:
-        sections += rsec('results', '結果', eng['outcome_title'] if eng else '實際成果', eng['results'] if eng else '', cls='sec-results', wide=supplementary)
+        sections += rsec('results', '結果', eng['outcome_title'] if eng else '實際成果', eng['results'] if eng else '', cls='sec-results', wide=supplementary, fold=teaser['results'])
     if eng:
-        sections += rsec('limits', '限制', '失敗情況與防護', '', cls='sec-limits', wide=eng['limits'])
+        sections += rsec('limits', '限制', '失敗情況與防護', '', cls='sec-limits', wide=eng['limits'], fold=teaser['limits'])
     prev = f'<a href="{path}#work" data-back>← 全部作品</a>'
     title = "".join(f'<span class="nw">{esc(t)}</span>' for t in p["title_parts"]) if p.get("title_parts") else esc(p["title"])
     head = f'''<div class="case-crumb">{prev}<span>／ {p["group"]}</span></div>
 <section class="case-heading"><div><p class="eyeline">{p['group']} · {'互動個案' if widget else '作品個案'}</p><h1>{title}</h1>{rich(p["intro"], cls="case-intro")}<div class="case-actions">{first_jump}</div></div>
 <div class="exhibit">{art(p,path,detail=True)}<div class="case-outcome"><span>交付成果</span><strong>{kn(esc(p['result']))}</strong></div></div></section>'''
-    body = f'''<main id="main" class="case-body frame">{number_figures(head + cycle + sections + module_html)}
-<div class="reading-shell">{fragment}{related}<nav class="next-case" aria-label="瀏覽其他作品">{prev}<a href="../{neighbour['id']}/">下一件 · {esc(neighbour['title'])} →</a></nav></div></main>'''
+    body = f'''<main id="main" class="case-body frame">{number_figures(head + key_section(p, chips) + fragment + cycle + sections + module_html)}
+<div class="reading-shell">{related}<nav class="next-case" aria-label="瀏覽其他作品">{prev}<a href="../{neighbour['id']}/">下一件 · {esc(neighbour['title'])} →</a></nav></div></main>'''
     return page(p['title']+'｜Gary Tang AI Engineer',p['intro'],path,body,widgets,case_href(p),ids=[p['id'],*(c['id'] for c in children)])
 
 

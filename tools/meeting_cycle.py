@@ -171,10 +171,16 @@ def text_list():
     return '<details class="cycle-list"><summary>以清單閱讀時間線</summary><ol>' + ''.join(items) + '<li><strong>下次開會後</strong> · 開始新一輪</li></ol></details>'
 
 
-def section():
-    intro = ('<div class="rich cycle-intro"><p class="lead">目前只有「本機轉錄及撰寫英文 Minutes」已在設計部使用。</p><dl class="ll">'
+def section(rsec=None, fold=None):
+    intro =('<div class="rich cycle-intro"><p class="lead">目前只有「本機轉錄及撰寫英文 Minutes」已在設計部使用。</p><dl class="ll">'
              '<div><dt>循環</dt><dd>由一次設計會議到下一次：撰寫紀錄、提醒講者、索價、整理 Agenda 及 Sharing PDF，再寄出通知。</dd></div>'
              '<div><dt>其餘</dt><dd>其餘節點是正在建構的流程設計。</dd></div></dl></div>')
+    if rsec:
+        wide = (f'<figure class="cycle-figure"><div class="cycle-scroll" tabindex="0" role="region" aria-label="{TITLE}，可橫向捲動">{svg()}</div>'
+                f'<figcaption>{TITLE}：由第 N 次開會到第 N+1 次開會</figcaption></figure>'
+                f'<p class="cycle-hint" aria-hidden="true">← 左右滑動查看全圖 →</p>{text_list()}')
+        return rsec('cycle', '全流程', TITLE, intro + legend(), cls='cycle-section', head_extra=f'<p class="cycle-status">{escape(STATUS)}</p>',
+                    wide=wide, title_id='workflow-title', fold=fold)
     return (f'<section class="rsec cycle-section" id="cycle" aria-labelledby="workflow-title"><header class="rsec-head"><p class="marker">§ 全流程</p>'
             f'<h2 id="workflow-title">{TITLE}</h2><p class="cycle-status">{escape(STATUS)}</p></header><div class="rsec-body">{intro}{legend()}</div>'
             f'<div class="rsec-wide"><figure class="cycle-figure"><div class="cycle-scroll" tabindex="0" role="region" aria-label="{TITLE}，可橫向捲動">{svg()}</div>'
