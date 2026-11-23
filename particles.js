@@ -93,7 +93,7 @@ export function mountParticles(hero) {
     // Points are ~1.5x (desktop) / ~1.3x (phone) the old size, so fewer are needed for the same light.
     // Fewer, larger, more solid points: tens of thousands of tiny faint dots read as video grain, not particles.
     // LOOK = [size, alpha, count] multipliers; total light stays close to the old dense field.
-    const LOOK = [1.4, 2.0, .3];
+    const LOOK = [2.8, 1.6, .14];
     const SIZE = (narrow ? 1.3 : 1.5)*LOOK[0], ALPHA = (narrow ? .95 : .86)*LOOK[1];
     const cnt = n => Math.round(n*LOOK[2]/TIERS)*TIERS;
     if (gl) { NMAX = cnt(narrow ? 17600 : 72000); NMIN = cnt(narrow ? 6600 : 22500); }
