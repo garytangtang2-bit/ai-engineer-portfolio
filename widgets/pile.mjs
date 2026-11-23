@@ -93,7 +93,7 @@ function selectHole() {
   const h = S.holes[selector.selectedIndex];
   const metres = value => value.toFixed(1) + ' m';
   $('#demo-reading').textContent = h.hole + ' · E ' + metres(h.e) + ' · N ' + metres(h.n)
-    + ' · 地面 ' + metres(h.gl) + ' · 岩面 ' + (h.rl === null ? '待確定' : metres(h.rl));
+    + ' · 地面 ' + metres(h.gl) + ' · 石面 ' + (h.rl === null ? '待確定' : metres(h.rl));
   draw3D();
 }
 selector.addEventListener('change',selectHole);

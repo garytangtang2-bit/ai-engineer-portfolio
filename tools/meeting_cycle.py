@@ -7,7 +7,7 @@ people are roles only.
 from html import escape
 
 TITLE = '設計會議循環時間線'
-STATUS = '完整工作流（建構中）'
+STATUS = '完整工作流'
 INTRO = ('由一次設計會議到下一次：撰寫紀錄、提醒講者、索價、整理 Agenda 及 Sharing PDF，再寄出通知。'
          '目前只有「本機轉錄及撰寫英文 Minutes」已在設計部使用；其餘節點是正在建構的流程設計。')
 
