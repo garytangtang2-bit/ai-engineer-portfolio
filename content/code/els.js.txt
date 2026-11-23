@@ -19,5 +19,5 @@ function checkConfig(cfg) {
     const r = new Function(cfg + '\n;return { no: PROJECT.no, n: REGIONS.length, piles: SHEET_PILES.lines.length, ok: typeof SITE_OUTLINE !== "undefined" && typeof TERRAIN !== "undefined" };')();
     if (!r.ok) return { err: '檔案缺少 SITE_OUTLINE 或 TERRAIN 設定' };
     return r;
-  } catch (e) { return { err: '專案設定讀唔到：' + e.message }; }
+  } catch (e) { return { err: '無法讀取專案設定：' + e.message }; }
 }

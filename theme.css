@@ -1150,6 +1150,8 @@ sup.fn a:hover,sup.fn a:focus-visible {color:var(--champ-hi);text-decoration:und
 /* The gradient text is clipped to the line box; give the descender of "g" room. */
 .hero-type h1 span {padding-bottom:.16em;margin-bottom:-.16em}
 
+/* Basis of a headline number, under it on its own line. */
+.metric-note {display:block;margin-top:.25em;font-size:.78em;opacity:.75}
 /* Detailed method write-up: small mono sub-headings between label lists. */
 .case-how {margin-top:1.6em}
 .gallery-body .case-how p.lead {margin:1.5em 0 .3em;font:600 .8rem/1.5 var(--mono);color:var(--champ);letter-spacing:.04em}

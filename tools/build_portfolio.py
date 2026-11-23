@@ -200,13 +200,13 @@ def home():
     stack = ''.join(f'<span><img src="assets/logos/{logo}.svg" alt="" width="19" height="19" loading="lazy">{name}</span>' for logo,name in [('python','Python'),('javascript','JavaScript'),('threedotjs','Three.js'),('github','GitHub')])
     body = f'''<main id="main" data-home><div class="hero-stage"><canvas class="particle-field" aria-hidden="true"></canvas><section id="home" class="frame landing">
 <div class="hero-type"><p class="eyeline"><span class="tone-dot"></span> AI ENGINEER <span class="role-city">／ 香港</span></p>
-<h1>鄧嘉維<span lang="en">Gary Tang</span></h1><p class="hero-statement">現於工程公司設計部負責 AI 工作流，會議紀錄、報表核對等系統已由同事日常使用；另一人主導 AI 學習平台 ToGoalAi 上線。擅長粵語語音轉錄、LLM／RAG、文件理解，以及模型評估與成本控制。</p>
+<h1>鄧嘉維<span lang="en">Gary Tang</span></h1><p class="hero-statement">現於工程公司設計部負責 AI 工作流，會議紀錄、報表核對等系統已由同事日常使用；另外，我獨立開發並上線 AI 學習平台 ToGoalAi。擅長粵語語音轉錄、LLM／RAG、文件理解，以及模型評估與成本控制。</p>
 <div class="hero-actions"><a class="main-btn" href="#work">瀏覽全部作品 <span aria-hidden="true">↓</span></a><a class="soft-btn" href="{pdf_name}">履歷及聯絡 <span aria-hidden="true">↗</span></a></div></div>
 </section><a class="scroll-cue" href="#results" aria-label="向下捲動至量度過的成果"><span>向下捲動</span><i aria-hidden="true"></i></a></div>
 <section class="home-section metrics-section" id="results" aria-labelledby="results-title"><div class="frame rgrid">{home_head('§1 成果', '已上線的成果', 'results-title', '會議紀錄和 PDF 系統由設計部同事使用；ToGoalAi 是我的個人產品。每個數字都連到個案頁。')}
-<div class="metric-rail rsec-wide" aria-label="主要成果"><a href="projects/meeting/" aria-label="會議紀錄人手時間由 5 小時縮至約 10 分鐘，以 30 場會議計"><span>會議紀錄人手時間</span><strong><span class="nw">5<small> 小時</small></span><i>→</i><span class="nw">10<small> 分鐘</small></span></strong><em>以 30 場會議計 · 總歷時約 90 分鐘</em></a>
-<a href="projects/pdf/" aria-label="PDF 還原 Excel 由 16 小時縮至 30 分鐘"><span>PDF 還原 Excel</span><strong><span class="nw">16<small> 小時</small></span><i>→</i><span class="nw">30<small> 分鐘</small></span></strong><em>抽查準確率 99.99%</em></a>
-<a href="projects/togoal/" aria-label="ToGoalAi 學習平台，2,000 名以上註冊用戶"><span>ToGoalAi 學習平台</span><strong><span class="nw">2,000+<small> 註冊用戶</small></span></strong><em>一人主導上線</em></a></div></div></section>
+<div class="metric-rail rsec-wide" aria-label="主要成果"><a href="projects/meeting/" aria-label="會議紀錄人手時間由 5 小時縮至約 10 分鐘，以 30 場會議計（包括補做的過往錄音）"><span>會議紀錄人手時間</span><strong><span class="nw">5<small> 小時</small></span><i>→</i><span class="nw">10<small> 分鐘</small></span></strong><em>以 30 場會議計 · 總歷時約 90 分鐘</em></a>
+<a href="projects/pdf/" aria-label="PDF 還原 Excel 由 16 小時縮至 30 分鐘"><span>PDF 還原 Excel</span><strong><span class="nw">16<small> 小時</small></span><i>→</i><span class="nw">30<small> 分鐘</small></span></strong><em>抽查準確率 99.99%<small class="metric-note">風險抽樣 · 獨立視覺模型盲核</small></em></a>
+<a href="projects/togoal/" aria-label="ToGoalAi 學習平台，2,000 名以上註冊用戶"><span>ToGoalAi 學習平台</span><strong><span class="nw">2,000+<small> 註冊用戶</small></span></strong><em>獨立開發並上線</em></a></div></div></section>
 {cost_section()}
 <section class="frame feature-band home-section" aria-labelledby="feature-title"><div class="feature-copy"><p class="eyeline">精選個案 ／ 完整工作流（建構中）</p><h2 id="feature-title">設計會議全流程自動化</h2>
 <div class="feature-text"><p class="lead">由一次設計會議到下一次的完整工作流。</p><dl class="ll"><div><dt>循環</dt><dd>撰寫紀錄、提醒講者、索價、整理 Agenda 及 Sharing PDF，再寄出通知。</dd></div><div><dt>進度</dt><dd>整個循環正逐步交給 AI 和程式。</dd></div><div><dt>把關</dt><dd>會前電郵草稿和最後通知，仍由我核對後才寄出。</dd></div></dl></div>
@@ -220,9 +220,9 @@ def home():
 <div class="bio"><h3>我的工作方式</h3><div class="method-statement"><p class="lead">AI 編碼代理寫程式，我負責設計與驗收</p><p><b class="lead">我以 AI 編碼代理實作，本站所有系統的程式碼都由代理撰寫。</b>我負責系統框架、規則與限制、目標、執行方法、評估及驗收，以及安全邊界：代理一出錯就即時叫停，代理的每次改動都先在沙盒內進行。</p></div><p><b class="lead">我在工程公司設計部負責 AI 工具。</b>做法是先跟同事走一次原流程，分清哪些步驟用程式、哪些交給模型、哪些必須由人決定，再按<a href="#cost">上面五條原則</a>選模型、盲測和驗收。</p>
 <div class="stack-marks" aria-label="常用技術">{stack}</div>{intro_film('')}
 <dl><div><dt>求職方向</dt><dd>AI Engineer 全職職位：LLM 應用與代理、RAG、模型評估、本機模型部署及成本控制。</dd></div>
-<div><dt>產品與維護</dt><dd>一人主導及維護網站與手機 App，程式由 Claude Code 和 Codex 等編碼代理實作。熟悉 Python、JavaScript、Three.js 及 Playwright 瀏覽器自動化，能讀懂、測試及驗收代理寫的程式。</dd></div>
+<div><dt>產品與維護</dt><dd>獨立開發及維護 ToGoalAi 網站，程式由 Claude Code 和 Codex 等編碼代理實作。熟悉 Python、JavaScript、Three.js 及 Playwright 瀏覽器自動化，能讀懂、測試及驗收代理寫的程式。</dd></div>
 <div><dt>AI 與部署</dt><dd>RAG、n8n、AI Skills、API 整合、Supabase、GitHub、Vercel。</dd></div>
-<div><dt>工作經歷</dt><dd>2026.09 至今 · Kin Wing Engineering Co. Ltd<br>Assistant AI and design Administrator，設計部。</dd></div>
+<div><dt>工作經歷</dt><dd>2026.09 至今 · Kin Wing Engineering Co. Ltd<br>Assistant AI and Design Administrator，設計部。</dd></div>
 <div><dt>學歷與證書</dt><dd>國立政治大學公共行政學系，2026.06 畢業。經 HKCAAVQ 評估等同香港榮譽學士學位。持有 Claude 101、AI Fluency 證書。</dd></div></dl></div></div></section></main>'''
     return page('鄧嘉維 Gary Tang｜AI Engineer 作品集','實試粵語會議紀錄、核對兩萬格 Excel，了解 Gary 如何主導 ToGoalAi 由設計到上線。','',body)
 

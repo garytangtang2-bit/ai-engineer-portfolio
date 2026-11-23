@@ -11,4 +11,4 @@ if ENERGY is not None:   # 剪接點不可落在有人聲的位置：向外推�
         nb += 0.01
 
 # gate.py：交片閘門，任何一項 FAIL 都不准交片
-verdict = "FAIL（唔准交片）" if fails else ("PASS（有 WARN，要逐個改或者寫明原因）" if any(r[1] == "WARN" for r in rows) else "PASS")
+verdict = "FAIL（不准交片）" if fails else ("PASS（有 WARN，須逐項修改或寫明原因）" if any(r[1] == "WARN" for r in rows) else "PASS")
