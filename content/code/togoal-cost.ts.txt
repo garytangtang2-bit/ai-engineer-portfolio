@@ -8,14 +8,8 @@ const modelConfig = getModelConfig(resolvedModelId);
 const effectiveModel = canUseModel(role, modelConfig) ? modelConfig : getModelConfig(FREE_MODEL_ID);
 // …
 
-// 2. 只為預設模型的繁中問答建快取；建快取時教材先壓到 3,000 token
+// 2. 只為預設模型的繁中問答建快取
 // ── Prompt Caching (ToGoalAi only — cheapest, highest cache ROI) ────────
 // Only use cache for default lang (zh-Hant); other langs get fresh responses to respect language choice
 const useCache = effectiveModel.id === FREE_MODEL_ID && (!lang || lang === "zh-Hant");
 // …
-if (useCache) {
-  if (!cacheValid) {
-    // Compress context to fit within cache token budget
-    const compressedContext = await compressToFit(rawContext, 3_000, `"${source.title}" study content`);
-    cacheName = await createGeminiCache(systemPrompt, compressedContext);
-    // …
