@@ -1166,3 +1166,8 @@ sup.fn a:hover,sup.fn a:focus-visible {color:var(--champ-hi);text-decoration:und
 
 .sig-mark{overflow:hidden;padding:0}
 .sig-mark img{width:100%;height:100%;object-fit:cover;object-position:50% 18%;border-radius:50%;display:block}
+
+.hero-type h1{zoom:.9}
+.hero-statement{max-width:none}
+.hero-statement span{display:block}
+.hero-statement span+span{margin-top:.35em}
