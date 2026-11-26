@@ -1171,3 +1171,11 @@ sup.fn a:hover,sup.fn a:focus-visible {color:var(--champ-hi);text-decoration:und
 .hero-statement{max-width:none}
 .hero-statement span{display:block}
 .hero-statement span+span{margin-top:.35em}
+/* featured tiles read as one clickable card */
+.flagship-grid>.work-tile {border:1px solid var(--hair-hi);border-radius:var(--r-3);background:linear-gradient(160deg,#172431,#111a23 70%);overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.flagship-grid>.work-tile .proof-card {border:0;border-bottom:1px solid var(--hair-hi);border-radius:0}
+.flagship-grid>.work-tile .tile-info {padding:16px 20px 18px;display:flex;flex-direction:column;flex:1}
+.flagship-grid>.work-tile .tile-result {align-items:center}
+.flagship-grid>.work-tile .tile-result::after {content:"查看詳情 →";flex:none;font-size:.85rem;font-weight:600;color:var(--ice-hi);padding:6px 12px;border:1px solid var(--hair-hi);border-radius:999px;white-space:nowrap}
+.flagship-grid>.work-tile:hover,.flagship-grid>.work-tile:focus-visible {border-color:rgba(200,212,232,.6);box-shadow:0 14px 30px #0005}
+.flagship-grid>.work-tile:hover .tile-result::after {background:var(--ice-hi);color:#111a23}
