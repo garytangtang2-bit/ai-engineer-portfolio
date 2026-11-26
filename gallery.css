@@ -174,3 +174,4 @@ body.gallery-body {
 .hero-intro{margin-top:24px}.hero-intro+.hero-actions{margin-top:14px}
 .intro-launch{flex-basis:auto}
 @media(min-width:701px){html .hero-stage .landing{padding-top:8px;padding-bottom:clamp(96px,16vh,180px)}}
+.about-film{margin:26px 0 0;width:100%;max-width:440px}.about-film .marker{margin:0}
