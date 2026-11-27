@@ -129,6 +129,9 @@ DESK_WIDGETS = ('meeting','pdf','tokens','youtube','togoal')
 FONTS = ('noto-sans-tc-site', 'noto-serif-tc-head', 'ibm-plex-mono-latin')
 
 
+WEB_ANALYTICS = '<script type=\'module\' src=\'https://static.cloudflareinsights.com/beacon.min.js\' data-cf-beacon=\'{"token": "e3f8068b0d714ef5811268096e6cb251"}\'></script>'
+
+
 def page(title, description, path, body, widgets=(), canonical='', ids=(), head_extra='', plain_page=False):
     widgets = [w for w in widgets if w]
     widget_css = ''.join(f'<link rel="stylesheet" href="{path}{sheet}.css">' for sheet in ('styles','presentation')) if widgets else ''
@@ -147,7 +150,7 @@ def page(title, description, path, body, widgets=(), canonical='', ids=(), head_
 <nav aria-label="網站導覽"><a href="{path}#work">作品</a><a href="{path}#about">關於</a><a class="cv-link" href="{path}{pdf_name}">履歷 PDF <span aria-hidden="true">↗</span></a></nav></div></header>
 {body}
 <footer class="folio-footer frame" id="contact"><div><h2>聯絡 Gary</h2><p>履歷內附電郵及電話，歡迎聯絡我面談。</p></div><div class="footer-cta"><a class="main-btn" href="{path}{pdf_name}">開啟履歷及聯絡資料 <span aria-hidden="true">↗</span></a><a class="soft-btn" href="{path}{pdf_name_en}" hreflang="en">English CV <span aria-hidden="true">↗</span></a></div></footer>
-</body></html>'''
+{WEB_ANALYTICS if not plain_page else ''}</body></html>'''
 
 
 def case_href(p):
